@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var money = 0;
+        var change = 0;
+        do {
+            var choice = prompt('请输入您要的操作：\n1.存钱\n2.取钱\n3.显示金额\n4.退出')
+            switch (choice) {
+                case '1':
+                    change = prompt('请输入要存入的金额')
+                    money += parseInt(change);
+                    continue
+                case '2':
+                    change = prompt('请输入要取出的金额')
+                    if (money < change) {
+                        alert('您的余额不够！');
+                        console.log('您的余额不够！');
+                        continue;
+                    }
+                    money -= parseInt(change);
+                    continue
+                case '3':
+                    alert('您的金额为' + money)
+                    continue
+                case '4':
+                    continue
+                default:
+                    continue
+            }
+        } while (choice != '4');
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
