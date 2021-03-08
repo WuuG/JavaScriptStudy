@@ -7,7 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script>
-
+        var arrys = [2, 0, 6, 1, 55, 52, 0, 25, 7]
+        var newArr = [];
+        for (var i = 0; i < arrys.length; i++) {
+            if (arrys[i] <= 10) {
+                newArr[newArr.length] = arrys[i]
+            }
+        }
+        console.log(newArr);
     </script>
 </head>
 

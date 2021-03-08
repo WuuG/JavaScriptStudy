@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var arryas = [2, 0, 6, 1, 55, 52, 0, 25, 7]
+        var num = arryas.length
+        for (var i = 0; i < arryas.length - 1; i++) {
+            for (var j = 0; j < num - 1; j++) {
+                var temp;
+                if (arryas[j] > arryas[j + 1]) {
+                    temp = arryas[j]
+                    arryas[j] = arryas[j + 1]
+                    arryas[j + 1] = temp;
+                }
+            }
+            num--;
+        }
+        console.log(arryas);
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

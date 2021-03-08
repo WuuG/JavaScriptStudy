@@ -7,6 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script>
+        function getSum(num1, num2) {
+            var sum = num1 + num2;
+            console.log(sum);
+        }
+        getSum(4);  //NaN 因为num2 == undefined
+        getSum(4, 2, 3);    //实参个数多余形参个数 仅使用匹配的实参。
 
     </script>
 </head>

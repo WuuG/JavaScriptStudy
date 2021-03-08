@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>这里是名字</title>
+    <script>
+        var arr = ['red', 'green', 'blue']
+        console.log(arr.length);
+        arr.length = 5;
+        console.log(arr.length); //['red', 'green', 'blue', empty , empty]
+
+        var arr2 = ['red', 'green', 'blue'];
+        arr2[3] = 'yellow';
+        //直接后面添加就好了
+        console.log(arr2);
+        //若是跳过最后一位， 用undefined填入。
+        arr2[5] = 'shirt';
+        console.log(arr2);
+        //若是给数组名赋值，会将所有数据覆盖掉
+        arr2 = '有点意思';
+        console.log(arr2);
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>

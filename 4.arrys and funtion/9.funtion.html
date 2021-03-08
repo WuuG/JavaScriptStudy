@@ -7,7 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script>
-
+        function getsSum(num1, num2) {
+            var sum = 0;
+            for (var i = num1; i < num2; i++) {
+                sum += i;
+            }
+            console.log(sum);
+        }
+        getsSum(1, 10);
+        getsSum(1, 100);
+        getsSum(50, 100);
     </script>
 </head>
 

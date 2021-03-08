@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function isRun(year) {
+            var flag = false;
+            if (!(year % 4) && (year % 100) || !(year % 400)) {
+                flag = true;
+            }
+            return flag;
+        }
+        function dayNum() {
+            var year = prompt('请输入今年的年份')
+            var days = 28;
+            if (isRun(year)) {
+                days = 29
+            }
+            alert('当前年份的2月份有' + days + '天')
+        }
+        dayNum();
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

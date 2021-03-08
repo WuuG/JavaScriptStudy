@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        /* var arryas = [2, 0, 6, 1, 55, 52, 0, 25, 7]
+        var newArr = []
+        for (var i = 0; i < arryas.length; i++) {
+            newArr[newArr.length] = arryas[arryas.length - i - 1];
+        }
+        console.log(newArr); */
+
+        var arryas = [2, 0, 6, 1, 55, 52, 0, 25, 7]
+        var left = 0, right = arryas.length - 1;
+        console.log(arryas);
+        while (left <= right) {
+            var temp = arryas[left]
+            arryas[left] = arryas[right]
+            arryas[right] = temp;
+            left++;
+            right--;
+        }
+        console.log(arryas);
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
