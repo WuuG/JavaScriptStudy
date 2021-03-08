@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        console.log(num); //undefined
+        var num = 10; // 会先将var num;提升至最上方 之后在到此行时进行执行
+
+        fn();
+        function fn() {
+            console.log(11);
+        }
+
+        fun();  //error //var fun;会提升至作用域最前面，之后调用的是一个变量，因此会报错。
+        var fun = function () {
+            console.log(22);
+        }
+        // 1.js引擎执行js 分两步：(1)预解析(2)代码执行
+        // （2.预解析：js引擎会把js里面 var和function 提升到当前作用域的最前面;
+        // （3.预解析后 进行代码执行（又上至下执行）
+        // 2.预解析分为 （1）变量预解析（变量提升） (2)函数预解析(函数提升)
+        // （1.变量提升仅提升定义 不提升赋值
+        // （2.将所有的函数声名提升至作用域最前面 不调用函数。
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

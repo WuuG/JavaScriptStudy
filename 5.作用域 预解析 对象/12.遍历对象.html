@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var obj = {
+            name: 'pink',
+            age: 12,
+            sex: '男',
+            fn: function () {
+                console.log('这是个方法');
+            }
+        }
+        // for(变量 in 对象) {
+        //循环体
+        // }
+        for (var k in obj) {
+            console.log(obj.k);  //undefined
+            console.log(k);       //输出的是属性名
+            console.log(obj[k]);  //只能用这种方法进行获取，这里的k是变量
+        }
+
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

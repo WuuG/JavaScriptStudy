@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var obj = {
+            userName: '大哥',
+            age: 19,
+            sex: '男',
+            sayHi: function () {  //匿名函数
+                console.log('hi');
+            }
+        }
+        // 1.创建对象
+        // （1.属性方法采用键值对的形式  键 属性名； 值 属性值
+        // （2.多个属性和方法之间用逗号隔开
+        // （3.方法冒号后跟的是匿名函数
+        // 2.适用对象
+        // （1.调用对象的属性 对象名.属性名
+        console.log(obj.userName);
+        // （2. 对象名['属性名']
+        console.log(obj['age']);
+        // （3.调用对象的方法   对象名.方法名
+        obj.sayHi();
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function Heros(hName, blood, attack) {
+            this.hName = hName;
+            this.blood = blood;
+            this.attack = attack;
+        }
+        var aixi = new Heros('艾希', 1000, '远程');
+        //1.new 构造函数可以在内存中创建一个空的对象
+        //2.this就会指向刚才创建的空的对象
+        //3.执行构造函数李米娜的代码， 给这个空对象添加属性和方法（相当于赋值）
+        //4.返回这个对象（因此构造函数不需要return）
+        var wanEr = new Heros('上官婉儿', 900, '远程');
+        console.log(aixi);
+        console.log(wanEr);
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

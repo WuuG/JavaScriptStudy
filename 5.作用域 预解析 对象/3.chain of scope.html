@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var num = 10;
+        function fn() {    //外部
+            var num = 20;
+            console.log(num);
+            function fn1() {    //内部
+                var num2 = 30;
+                console.log(num); //20
+            }
+            fn1();
+        }
+        fn();
+        console.log(num);
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        //四大天王对象 
+        //构造函数的语法格式
+        // function 构造函数名() {
+        //     this.属性 = 值,
+        //         this.方法 = function () {
+
+        //         }
+        // }
+        // new 构造行数名();
+        function Star(uName, age, sex) {   //构造函数首字母大写
+            this.uName = uName;
+            this.age = age;
+            this.sex = sex;
+            //构造函数不需要return
+        }
+        var ldh = new Star('刘德华', 18, '男')
+        console.log(typeof (ldh));
+        console.log(ldh);
+        console.log(ldh['sex']);
+        var zxy = new Star('张学友', 20, '男')
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
