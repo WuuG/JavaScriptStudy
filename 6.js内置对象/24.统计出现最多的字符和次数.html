@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var arr = new Object();
+        var str = 'abcoefoxuozzopp'
+        var max = 0;
+        var maxStr = '';
+        arr.length = 0;
+        for (var i = 0; i < str.length; i++) {
+            var temp = str.charAt(i);
+            if (arr[temp]) {
+                arr[temp]++;
+            } else {
+                arr[temp] = 1;
+                arr['length']++;
+            }
+            if (max < arr[temp]) {
+                max = arr[temp];
+                // maxStr = arr[temp];
+                maxStr = str.charAt(i);
+            }
+        }
+        console.log(max, maxStr);
+        console.log(arr.length);
+        // max = 0;
+        // maxStr = '';
+        // for (var k in arr) {
+        //     console.log(arr[k]);
+        //     if (max < arr[k]) {
+        //         max = arr[k];
+        //         maxStr = k;
+        //     }
+        // }
+        // console.log(max, maxStr);
+
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

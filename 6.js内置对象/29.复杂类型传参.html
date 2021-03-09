@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function Star(name) {
+            this.name = name;
+        }
+        function fn(x) {
+            console.log(x.name);
+            x.name = '张三'
+            console.log(x.name);
+        }
+        var ldh = new Star('刘德华');
+        console.log(ldh.name);  //刘德华
+        fn(ldh);    // 刘德华 
+        //  张三
+        console.log(ldh.name);  //张三
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        //生成[0,1)之间的随机数
+        console.log(Math.random());
+        //两个数之间的随之整数，并包含这两个随机整数
+        function getRandom(min, max) {
+            return Math.floor(Math.random() * ((max - min + 1) + min))
+        }
+        console.log(getRandom(10, 20));
+
+        var arr = ['张三', '李四', '王五', '路六', '七七'];
+        console.log(arr[parseInt(getRandom(0, arr.length - 1))]);
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

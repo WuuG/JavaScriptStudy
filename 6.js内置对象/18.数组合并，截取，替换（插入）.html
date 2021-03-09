@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var arr1 = ['Jan', 'March', 'April', 'June'];
+        var arr2 = ['d', 'e', 'f'];
+        var arr3 = arr2.concat(arr1) //合并，不改变原数组，返回新数组 还可对多个数组（或值）进行操作
+        console.log(arr3); //["d", "e", "f", "Jan", "March", "April", "June"]
+        arr4 = arr3.slice(2, 5);//截取部分，不改变原数组，返回新数组 删的是2，3，4索引下的元素
+        console.log(arr4); //["f", "Jan", "March"]
+        arr4 = arr3.slice(2) //截取2后的所有
+        console.log(arr4); //["f", "Jan", "March", "April", "June"]
+        console.log(arr3.splice(1, 0, '第一个插入'));   //[]   插入一个值,会改变原数组的 
+        console.log(arr3);  //["d", "第一个插入", "e", "f", "Jan", "March", "April", "June"]
+        console.log(arr3.splice(1, 1, '替换')); //["第一个插入"]
+        console.log(arr3);  //["d", "替换", "e", "f", "Jan", "March", "April", "June"]
+        console.log(arr3.splice(1, 1));  //删除，1后一个元素
+        console.log(arr3);//["d", "e", "f", "Jan", "March", "April", "June"]
+        console.log(arr3.splice(1));    //删除1，后全部元素
+        console.log(arr3); //["d"]
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var num = Math.floor(Math.random() * (11));
+        console.log(num);
+        do {
+            var inputNum = parseInt(prompt('请输入一个1-10之间的整数'))
+            if (inputNum > 10 || inputNum < 1) {
+                alert('请输入正确的值（1-10）')
+                continue
+            }
+            if (inputNum == num) {
+                alert('回答正确')
+                break
+            }
+            inputNum > num ? alert('大于所输入值') : alert('小于所输入值')
+        } while (inputNum != num)
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var str = 'abvnabndbasdbsfbjvbnab';
+        // var num = 0;
+        var arr = [];
+        // while (str.indexOf('b', num) != -1) {
+        //     var index = str.indexOf('b', num);
+        //     arr[arr.length] = str.index;
+        //     num = str[index] + 1;
+        // }
+        var index = str.indexOf('b', 0);
+        while (index != -1) {
+            arr[arr.length] = index;
+            index = str.indexOf('b', ++index);
+        }
+        console.log(arr, arr.length);
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        //1.替换字符 str.replace('a','b')
+        var str1 = 'aaabbbccc'
+        console.log(str1.replace('a', 'b'));    //baabbbccc
+        console.log(str1);  //aaabbbccc 不会改变原数组哦
+        for (var i = 0; i < str1.length; i++) {
+            str1 = str1.replace('b', 'o');
+        }
+        console.log(str1); // aaaoooccc
+        // 2.split(分隔符)
+        var str3 = 'red & ks & green'
+        var arr = [];
+        arr = str3.split('&')   //空格占一个索引位
+        console.log(arr);
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
