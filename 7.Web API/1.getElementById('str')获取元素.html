@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+
+    </script>
+</head>
+
+<body>
+    <div id='time'>1997-10-11</div>
+    <script>
+        //1.页面是冲上往下加载的，所以需要先有标签，所以写在标签下面
+        //2.id是大小写敏感的字符串
+        //3.返回的是一个元素对象
+        var time = document.getElementById('time')
+        console.log(time);
+        console.log(typeof time);
+        //4.console.dir 打印元素对象，可查看里面的属性和方法
+        console.dir(time)
+    </script>
+</body>
+
+</html>

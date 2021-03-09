@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+
+</head>
+
+<body>
+    <div></div>
+    <p>
+        文字
+        <span>123</span>
+    </p>
+    <script>
+        var div = document.querySelector('div')
+        //1.innnerText不识别html标签的 非标准
+        div.innerText = '<strong>这里是innerText的修改</strong>';
+        //2.innerHTML识别html标签 w3c 标准
+        div.innerHTML = '<strong>这里是innerHTML的修改</strong>'
+        var p = document.querySelector('p')
+        console.log(p.innerText); //会去除空格和换行
+        console.log(p.innerHTML); //保留空格和换行
+    </script>
+</body>
+
+</html>

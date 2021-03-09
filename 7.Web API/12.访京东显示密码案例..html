@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        .box {
+            position: relative;
+            margin: 100px auto;
+            width: 400px;
+            height: 30px;
+            line-height: 28px;
+            border: 1px solid black;
+            padding-left: 10px;
+        }
+
+        input {
+            border: 0;
+            outline: none;
+            width: 300px;
+            height: 28px;
+            vertical-align: top;
+        }
+
+        button {
+            position: absolute;
+            top: 5px;
+            right: 13px;
+            width: 20px;
+            height: 20px;
+            line-height: 10px;
+            text-align: center;
+            border: none;
+            outline: none;
+            background-color: transparent;
+        }
+
+        img {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <input type="password" name="" id="input">
+        <button>
+            <img src="images/close.png" alt="">
+        </button>
+    </div>
+    <script>
+        var box = document.getElementsByClassName('box')
+        var input = document.querySelector('#input')
+        var btn = document.getElementsByTagName('button')
+        var img = document.querySelector('img')
+        console.log(box[0], input, btn[0]);
+        var flagForBtn = 0;
+        btn[0].onclick = function () {
+            console.log('点击了');
+            if (flagForBtn == 1) {
+                input.type = 'password'
+                flagForBtn = 0
+                img.src = 'images/close.png'
+            } else {
+                input.type = 'text'
+                flagForBtn = 1;
+                img.src = 'images/open.png'
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            /* box-sizing: border-box; 这个可不一定是万能的哦，在某些地方还会害人。  */
+        }
+
+        div {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            text-align: center;
+            color: #ef4f2b;
+            font-size: 30px;
+            border: 2px solid #ef4f2b;
+            padding: 2px;
+        }
+
+        .x {
+            position: absolute;
+            top: 7px;
+            left: -5px;
+            transform: translateX(-100%);
+            width: 20px;
+            height: 20px;
+            line-height: 16px;
+            text-align: center;
+            border: 2px solid #ef4f2b;
+            vertical-align: top;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        淘宝二维码
+        <img src="images/tao.png" alt="">
+        <span class="x" id="x">x</span>
+    </div>
+    <script>
+        var div = document.querySelector('div')
+        var x = document.querySelector('#x')
+        x.onclick = function () {
+            div.style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
