@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <button>按钮</button>
+    <p>ppp</p>
+    <div class="inner">
+        <div>222</div>
+    </div>
+
+    <script>
+
+        //1.document.write('')
+        var btn = document.querySelector('button')
+        btn.onclick = function () {
+            document.write('<div>123</div>')//
+        }
+        document.write('<div>123</div>')// 页面文档流执行完毕后，会产生页面重绘
+        // 2.innerHTML
+        var inner = document.querySelector('.inner')
+        inner.innerHTML = '<a href="javascipt:">百度</a>'
+        var d1 = +new Date();
+        for (var i = 0; i < 100; i++) {
+            //拼接字符串 因为字符串所占内存不会消去，所以速度会越来越慢。
+            inner.innerHTML += '<a href="javascipt:">百度</a>'
+        }
+        var d2 = +new Date();
+        console.log(d2 - d1);
+        //2.1用数组追加试试。
+        // 3.document.createElement()
+        inner.innerHTML += '<div></div>'
+        var a = document.createElement('a')
+        inner.appendChild(a)
+        var d3 = +new Date();
+
+        for (var i = 0; i < 100; i++) {
+            var a = document.createElement('a')
+            a.innerHTML = '百度'
+            a.href = 'javascript:'
+            inner.appendChild(a)
+        }
+        var d4 = +new Date();
+        console.log(d4 - d3);
+    </script>
+</body>
+
+</html>

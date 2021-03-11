@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        textarea {
+            resize: none;
+        }
+    </style>
+</head>
+
+<body>
+    <textarea name="" id="commend" cols="30" rows="10"></textarea>
+    <button>发布</button>
+    <ul>
+
+    </ul>
+    <script>
+        var btn = document.querySelector('button')
+        var ul = document.querySelector('ul')
+        btn.onclick = function () {
+            var commend = document.querySelector('#commend')
+            if (commend.value == '') {
+                alert('请输入评论内容')
+                return null;
+            }
+            console.log(commend.value);
+            var li = document.createElement('li');
+            li.innerHTML = commend.value
+            //这个把最新留言放到后面去了
+            // ul.appendChild(li);
+            ul.insertBefore(li, ul.children[0]);
+            commend.value = ''
+        }
+    </script>
+</body>
+
+</html>

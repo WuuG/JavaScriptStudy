@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div>熊</div>
+    <span>弟弟</span>
+    <script>
+        var div = document.querySelector('div')
+        // 1.nextSibling 下一个兄弟节点 无则返回null
+        console.log(div.nextSibling);   //下一个兄弟节点
+        console.log(div.previousSibling);   //前一个兄弟节点
+        //2.nextElementSibling 下一个元素节点 无则返回null 兼容性问题
+        console.log(div.nextElementSibling); //下一个兄弟元素
+        console.log(div.previousElementSibling); //前一个兄弟元素
+        //3.若考虑兼容性 则需要封装一个兼容性函数
+    </script>
+</body>
+
+</html>
