@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            transition: 2s;
+        }
+
+        .change {
+            background-color: purple;
+            transition: 2s;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">文本</div>
+    <script>
+        var div = document.querySelector('.box')
+        div.onclick = function () {
+            // div.className = 'change'
+            //若要保留原先的类名 可以用多类名选择器
+            div.className = 'change box'
+        }
+    </script>
+</body>
+
+</html>

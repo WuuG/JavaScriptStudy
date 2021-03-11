@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <div id="demo" data_index='冰箱' class="none" delete='0'></div>
+    <script>
+        var div = document.querySelector('div')
+        // 1.第一种方法 获取元素自带的属性
+        console.log(div.id);
+        // 2.第二种方法 获取程序员所添加的自定义属性
+        console.log(div.getAttribute('id'));
+        console.log(div.getAttribute('data_index'));
+
+        // 1.设置元素属性值
+        div.id = 'text'
+        // 2.div.setAttribute('属性名', '值') 针对自定义属性
+        div.setAttribute('data_index', '电脑')
+        div.setAttribute('class', 'yes')
+
+        // 1.移除属性元素值
+        div.removeAttribute('delete')
+    </script>
+</body>
+
+</html>

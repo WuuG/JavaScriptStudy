@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 600px;
+            margin: 100px auto;
+        }
+
+        input {
+            vertical-align: bottom;
+        }
+
+        .text {
+            padding-left: 25px;
+            background: url(images/mess.png) no-repeat 4px 4px;
+        }
+
+        .right {
+            color: green;
+            background-image: url(images/right.png);
+        }
+
+        .wrong {
+            color: red;
+            background-image: url(images/wrong.png);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <input type="text">
+    <span>
+        请输入值
+    </span> -->
+    <div class="register">
+        <input type="password" placeholder="请输入密码">
+        <span class="text">请输入6~16位密码</span>
+    </div>
+    <script>
+        //1.第一种自己写的奇怪的做法。
+        // var input = document.querySelector('input')
+        // var img = document.querySelector('img')
+        // var text = document.querySelector('span')
+        // input.onblur = function () {
+        //     if (input.value.length > 16 || input.value.length < 6) {
+        //         text.style.color = 'red'
+        //         text.innerHTML = '<img src="images/wrong.png" alt=""> 密码需要在6-16位之间'
+        //     } else {
+        //         text.innerHTML = '<img src="images/right.png" alt=""> 您输入的正确'
+        //         text.style.color = 'green'
+        //     }
+        // }
+        // 2.课上写法
+        var input = document.querySelector('input')
+        var text = document.querySelector('.text')
+        input.onblur = function () {
+            if (this.value.length < 6 || this.value.length > 16) {
+                text.className = 'text wrong';
+            } else {
+                text.className = 'text right'
+                text.innerHTML = '您输入的正确'
+            }
+        }
+
+    </script>
+</body>
+
+</html>

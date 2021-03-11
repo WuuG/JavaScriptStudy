@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        ul {
+            margin: 100px auto;
+            width: 50%;
+            display: flex;
+            list-style: none;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        ul li {
+            display: flex;
+            flex: 25%;
+            height: 100px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo {
+            margin-top: 10px;
+            width: 25px;
+            height: 25px;
+            background-image: url(images/sprite.png);
+            /* background-position: 0 0; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <ul>
+            <li>
+                <div class="logo"></div>
+            </li>
+            <li>
+                <div class="logo"></div>
+            </li>
+            <li>
+                <div class="logo"></div>
+            </li>
+            <li>
+                <div class="logo"></div>
+            </li>
+            <li>
+                <div class="logo"></div>
+            </li>
+            <li>
+                <div class="logo"></div>
+            </li>
+            <li>
+                <div class="logo"></div>
+            </li>
+            <li>
+                <div class="logo"></div>
+            </li>
+            <li>
+                <div class="logo"></div>
+            </li>
+            <li>
+                <div class="logo"></div>
+            </li>
+            <li>
+                <div class="logo"></div>
+            </li>
+            <li>
+                <div class="logo"></div>
+            </li>
+        </ul>
+    </div>
+    <script>
+        var ul = document.querySelector('ul');
+        var li = document.querySelectorAll('li');
+        var logo = document.querySelectorAll('.logo')
+        console.log(li);
+        for (var i = 0; i < li.length; i++) {
+            var index = -44 * i;
+            logo[i].style.backgroundPosition = ' 0  ' + index + 'px'
+        }
+    </script>
+</body>
+
+</html>

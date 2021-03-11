@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .clicked {
+            background-color: seagreen;
+        }
+
+        .un {
+            background-color: none;
+        }
+
+        button {
+            margin: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <button>按钮1</button><button>按钮2</button><button>按钮3</button><button>按钮4</button><button>按钮5</button>
+    <script>
+        var btn = document.getElementsByTagName('button')
+        for (var i = 0; i < btn.length; i++) {
+            btn[i].onclick = function () {
+                for (var j = 0; j < btn.length; j++) {
+                    console.log(btn[j]);
+                    //这个语句并不会建一个行内样式，让某个行内样式消失罢了，而不会让修改内部样式表的类名
+                    btn[j].style.color = 'red'
+                    btn[j].style.backgroundColor = '';
+                    // btn[j].className = 'un'
+                    console.log('进入了');
+                }
+                this.style.backgroundColor = 'seagreen'
+                //这里若是用改类名的方法来实现，上面也需要修改类名。否则不会实现排他
+                // this.className = 'clicked'
+            }
+        }
+    </script>
+</body>
+
+</html>
