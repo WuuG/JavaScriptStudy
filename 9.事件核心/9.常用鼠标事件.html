@@ -12,8 +12,16 @@
 </head>
 
 <body>
+    这里有一份文字
     <script>
-
+        //禁止鼠标右键
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        })
+        //禁止鼠标选中
+        document.addEventListener('selectstart', function (e) {
+            e.preventDefault()
+        })
     </script>
 </body>
 

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            margin: 100px auto;
+            width: 200px;
+            height: 200px;
+            background-color: seagreen;
+        }
+    </style>
+</head>
+
+<body>
+    <div>123</div>
+    <script>
+        var div = document.querySelector('div')
+        //1.event 是一个事件对象，写至监听函数内 当作形参
+        //2.事件对象只有事件才会存在，系统自动创建的，不需要传递参数
+        //3.事件对象是事件一系列相关数据的集合， 不仅仅是一个事件还包括其他相关参数。
+        div.onclick = function (event) {
+            console.log(event);
+            //以下是兼容性写法
+            // e = e || window.event;
+            // console.log(e);
+        }
+        div.addEventListener('click', function (e) {    //4.事件对象可以自己命名的 不一定要event
+            console.log(e);
+        })
+        //5.存在兼容性问题 通过window.event 获取
+    </script>
+</body>
+
+</html>

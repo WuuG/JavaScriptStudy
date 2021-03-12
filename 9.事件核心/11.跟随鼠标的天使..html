@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        img {
+            position: absolute;
+            left: -100px;
+            top: -100px;
+            cursor: none;
+
+        }
+    </style>
+</head>
+
+<body>
+    <img src="images/angel.gif" alt="">
+    <script>
+        var angle = document.querySelector('img')
+        document.addEventListener('mousemove', function (e) {
+            console.log(e.pageX, e.pageY);
+            angle.style.left = e.pageX + 'px';
+            angle.style.top = e.pageY + 'px'
+            angle.style.transform = 'translate(-50%, -50%)'
+        })
+    </script>
+</body>
+
+</html>

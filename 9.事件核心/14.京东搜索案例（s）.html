@@ -12,8 +12,14 @@
 </head>
 
 <body>
+    <input type="text">
     <script>
-
+        var input = document.querySelector('input')
+        document.addEventListener('keyup', function (e) {
+            if (e.keyCode === 83) {
+                input.focus();
+            }
+        })
     </script>
 </body>
 

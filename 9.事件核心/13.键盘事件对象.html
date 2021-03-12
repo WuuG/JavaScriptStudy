@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <script>
+        document.addEventListener('keyup', function (e) {
+            console.log(e.keyCode);
+            console.log(e.key); //这个有较大的兼容性问题 很多浏览器无法识别
+            //1.keyup keydown 事件不区分大小写 a 与A的ASCII都是65
+            if (e.keyCode === 65) {
+                alert('a')
+            } else {
+                alert('other')
+            }
+        })
+        document.addEventListener('keypress', function (e) {
+            console.log(e.keyCode);//区分大小写
+        })
+    </script>
+</body>
+
+</html>

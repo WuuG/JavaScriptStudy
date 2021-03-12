@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .father {
+            overflow: hidden;
+            margin: 0 auto;
+            width: 200px;
+            height: 200px;
+            background-color: skyblue;
+        }
+
+        .son {
+            margin: 25px auto;
+            width: 100px;
+            height: 100px;
+            background-color: seagreen;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="father">
+        <div class="son"></div>
+    </div>
+    <script>
+        var son = document.querySelector('.son')
+        //捕获
+        // son.addEventListener('click', function () {
+        //     alert('son')
+        // }, true) //当第三个参数为true时 处于捕获阶段
+        var father = document.querySelector('.father')
+        // father.addEventListener('click', function () {
+        //     alert('father')
+        // }, true)
+        //冒泡
+        son.addEventListener('click', function () {
+            alert('son')
+        }, true) //当第三个参数为true时 处于捕获阶段
+        father.addEventListener('click', function () {
+            alert('father')
+        }, true)
+        document.addEventListener('click', function () {
+            alert('document')
+        }, true)
+    </script>
+</body>
+
+</html>

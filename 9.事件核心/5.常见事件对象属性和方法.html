@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 100px;
+            height: 100px;
+            background-color: seagreen;
+        }
+    </style>
+</head>
+
+<body>
+    <div>123</div>
+    <ul>
+        <li>abc1</li>
+        <li>abc2</li>
+        <li>abc3</li>
+    </ul>
+    <script>
+        var div = document.querySelector('div')
+        div.addEventListener('click', function (e) {
+            console.log(e.target); //<div>123</div> 返回触发事件的对象
+            console.log(this);  //  this返回的是绑定事件的对象
+
+        })
+        var ul = document.querySelector('ul')
+        ul.addEventListener('click', function (e) {
+            console.log(e.target);  //li    li是触发对象
+            console.log(this);  //ul 是绑定对象
+            console.log(e.currentTarget);   //和this非常相似
+        })
+
+    </script>
+</body>
+
+</html>

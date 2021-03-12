@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <button>传统</button>
+    <button>方法监听</button>
+    <button>兼容监听</button>
+    <script>
+        //1.传统方法
+        var btns = document.querySelectorAll('button')
+        btns[0].onclick = function () {
+            //事件的唯一性，会被覆盖
+            console.log('11');
+        }
+        btns[0].onclick = function () {
+            console.log('22');
+        }
+        //2.事件监听方式
+        //2.1同一个事件可以添加多个处理程序哦
+        //2.2事件类型 是字符串 且不需要on
+        //EventTarget.addEventListener('事件类型', function () { },)
+        btns[1].addEventListener('click', function () {
+            alert('22');
+        })
+        btns[1].addEventListener('click', function () {
+            alert('33');
+        })
+        // 3.attachEvent ie9以前
+        btns[2].attachEvent('onclick', function () {
+            alert('11')
+        })
+        // 4.兼容性解决方案 wiz 12.事件核心
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .search {
+            position: relative;
+            margin: 100px auto;
+            width: 200px;
+            height: 200px;
+        }
+
+        .zoom {
+            display: none;
+            position: absolute;
+            top: -40px;
+            left: 0;
+            min-width: 40px;
+            height: 30px;
+            line-height: 30px;
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+            font-size: 25px;
+        }
+
+        .zoom::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 26px;
+            width: 0;
+            height: 0;
+            border: 5px solid #fff;
+            border-left-color: transparent;
+            border-bottom-color: transparent;
+            transform: rotate(135deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="search">
+        <div class="zoom"></div>
+        <input type="text" placeholder="请输入快递单号">
+    </div>
+    <script>
+        var input = document.querySelector('input')
+        var zoom = document.querySelector('.zoom')
+        input.addEventListener('keyup', function (e) {
+            if (input.value.length != 0) {
+                zoom.style.display = 'block'
+                zoom.innerHTML = input.value
+            } else {
+                zoom.style.display = 'none'
+            }
+        })
+        input.addEventListener('focus', function () {
+            if (input.value.length != 0) {
+                zoom.style.display = 'block'
+            }
+        })
+        input.addEventListener('blur', function () {
+            zoom.style.display = 'none'
+        })
+    </script>
+</body>
+
+</html>
