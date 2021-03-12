@@ -12,8 +12,15 @@
 </head>
 
 <body>
+    <button>停止爆炸</button>
     <script>
-
+        var time1 = setTimeout(function () {
+            console.log('爆炸');
+        }, 2000)
+        var btn = document.querySelector('button')
+        btn.addEventListener('click', function () {
+            clearTimeout(time1)
+        })
     </script>
 </body>
 

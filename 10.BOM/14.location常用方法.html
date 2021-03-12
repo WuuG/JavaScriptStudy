@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <button>点击</button>
+    <script>
+        var btn = document.querySelector('button')
+        btn.addEventListener('click', function () {
+            location.assign('http://www.baidu.com');    // 记录浏览历史
+            location.replace('http://www.baidu.com')    //跳转页面，不记录浏览历史
+            location.reload('http://www.baidu.com') //刷新页面
+        })
+    </script>
+</body>
+
+</html>

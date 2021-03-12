@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <script>
+        console.log(1); //第一个执行
+        document.onclick = function () {
+            console.log('click');   //点击后放入消息队列
+        }
+        console.log(2); //第二个执行
+        setTimeout(function () {
+            console.log(3)  //3秒后放进消息队列，待同步任务结束后，再将队列内的任务移至同步任务队列中
+        }, 3000)
+    </script>
+</body>
+
+</html>

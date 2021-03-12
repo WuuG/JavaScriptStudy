@@ -12,8 +12,14 @@
 </head>
 
 <body>
+    <h1>这是列表页</h1>
+    <button>返回</button>
     <script>
-
+        var btn = document.querySelector('button')
+        btn.addEventListener('click', function () {
+            // history.back();
+            history.go(-1)  //向后返回一页 与上面相同
+        })
     </script>
 </body>
 

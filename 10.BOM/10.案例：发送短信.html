@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <input type="text"> <button>发送短信</button>
+    <script>
+        var btn = document.querySelector('button')
+        var time60 = 59;
+        var timer = null;
+        btn.addEventListener('click', function () {
+            btn.disabled = true
+            btn.innerHTML = '还剩下60秒'
+            timer = setInterval(function () {
+                if (time60 == 0) {
+                    clearInterval(timer)
+                    time60 = 60;
+                    btn.innerHTML = '发送短信'  //这里改成this会出错的 因为这里this指向window
+                    btn.disabled = false
+                } else {
+                    btn.innerHTML = '还剩下' + time60 + '秒'
+                    time60--;
+                    btn.disabled = true
+                }
+            }, 1000)
+        })
+
+    </script>
+</body>
+
+</html>

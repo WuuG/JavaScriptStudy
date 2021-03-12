@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <script>
+        // 1.window.setTimeout(调用函数，延时时间) 调用时window可以省略
+        //2.延时时间是毫秒单位
+        //3.页面中的定时器可以添加标识符
+        setTimeout(function () {
+            console.log(11);
+        }, 1000)
+        var fn = function () {
+            console.log('时间到');
+        }
+        var timer1 = setTimeout(fn, 2000)
+        var timer2 = setTimeout('fn()', 3000)   //  字符串形式 ，不太推荐使用
+
+    </script>
+</body>
+
+</html>
