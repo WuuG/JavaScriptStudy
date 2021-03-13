@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 200px;
+            height: 200px;
+            background-color: seagreen;
+            border: 10px solid skyblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div>1</div>
+    <script>
+        div = document.querySelector('div')
+        console.log(div.clientWidth);   // 不包含边框
+        console.log(div.clientLeft);    //  获取边框左侧大小
+        console.log(div.offsetWidth);   // 包含边框
+    </script>
+</body>
+
+</html>

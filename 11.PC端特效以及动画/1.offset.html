@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .father {
+            position: relative;
+            padding: 10px;
+            margin: 150px;
+            width: 100px;
+            height: 100px;
+            background-color: seagreen;
+            border: 10px solid red;
+        }
+
+        .son {
+            width: 10px;
+            height: 20px;
+            margin-left: 10px;
+            background-color: skyblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="father">
+        <div class="son"></div>
+    </div>
+    <script>
+        var father = document.querySelector('.father')
+        var son = document.querySelector('.son')
+        console.log(father.offsetTop);
+        console.log(father.offsetLeft);
+        //以带有定位的父亲为准
+        console.log(son.offsetTop);
+        console.log(son.offsetLeft);
+        //计算的是盒子大小是包含 padding border的
+        console.log(father.offsetWidth);
+        console.log(father.offsetHeight);
+        //返回带有定位的父亲
+        console.log(son.offsetParent); //返回了father（带有定位）
+        console.log(son.parentNode);   //返回亲父亲
+    </script>
+</body>
+
+</html>

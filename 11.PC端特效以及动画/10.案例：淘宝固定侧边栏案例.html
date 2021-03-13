@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .slider-bar {
+            position: absolute;
+            left: 50%;
+            top: 300px;
+            margin-left: 600px;
+            width: 45px;
+            height: 130px;
+            background-color: pink;
+        }
+
+
+        .w {
+            width: 1200px;
+            margin: 10px auto;
+        }
+
+        .header {
+            height: 150px;
+            background-color: purple;
+        }
+
+        .banner {
+            height: 150px;
+            background-color: skyblue;
+        }
+
+        .main {
+            height: 1000px;
+            background-color: yellowgreen;
+        }
+
+        span {
+            display: none;
+            position: absolute;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slider-bar">
+        <span class="goBack">返回顶部</span>
+    </div>
+    <div class="header w">头部区域</div>
+    <div class="banner w">banner区域</div>
+    <div class="main w">主体部分</div>
+    <script>
+        var sideBar = document.querySelector('.slider-bar');
+        var banner = document.querySelector('.banner')
+        var bannerTop = banner.offsetTop;
+        var mainTop = banner.nextElementSibling.offsetTop;
+        var span = document.querySelector('span')
+        console.log(bannerTop);
+        document.addEventListener('scroll', function () {
+            // console.log(sideBar.offsetTop);
+            // console.log(window.pageYOffset);
+            if (window.pageYOffset <= bannerTop) {
+                sideBar.style.position = 'absolute'
+                sideBar.style.top = '300px';
+                sideBar.firstElementChild.style.display = 'none'
+                // console.log(sideBar.firstElementChild);
+
+            } else if (window.pageYOffset > bannerTop && window.pageYOffset < mainTop) {
+                sideBar.style.position = 'fixed'
+                sideBar.style.top = (300 - bannerTop) + 'px';
+                sideBar.firstElementChild.style.display = 'none'
+
+            } else {
+                sideBar.firstElementChild.style.display = 'block'
+            }
+        })
+        // span.addEventListener('click', function () {
+        //     window.pageYOffset = 0;
+        // })
+    </script>
+</body>
+
+</html>

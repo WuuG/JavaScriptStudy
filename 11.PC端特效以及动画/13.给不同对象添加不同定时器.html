@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background-color: seagreen;
+
+        }
+
+        h1 {
+            display: block;
+            width: 100px;
+            height: 100px;
+            position: relative;
+            left: 0;
+            top: 300px;
+            background-color: skyblue;
+        }
+    </style>
+</head>
+
+<body>
+    <button>点击才走</button>
+    <div>
+    </div>
+    <h1></h1>
+    <script>
+        var div = document.querySelector('div')
+        var h1 = document.querySelector('h1')
+        function animate(obj, target) {
+            clearInterval(obj.timer)
+            obj.timer = setInterval(function () {
+                //不断点击按钮，速度会越来越快，因为开启太多定时器。
+                //解决方案：清除以前的定时器就好，仅保留一个定时器。
+                if (obj.offsetLeft >= target) {
+                    clearInterval(obj.timer)
+                    return 0
+                }
+                obj.style.left = obj.offsetLeft + 1 + 'px'
+            }, 30)
+        }
+        var btn = document.querySelector('button')
+        btn.addEventListener('click', function () {
+            animate(h1, 400)
+        })
+        animate(div, 200);
+    </script>
+</body>
+
+</html>

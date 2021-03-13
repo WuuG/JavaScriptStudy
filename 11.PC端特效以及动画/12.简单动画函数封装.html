@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background-color: seagreen;
+
+        }
+
+        h1 {
+            display: block;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            left: 0;
+            top: 300px;
+            background-color: skyblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+    </div>
+    <h1></h1>
+    <script>
+        var div = document.querySelector('div')
+        var h1 = document.querySelector('h1')
+        function animate(obj, target) {
+            var timer = setInterval(function () {
+                if (obj.offsetLeft >= target) {
+                    clearInterval(timer)
+                }
+                obj.style.left = obj.offsetLeft + 1 + 'px'
+            }, 20)
+        }
+        animate(div, 200);
+        animate(h1, 400)
+    </script>
+</body>
+
+</html>

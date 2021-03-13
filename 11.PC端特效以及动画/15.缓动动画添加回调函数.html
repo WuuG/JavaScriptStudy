@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            position: absolute;
+            top: 100px;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background-color: seagreen;
+        }
+
+        h1 {
+            display: block;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            left: 0;
+            top: 300px;
+            background-color: skyblue;
+        }
+
+        .callback {
+            display: block;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            left: 0;
+            top: 300px;
+            background-color: skyblue;
+        }
+    </style>
+</head>
+
+<body>
+    <button>点击才走</button>
+    <div>
+    </div>
+    <h1></h1>
+    <button>刷新</button>
+    <button>500</button>
+    <button>800</button>
+    <script>
+        var div = document.querySelector('div')
+        var h1 = document.querySelector('h1')
+        function animate(obj, target, callback) {
+            clearInterval(obj.timer)
+            obj.timer = setInterval(function () {
+                //不断点击按钮，速度会越来越快，因为开启太多定时器。
+                //解决方案：清除以前的定时器就好，仅保留一个定时器。
+                var step = (target - obj.offsetLeft) / 10
+                //首先需要知道的是，用上面那个公式，不会存在一步跳过目标值的问题，因为setp的绝对值一定小与目标与目前位置的差值。
+                //步长存在一个上下取整的问题，若是取整不对的话，会使得step取整取到0，导致没有办法移动，并且也无法清除计时器，导致不断循环。
+                step = step > 0 ? Math.ceil(step) : Math.floor(step);
+                console.log(step);
+                if (obj.offsetLeft == target) {
+                    clearInterval(obj.timer)
+                    //回调函数写到定时器结束后使用，记得判断是否有这个函数
+                    if (callback) {
+                        callback();
+                    }
+                }
+                //步长公式 （目标值-现在的位置）/10
+                obj.style.left = obj.offsetLeft + step + 'px'
+            }, 15)
+        }
+        var btn = document.querySelectorAll('button')
+        btn[0].addEventListener('click', function () {
+            animate(h1, 400)
+        })
+        btn[1].addEventListener('click', function () {
+            location.reload()
+        })
+        btn[2].addEventListener('click', function () {
+            animate(div, 500)
+        })
+        btn[3].addEventListener('click', function () {
+            animate(div, 800, function () {
+                alert('800动画结束啦，回调函数出来啦！')
+                div.className = 'callback'
+            });
+        })
+    </script>
+</body>
+
+</html>

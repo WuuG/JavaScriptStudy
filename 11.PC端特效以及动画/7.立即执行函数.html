@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <script>
+        //两种立即执行函数的写法
+        //1.(function(){}) ()
+        (function (a) {
+            console.log(a);
+        })(33); //  这里需要分号结尾 否则会报错
+        //2.(function(){}())
+        (function (a) {
+            console.log(a);
+        }(44))
+        // 3.立即执行函数最大的作用是 独立创建了一个作用域，变量均是局部变量，不会有命名冲突的情况
+    </script>
+</body>
+
+</html>

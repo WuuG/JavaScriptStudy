@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 100px;
+            height: 100px;
+            background-color: seagreen;
+            padding: 10px;
+            border: 10px solid skyblue;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        氨基酸的卢卡斯大家
+        氨基酸的卢卡斯大家
+        氨基酸的卢卡斯大家
+        氨基酸的卢卡斯大家
+        氨基酸的卢卡斯大家
+        氨基酸的卢卡斯大家
+        氨基酸的卢卡斯大家
+        氨基酸的卢卡斯大家
+        氨基酸的卢卡斯大家
+        氨基酸的卢卡斯大家
+        氨基酸的卢卡斯大家
+    </div>
+    <script>
+        var div = document.querySelector('div')
+        div.addEventListener('scroll', function () {
+            console.log(div.scrollTop); //被卷去的上侧距离
+        })
+        console.log(div.scrollHeight);  //里面内容盒子的所占空间的大小
+    </script>
+</body>
+
+</html>
