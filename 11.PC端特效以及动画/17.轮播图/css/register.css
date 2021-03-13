@@ -1,0 +1,137 @@
+.w {
+    width: 1200px;
+    margin: 0 auto;
+}
+.header {
+    overflow: hidden;
+    height: 83px;
+    border-bottom: 2px solid#b31610;
+}
+.header a {
+    margin: 16px 0 0 4px;
+    display: block;
+    width: 171px;
+    height: 61px;
+}
+.shortcut {
+    height: 42px;
+    margin-top: 20px;
+    border: 1px solid #dfdfdf;
+    background-color: #ececec;
+    line-height: 42px;
+}
+.shortcut h3 {
+    padding-left: 10px;
+    float: left;
+    font-size: 18px;
+    font-weight: normal;
+}
+.shortcut p {
+    padding-right: 10px;
+    float: right;
+    font-size: 14px;
+}
+.shortcut p a {
+    color: #ca111a;
+}
+.register_area {
+    margin: 54px auto 0;
+    width: 542px;
+    height: 368px;
+}
+.register_area ul li {
+    margin-bottom: 20px;
+    height: 36px;
+}
+.register_area ul li:nth-child(4) {
+    height: 12px;
+}
+.register_area ul li label {
+    float: left;
+    display: block;
+    width: 88px;
+    height: 36px;
+    text-align: right;
+    line-height: 36px;
+}
+.register_area ul li input {
+    float: left;
+    padding-left: 12px;
+    width: 240px;
+    height: 36px;
+    border: 1px solid #b3b3b3;
+}
+.register_area ul li .error {
+    float: left;
+    margin-left: 10px;
+    height: 36px;
+    vertical-align: middle;
+    line-height: 36px;
+    color: #df3033;
+}
+.register_area ul li span {
+    margin: 0 9px 0 166px;
+    float: left;
+    color: #b2b2b2;
+}
+.register_area ul .check a {
+    color: #1ba1e6;
+}
+.register_area ul li .ruo,
+.register_area ul li .zhong,
+.register_area ul li .qiang {
+    float: left;
+    margin-right: 1px;
+    width: 34px;
+    height: 13px;
+    color: #ffffff;
+    text-align: center;
+    line-height: 13px;
+}
+.register_area ul li .ruo {
+    background-color: #e00900;
+}
+.register_area ul li .zhong {
+    background-color: #39ba36;
+}
+.register_area ul li .qiang {
+    background-color: #f99200;
+}
+.register_area .check {
+    margin: 33px 0 0 85px;
+    width: 222px;
+    height: 15px;
+    line-height: 15px;
+}
+.register_area .check .agreement {
+    float: left;
+    margin-right: 12px;
+    width: 16px;
+    height: 15px;
+}
+.register_area .btn {
+    margin: 50px 0 0 96px;
+    width: 200px;
+    height: 34px;
+    background-color: #ca111a;
+    color: #ffffff;
+    text-align: center;
+    line-height: 34px;
+    cursor: pointer;
+}
+.footer .mod_copyright {
+    margin-top: 57px;
+    height: 119px;
+    border-top: 1px solid#e9e9e9;
+}
+.footer .mod_copyright .links {
+    text-align: center;
+    margin-top: 20px;
+}
+.footer .mod_copyright p {
+    margin-top: 15px;
+    text-align: center;
+}
+.footer .mod_copyright p:last-child {
+    margin-top: 10px;
+}

@@ -1,0 +1,177 @@
+.header .logo .sk_img {
+    overflow: hidden;
+    position: absolute;
+    top: 11px;
+    right: -85px;
+    padding-left: 14px;
+    width: 71px;
+    height: 32px;
+    border-left: 1px solid #c81523;
+    line-height: 32px;
+    text-align: right;
+}
+.nav .w ul {
+    float: left;
+}
+.nav .w ul li {
+    float: left;
+}
+.nav .w ul li a {
+    display: block;
+    line-height: 45px;
+    text-align: center;
+}
+.nav .w .sk_list li a {
+    width: 117px;
+    height: 45px;
+    color: #000000;
+    font-size: 16px;
+    font-weight: 700;
+}
+.nav .w .sk_content li:first-child a {
+    padding-left: 25px;
+}
+.nav .w .sk_content li a {
+    padding: 2px 0 0 46px;
+    display: block;
+    font-size: 14px;
+}
+.nav .w .sk_content li:last-of-type a::after {
+    content: "\e91e";
+    font-family: "icomoon";
+}
+.banner {
+    overflow: hidden;
+    height: 120px;
+    background-color: seagreen;
+    background: url(../images/list_banner_backfround.png) no-repeat center center;
+    text-align: center;
+}
+.banner h3 {
+    margin-top: 21px;
+    height: 29px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #c81523;
+}
+.banner h3::before {
+    content: "\e959";
+    font-family: "icomoon";
+}
+.banner p {
+    margin-top: 25px;
+    height: 15px;
+    line-height: 15px;
+    font-size: 16px;
+    color: #000000;
+}
+.banner p::before {
+    padding-right: 21px;
+    content: "————";
+}
+.banner p::after {
+    padding-left: 21px;
+
+    content: "————";
+}
+.list_content ul {
+    position: relative;
+    width: 1300px;
+}
+.list_content ul li {
+    float: left;
+    margin: 13px 13px 0 0;
+}
+.list_content ul li a {
+    display: block;
+    width: 290px;
+    height: 460px;
+    text-align: center;
+    border: 1px solid transparent;
+}
+.list_content ul li a:hover {
+    border: 1px solid #c81523;
+}
+.list_content ul li a .img {
+    margin-top: 1px;
+    overflow: hidden;
+    width: 283px;
+    height: 290px;
+}
+.list_content ul li a p {
+    margin-left: 12px;
+    width: 265px;
+    height: 35px;
+    font-size: 14px;
+    text-align: left;
+    line-height: 19px;
+    color: #a0a0a0;
+}
+.list_content ul li a .money {
+    margin: 17px 0 0 12px;
+    height: 19px;
+    text-align: left;
+}
+.list_content ul li a .money h4 {
+    display: inline;
+    height: 19px;
+    font-size: 22px;
+    color: #e60012;
+    line-height: 18px;
+}
+.list_content ul li a .money h4::before {
+    content: "￥";
+    font-size: 14px;
+}
+.list_content ul li a .money span {
+    text-decoration: line-through;
+    font-size: 14px;
+    color: #c0c0c0;
+}
+.list_content ul li a .purchase {
+    margin: 9px 0 0 12px;
+    height: 14px;
+}
+.list_content ul li a .purchase span {
+    float: left;
+    height: 14px;
+    line-height: 14px;
+}
+.list_content ul li a .purchase .bar {
+    margin: 2px 12px 0 12px;
+    float: left;
+    width: 132px;
+    height: 12px;
+    border: 1px solid #ed282e;
+    border-radius: 4px;
+}
+.list_content ul li a .purchase .cur_bar {
+    width: 117px;
+    height: 10px;
+    background-color: #ed282e;
+    border-radius: 2px 0 0 2px;
+}
+.list_content ul li a .btn {
+    margin: 24px 0 0 -1px;
+    width: 290px;
+    height: 50px;
+    background-color: #b1191a;
+    color: #ffffff;
+}
+.list_content ul .back {
+    position: absolute;
+    padding-top: 14px;
+    right: 24px;
+    bottom: 0;
+    width: 68px;
+    height: 68px;
+    background-color: #b1191a;
+    font-family: "icomoon";
+    font-size: 20px;
+    color: #f7f7f7;
+    text-align: center;
+    line-height: 17px;
+}
+.footer {
+    margin-top: 283px;
+}
