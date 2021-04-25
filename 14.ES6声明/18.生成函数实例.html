@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      //1s 输出111   2s后输出222 3s后输出 333
+      //回调地狱
+
+      //   setTimeout(() => {
+      //     console.log(222);
+      //     setTimeout(() => {
+      //       console.log(333);
+      //     }, 3000);
+      //   }, 2000);
+      // }, 1000);
+      //这样写，不行的，因为每次调用的都是一个新的gen。
+      // function printByTime(delay) {
+      //   setTimeout(() => {
+      //     console.log(delay);
+      //     gen().next();
+      //   }, delay);
+      // }
+      // function* gen() {
+      //   yield printByTime(1000);
+      //   yield printByTime(2000);
+      //   yield printByTime(3000);
+      // }
+      // gen().next();
+      function printByTime(delay) {
+        setTimeout(() => {
+          console.log(delay);
+          iterator.next();
+        }, delay);
+      }
+      function* gen() {
+        yield printByTime(1000);
+        yield printByTime(2000);
+        yield printByTime(3000);
+      }
+      //这里需要用iterator接受，为了实现是在同一个迭代器运行
+      const iterator = gen();
+      iterator.next();
+    </script>
+  </body>
+</html>

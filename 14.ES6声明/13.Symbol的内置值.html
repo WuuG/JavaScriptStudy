@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      // class Person {
+      //   //当其他对象使用instanof运算符时,判断是否属于这个类的时候，会调用这个方法
+      //   static [Symbol.hasInstance](params) {
+      //     console.log(params);
+      //     console.log("检测类型?");
+      //     return true;
+      //   }
+      // }
+      // let a = new Person();
+      // console.log(a instanceof Person);
+      const a = [1, 2, 3];
+      const b = [4, 5, 6];
+      b[Symbol.isConcatSpreadable] = false; //数组内部与Symbol还有关系吗？
+      console.log(a.concat(b));
+    </script>
+  </body>
+</html>

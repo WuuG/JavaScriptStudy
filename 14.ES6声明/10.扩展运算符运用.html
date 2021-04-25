@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <div></div>
+    <div></div>
+    <div></div>
+    <script>
+      // 1.数组合并
+      const kuaizi = ["a", "b"];
+      const fh = ["c", "d"];
+      const fnKuaizi = [...kuaizi, ...fh];
+      console.log(fnKuaizi);
+      // 2,数组的可溶 浅拷贝
+      const newkuaiz = [...fnKuaizi];
+      console.log(newkuaiz);
+      // 3.将伪数组转换为真数组
+      divs = document.querySelectorAll("div");
+      // divs.concat("a"); //报错
+      console.log(divs); //伪数组，对象
+      divs1 = [...divs];
+      divs1.splice(4, 1, "a");
+      console.log(divs1);
+    </script>
+  </body>
+</html>

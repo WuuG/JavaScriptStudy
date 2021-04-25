@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>自定义遍历数据</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      //遍历banji内的stus,但不能直接通过banji.sus获取
+      const banji = {
+        name: "电子信息二班",
+        stus: ["xiaohong", "xiaoming", "tian", "lwx"],
+        [Symbol.iterator]() {
+          let index = 0;
+          //需要返回一个指针对象
+          return {
+            //返回的是一个由value和done的对象
+            next: () => {
+              //对value和done进行处理,确定合适done,注意下面的this，如果不是箭头函数，所指向的this是return的空数组
+              console.log(this);
+              if (index < this.stus.length) {
+                const result = { value: this.stus[index], done: false };
+                index++;
+                return result;
+              } else {
+                return { value: undefined, done: true };
+              }
+            },
+          };
+        },
+      };
+      for (let v of banji) {
+        console.log(v);
+      }
+    </script>
+  </body>
+</html>

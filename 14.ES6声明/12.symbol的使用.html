@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      //给对象添加属性的方法
+      let game = {
+        name: "pubg",
+        up() {
+          console.log("up");
+        },
+        down() {
+          console.log("dwon");
+        },
+      };
+      game[Symbol()] = () => {
+        console.log("up");
+      };
+      game[Symbol()] = () => {
+        console.log("down");
+      };
+      console.log(game);
+      let game1 = {
+        name: "dota",
+        [Symbol("up")]: () => {
+          console.log("up");
+        },
+      };
+      console.log(game1);
+    </script>
+  </body>
+</html>

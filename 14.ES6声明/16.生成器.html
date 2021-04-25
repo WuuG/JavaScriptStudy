@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      //生成器是一个特殊的函数,用于异步编程
+      //异步编程 其他解决方案 使用纯回调函数
+      function* gen() {
+        //yield 分隔符，将代码分成四块，迭代调用
+        console.log("hello generator");
+        yield "啥意思？";
+        console.log(222);
+        yield "什么用？";
+        console.log(333);
+        yield "函数代码的分隔符?";
+        console.log(444);
+      }
+      let iterator = gen();
+      console.log(iterator);
+      // next()函数会运行到yield为止，yield相对与这个代码块的return
+      iterator.next();
+      iterator.next();
+      //这里如果用上面的 iterator是输出空的，iterator已经到结尾了
+      for (v of gen()) {
+        console.log(v);
+      }
+    </script>
+  </body>
+</html>

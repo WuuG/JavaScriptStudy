@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      //1,数组
+      const SCHOOLS = ["fzu", "Qing", "华侨"];
+      let [a, b, c] = SCHOOLS;
+      console.log(a, b, c);
+      //2, 对象J
+      const user = {
+        name: "wuug",
+        age: 16,
+        hit: function () {
+          console.log("Hp - 1");
+        },
+      };
+      //并不是指向对象内部数据，而是将内部数据赋值给声明的变量
+      let { name, age, hit } = user;
+      name = "chengjr";
+      console.log(user); //name: wuug
+      console.log(name, age, hit); //chengjr
+      hit();
+    </script>
+  </body>
+</html>
