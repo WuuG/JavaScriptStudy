@@ -8,6 +8,16 @@
     <style></style>
   </head>
   <body>
-    <script></script>
+    <script>
+      const p = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject("失败啦");
+        }, 1000);
+      });
+      //其实和原先的then的第二个参数一样
+      p.catch((err) => {
+        console.error(err);
+      });
+    </script>
   </body>
 </html>

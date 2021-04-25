@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      //promise对象的三个状态 初始化 成功 失败
+      const p = new Promise(function (resolve, reject) {
+        setTimeout(() => {
+          // let data = "数据库中的用户数据";
+          // resolve(data);
+
+          let err = "读取用户数据失败";
+          reject(err);
+        }, 1000);
+      });
+      p.then(
+        //当调用resolve时，状态为成功，就会去调用then里面的第一个回调函数
+        (value) => {
+          console.log(value);
+        },
+        //若是调用reject，状态为失败，会调用第二个回调函数
+        (reason) => {
+          //error 可以变红 真不错
+          console.error(reason);
+        }
+      );
+    </script>
+  </body>
+</html>
