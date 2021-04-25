@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200px;
+        height: 200px;
+        background-color: seagreen;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="box"></div>
+    <script>
+      const box = document.querySelector(".box");
+      let startPos = {
+        x: 0,
+        y: 0,
+      };
+      let pos = {
+        x: 0,
+        y: 0,
+      };
+      box.addEventListener("touchstart", (e) => {
+        //这里的this 还挺有意思的
+        console.log(this);
+        startPos.x = e.targetTouches[0].pageX;
+        startPos.y = e.targetTouches[0].pageY;
+        pos.x = box.offsetLeft;
+        pos.y = box.offsetTop;
+      });
+      box.addEventListener("touchmove", (e) => {
+        let moveX = e.targetTouches[0].pageX - startPos.x;
+        let moveY = e.targetTouches[0].pageY - startPos.y;
+        box.style.left = pos.x + moveX + "px";
+        box.style.top = pos.y + moveY + "px";
+        e.preventDefault(); //阻止默认滚动行为，防止跳一下
+      });
+    </script>
+  </body>
+</html>
