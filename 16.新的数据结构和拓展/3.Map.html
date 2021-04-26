@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      let m = new Map();
+      m.set("name", "wuug");
+      m.set("jump", function () {
+        console.log("跳起来了！！");
+      });
+      let key = {
+        school: "fzu",
+      };
+      //添加
+      m.set(key, ["a", "b", "c"]);
+      //大小
+      console.log(m.size);
+      //删除
+      // m.delete(key);
+      //获取
+      m.get("jump")();
+      //清空
+      // m.clear();
+      for (const v of m) {
+        //这里的const 还是挺有意思的，v是一个指针对象哦
+        console.log(v);
+      }
+      console.log(m, typeof m); //object
+    </script>
+  </body>
+</html>

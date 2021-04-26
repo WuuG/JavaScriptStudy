@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      function Phone() {}
+      //函数对象添加了属性和方法，实例对象是无法访问的，二者并不是相通的
+      Phone.brand = "xiaoMi";
+      Phone.slogen = function () {
+        console.log(this.brand + ":干翻华为！！");
+      };
+      Phone.prototype.size = "12inch";
+      let xiaomi = new Phone();
+      console.log(xiaomi.brand); //undefined
+      console.log(xiaomi.size);
+      console.log(Phone.brand); //xiaomi
+      Phone.slogen(); //xiaomi：干翻华为
+      class Phone2 {
+        //静态成员属于Phone2，而不属于实例对象
+        static name = "手机";
+        static change() {
+          console.log(this.name + "发生了改变！");
+        }
+      }
+      let huaWei = new Phone2();
+      console.log(huaWei.name); //undefined
+      console.log(Phone2.name); //手机
+    </script>
+  </body>
+</html>

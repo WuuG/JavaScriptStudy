@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      //ES5的继承
+      function Phone(brand, price) {
+        this.brand = brand;
+        this.price = price;
+      }
+      Phone.prototype.add = function () {
+        console.log(this.brand + "添加了加个为" + this.price);
+      };
+      //智能手机
+      function SmartPhone(brand, price, screen, memory) {
+        //this指向SmartP的实例对象，构造函数继承传参,构造函数的继承,这里的call是固定的
+        Phone.call(this, brand, price);
+        this.screen = screen;
+        this.memory = memory;
+      }
+      //设置子级构造函数的原型,在原型上进行父级方法的继承
+      SmartPhone.prototype = new Phone();
+      SmartPhone.prototype.constructor = SmartPhone; //矫正constructor函数
+
+      //给子类对象添加方法
+      SmartPhone.prototype.photo = function () {
+        console.log("智能手机拍照");
+      };
+      const mix = new SmartPhone("xiaomi", 2092, "16ich", "12g");
+      console.log(mix);
+      mix.add();
+      mix.photo();
+    </script>
+  </body>
+</html>

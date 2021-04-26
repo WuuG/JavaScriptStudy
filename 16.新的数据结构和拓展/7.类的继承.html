@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      class Phone {
+        constructor(brand, price) {
+          this.brand = brand;
+          this.price = price;
+        }
+        call() {
+          console.log(this.brand + "可以打电话啦");
+        }
+      }
+      class SmartPhone extends Phone {
+        constructor(brand, price, color, size) {
+          //父类的构造函数的继承
+          super(brand, price);
+          this.color = color;
+          this.size = size;
+        }
+        photo() {
+          console.log("拍照");
+        }
+      }
+      const xiaomi = new SmartPhone("xiaomi", 2032, "red", "20ich");
+      console.log(xiaomi);
+      xiaomi.call();
+      xiaomi.photo();
+    </script>
+  </body>
+</html>

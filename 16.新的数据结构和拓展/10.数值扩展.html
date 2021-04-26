@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      // 1.表示javas的最小进度,用在浮点数运算上
+      console.log(Number.EPSILON);
+      console.log(0.1 + 0.2 == 0.3); //false
+      //用于实现在精度下的取值判断
+      function equal(a, b) {
+        return Math.abs(a - b) < Number.EPSILON ? true : false;
+      }
+      console.log(equal(0.1 + 0.2, 0.3));
+      //2.二进制 八进制 十进制 十六进制
+      let b = 0b1010;
+      let o = 0o10;
+      let d = 100;
+      let x = 0xf;
+      console.log(b, o, d, x); //10 8 100 4095 15
+      //3.检测是否为有限数
+      console.log(Number.isFinite(100 / 0)); //false
+      console.log(Number.isFinite(100)); //true
+      console.log(Number.isFinite(Infinity)); //false
+    </script>
+  </body>
+</html>

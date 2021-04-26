@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      //可接受可迭代数据,会自动去重
+      let s2 = new Set(["wuug", "wis", "lwx", "wuug"]);
+      console.log(s2, typeof s2); //object类型
+      //元素个数
+      console.log(s2.size);
+      //添加新元素
+      s2.add("wug");
+      //删除元素
+      s2.delete("wis");
+      //检测元素
+      console.log(s2.has("lwx"));
+      //清空集合
+      // s2.clear();
+      //遍历
+      for (let v of s2) {
+        console.log(v);
+      }
+    </script>
+  </body>
+</html>

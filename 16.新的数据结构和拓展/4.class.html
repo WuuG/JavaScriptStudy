@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      // ES5写法
+      function Phone(brand, price) {
+        this.brand = brand;
+        this.price = price;
+      }
+      Phone.prototype.call = function () {
+        console.log("这个是" + this.brand + "的手机");
+      };
+      let Huawei = new Phone("华为", 2922);
+      Huawei.call();
+      console.log(Huawei);
+      //ES6 class写法
+      class Phone2 {
+        //构造函数  一旦new就会调用这个方法
+        constructor(brand, price) {
+          this.brand = brand;
+          this.price = price;
+        }
+        //class里的函数写法 一定要这样写哦
+        call() {
+          console.log("这个是" + this.brand + "的手机");
+        }
+      }
+      let oppo = new Phone2("oppo", 2923);
+      oppo.call();
+      console.log(oppo);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      //1.get
+      class Phone {
+        //get 可用于返回一些需要计算的值，在计算后返回
+        get price() {
+          console.log("读取价格");
+          return "$1290";
+        }
+        //set 函数是一定要有参数的,可用于类型检测
+        set price(newValue) {
+          // return; //只要return就不会对数据进行修改
+          console.log("修改价格属性");
+        }
+      }
+      let s = new Phone();
+      console.log(s.price); //这里s.price的值为 return的值 这很类似vue中的computerd
+      s.price = "$10";
+      console.log(s.price);
+    </script>
+  </body>
+</html>

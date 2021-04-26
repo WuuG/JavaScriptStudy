@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      let arr = [1, 23, 21, 23, 123, 23, 123, 5, 324, 231, 21];
+      //去重
+      let result1 = [...new Set(arr)]; //这里扩展运算符还是很有意思的
+      console.log(result1);
+      //交集
+      let arr2 = [21, 23, 123, 46, 123, 56, 74, 23];
+      // let result2 = result1.filter((item) => {
+      //   // for (let v of arr) {
+      //   //   if (item === v) {
+      //   //     return item;
+      //   //   }
+      //   // }
+      //   let setArr2 = new Set(arr2);
+      //   return setArr2.has(item) ? true : false;
+      // });
+      let result2 = result1.filter((item) => new Set(arr2).has(item));
+      console.log(result2);
+      // 并集
+      let result3 = [...new Set([...result1, ...arr2])];
+      console.log(result3.sort());
+      // 差集 arr -arr2 获取arr对arr2的差集
+      let result4 = result1.filter((item) => !new Set(arr2).has(item));
+      console.log(result4);
+    </script>
+  </body>
+</html>
