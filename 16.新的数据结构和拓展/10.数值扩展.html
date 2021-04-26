@@ -27,6 +27,26 @@
       console.log(Number.isFinite(100 / 0)); //false
       console.log(Number.isFinite(100)); //true
       console.log(Number.isFinite(Infinity)); //false
+      //4. 检测是否为NaN NaN:不是数字的数字类型
+      console.log(Number.isNaN(100)); //false
+      let a = parseInt("你好j");
+      console.log("isNaN", Number.isNaN(a)); //true
+      //5.字符串转换为数字
+      console.log(Number.parseInt("2293.23 j2923jlhli")); //到非数字会截断的
+      console.log(Number.parseFloat("283.238kasd"));
+      //6. 判断一个数是否为整数
+      console.log(Number.isInteger(2.3));
+      //7. 讲数字的小数部分抹掉 Math.trunc不用考虑正负情况了. 对科学计数法更友好
+      console.log(Math.trunc(3.5));
+      console.log(Number.parseInt(3.5));
+      console.log(parseInt(6.022e23)); // 6
+      console.log(Math.trunc(6.022e23)); // 6.022e+23
+      console.log(parseInt(0.0000006)); //6
+      console.log(Math.trunc(0.0000006)); //0
+      //8. Math.sign 判断一个数为正数 负数 还是 零
+      console.log(Math.sign(-10)); //-1
+      console.log(Math.sign(0)); // 0
+      console.log(Math.sign(10)); // 1
     </script>
   </body>
 </html>
