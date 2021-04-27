@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      const arr = [12, 31, 23, 1, 2, [23, 23]];
+      const arr2 = [1, 2, 3, 4, [5, 6, [7, 8]]];
+      //将数组从二维转换成一维
+      console.log(arr.flat());
+      //三维 => 二维
+      console.log(arr2.flat());
+      //三维 => 一维  降两维
+      console.log(arr2.flat(2));
+      const arr3 = [1, 2, 3, 4];
+      //将返回的数组降维
+      const result = arr3.flatMap((item) => [item * 10]);
+      console.log(result);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      //1.this是静态的， this时钟指向函数声明时 所在作用域下的this值
+      window.name = "这是window的name";
+      let user = {
+        name: "wuug",
+      };
+      function getName() {
+        console.log(this.name);
+      }
+      let getName2 = () => {
+        console.log(this.name);
+      };
+      //直接调用 this都是指向windo的
+      getName();
+      getName2();
+      //call 方法调用会改变函数内部this的值的
+      getName.call(user);
+      getName2.call(user); //这里的this依然指向window，并没有改变
+      //2. 不能作为构造实例化对象
+      let Person = (name, age) => {
+        (this.name = "wuug"), (this.age = 18);
+      };
+      let Person1 = function () {
+        (this.name = "zhangsan"), (this.age = 20);
+      };
+      let me1 = new Person1();
+      // let me = new Person(); //报错,箭头函数不可作为构造函数
+      //3. 不能使用arguments(用来保存实参) 变量
+      let fn = () => {
+        console.log(arguments); //报错，找不到arguments
+      };
+      let fn1 = function (name) {
+        console.log(arguments);
+      };
+      fn1("wuug");
+      //4. 箭头函数的简写
+      // 4.1 省略小括号 形参只有一个的时候可以省略小括号。
+      // 4.2 代码体只有一条语句的时候，可以省略花括号。此时return必须省略，会直接将这条语句的结果返回
+      let mul = (res) => res * res;
+      console.log(mul(2)); //返回4
+      //5. 箭头函数适合与this无关的回调，定时器，数组的方法回调
+      //  而不适合与this有关的回到，如实践回调，或者对象的方法
+    </script>
+  </body>
+</html>

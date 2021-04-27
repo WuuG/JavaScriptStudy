@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      div {
+        margin: 10px;
+        width: 100px;
+        height: 100px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <script>
+      //4.不影响作用域链. 会去更大的范围找对应的变量
+      {
+        let school = "fzu";
+        function fn() {
+          console.log(school);
+        }
+        fn();
+      }
+      let divs = document.querySelectorAll("div");
+      //这里会报错哦 当点击的时候，i已经是3了
+      // for (var i = 0; i < divs.length; i++) {
+      //   divs[i].onclick = function () {
+      //     divs[i].style.background = "red";
+      //   };
+      // }
+      //这里就可以
+      for (var i = 0; i < divs.length; i++) {
+        divs[i].onclick = function () {
+          divs[i].style.background = "red";
+        };
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      //1.object.is 判断两个值是否完全相等
+      console.log(Object.is(120, 120)); //ture
+      console.log(Object.is(NaN, NaN)); //ture
+      console.log(NaN === NaN); //false NaN和任何数字都不相等
+      //2.Object.assign 对象的合并
+      const config1 = {
+        host: "localhost",
+        port: 2913,
+        name: "wuug",
+      };
+      const config2 = {
+        host: "http://baidu.com",
+        port: 231,
+        age: "129",
+      };
+      // config2会覆盖config1
+      const config = Object.assign(config1, config2);
+      console.log(config);
+      // 3. Object.setPrototypeOf 设置原型对象
+      const school = {
+        name: "TSUC",
+      };
+      const cities = {
+        xiaoqu: ["a", "b", "c"],
+      };
+      //给school的原型添加cities
+      Object.setPrototypeOf(school, cities);
+      //获取原型
+      console.log(Object.getPrototypeOf(school));
+      console.log(school);
+    </script>
+  </body>
+</html>

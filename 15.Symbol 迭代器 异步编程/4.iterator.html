@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      const xiyou = ["monmon", "wukong", "八戒", "沙僧"];
+      for (let i of xiyou) {
+        console.log(i);
+      }
+      //包含Symobol.interator属性 就可以通过 for .. of 遍历
+      //通过调用iterator函数，来创建iterator对象
+      const iterator = xiyou[Symbol.iterator]();
+      console.log(iterator);
+      //next 函数每次都会返回两个值，一个value 和 done，来获取值和判断是否到结尾
+      console.log(iterator.next());
+      console.log(iterator.next());
+      console.log(iterator.next());
+      console.log(iterator.next());
+      console.log(iterator.next());
+      console.log(iterator.next());
+    </script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      class Phone {
+        constructor(brand, price) {
+          this.brand = brand;
+          this.price = price;
+        }
+        call() {
+          console.log("这是父类的call");
+        }
+      }
+      class SmartPhone extends Phone {
+        constructor(color, size) {
+          //父类的构造函数的继承
+          super();
+          this.color = color;
+          this.size = size;
+        }
+        call() {
+          //子类不能够调用父类的同名方法的
+          // this.call();
+          console.log("这是子类的call");
+        }
+      }
+      const xiaomi = new SmartPhone("red", "20ich");
+      console.log(xiaomi);
+      xiaomi.call();
+    </script>
+  </body>
+</html>

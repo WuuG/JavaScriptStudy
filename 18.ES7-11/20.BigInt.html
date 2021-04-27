@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      let n = 521n;
+      console.log(n, typeof n);
+      //函数 bigInt() 转换为大整型 只能转换整数
+      let n1 = 123;
+      console.log(BigInt(n1));
+      //用于大数值运算
+      //在最大安全数后，再相加2以上就会出现错误（算出来的数值不准确）
+      let max = Number.MAX_SAFE_INTEGER;
+      console.log(max + 1);
+      //大整数只能和大整数进行运算
+      console.log(BigInt(max) + BigInt(3));
+    </script>
+  </body>
+</html>

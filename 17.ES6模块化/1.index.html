@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script type="module">
+      // 1.通用的导入形式
+      // import * as m1 from "./common.js";
+      // import * as m2 from "./expose2.js";
+      // import * as m3 from "./expose3.js";
+      // console.log(m1);
+      // console.log(m2);
+      // console.log(m3);
+      // m3.default.change();
+      //2. 解构赋值形式
+      // import { school, rule } from "./common.js";
+      // console.log(school, rule);
+      // //别名的使用
+      // import { school as fzu, findJob } from "./expose2.js";
+      // console.log(fzu, findJob);
+      // //导入默认到处的模块
+      // import { default as huaqiao } from "./expose3.js";
+      // console.log(huaqiao);
+      // 3.简便形式 只能用于默认暴露
+      // import huaqiao from "./expose3.js";
+      // console.log(huaqiao);
+    </script>
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
