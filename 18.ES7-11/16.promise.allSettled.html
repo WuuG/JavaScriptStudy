@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      const p1 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("获取商品数据-1");
+        }, 1000);
+      });
+      const p2 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject("无法获取用户数据");
+        }, 1000);
+      });
+      const result = Promise.allSettled([p1, p2]);
+      console.log(result);
+      //返回的若有错误的promiser，则函数返回的promise对象状态为错误,则其值为错误的promiser对象的值（在此例中为p2）,若成功则返回成功的promise对象，返回值为成功的promise对象的值。
+      const result1 = Promise.all([p1, p2]);
+      console.log(result1);
+    </script>
+  </body>
+</html>

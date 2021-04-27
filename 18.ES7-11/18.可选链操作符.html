@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      // ?.用于层层判断，防止没传报错
+      function main(config) {
+        //之前的写法
+        // const dbHost = config && config.db && config.db.host;
+        const dbHost = config?.dn?.host;
+        console.log(dbHost);
+      }
+      main({
+        // db: {
+        //   host: "123.123.123.123",
+        //   username: "wuug",
+        // },
+        // catch: {
+        //   host: "123.232.123.123",
+        //   username: "lwx",
+        // },
+      });
+    </script>
+  </body>
+</html>
