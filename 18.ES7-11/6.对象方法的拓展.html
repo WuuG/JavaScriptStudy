@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      const school = {
+        name: "fzu",
+        major: ["a", "b", "c"],
+        xueke: ["d", "e", "f"],
+      };
+      //1.返回数组,内部为school的键
+      console.log(Object.keys(school));
+      //2.返回数组,内部为school的值
+      console.log(Object.values(school));
+      //3.entries 返回数组，数组内还有数组[键，值]
+      const a = Object.entries(school);
+      //可以很好的构建MAp
+      const m = new Map(a);
+      console.log(m);
+      //4.对象属性的描述对象
+      console.log("getOwn :>> ", Object.getOwnPropertyDescriptors(school));
+      //第一个参数：原型对象，第二参数描述对象
+      const obj = Object.create(null, {
+        name: {
+          //设置值
+          value: "wuug",
+          //设置属性特性
+          writable: true, //是否可写
+          configurable: true, //是否可删除
+          enumberable: true, //是否可枚举
+        },
+      });
+    </script>
+  </body>
+</html>

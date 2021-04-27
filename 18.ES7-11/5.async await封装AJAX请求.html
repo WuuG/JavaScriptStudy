@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      function sendAJAX(url) {
+        return new Promise((resolve, reject) => {
+          const x = new XMLHttpRequest();
+          x.open("GET", url);
+          x.send();
+          x.onreadystatechange = function () {
+            if (x.readyState === 4) {
+              if (x.status >= 200 && x.status < 300) {
+                resolve(x.response);
+              } else {
+                reject(x.status);
+              }
+            }
+          };
+        });
+      }
+      //promise 方法获取
+      // sendAJAX("https://www.tianqiapi.com/api/")
+      //   .then((value) => {
+      //     console.log(value);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+      async function main() {
+        try {
+          let a = await sendAJAX("https://www.tianqiapi.com/api/");
+          console.log(a);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      main();
+    </script>
+  </body>
+</html>

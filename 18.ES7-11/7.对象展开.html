@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <script>
+      //多余的参数，会进到user的对象里
+      function connect({ host, port, ...user }) {
+        console.log(host);
+        console.log(port);
+        console.log(user);
+      }
+      connect({
+        host: "122.12.21.3",
+        port: 1231,
+        userName: "root",
+        password: "root",
+        type: "get",
+      });
+      //rest参数在对象上的使用
+      const user1 = {
+        name: "user",
+        age: 10,
+        hight: 182,
+      };
+      const user2 = {
+        name: "wuug",
+        age: 19,
+        major: "tch",
+      };
+      //对象合并，同属性覆盖(后面的覆盖前面的)
+      const user = { ...user1, ...user2 };
+      console.log("user :>> ", user);
+    </script>
+  </body>
+</html>
