@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="animate.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        body {
+            background-color: black;
+        }
+
+        .c-nav {
+            width: 900px;
+            height: 42px;
+            background: #fff url(images/rss.png) no-repeat right center;
+            margin: 100px auto;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .c-nav ul {
+            position: absolute;
+        }
+
+        .c-nav li {
+            float: left;
+            width: 83px;
+            text-align: center;
+            line-height: 42px;
+        }
+
+        .c-nav li a {
+            color: #333;
+            text-decoration: none;
+            display: inline-block;
+            height: 42px;
+        }
+
+        .c-nav li a:hover {
+            color: white;
+        }
+
+        .cloud {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 83px;
+            height: 42px;
+            background: url(images/cloud.gif) no-repeat;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="c_nav" class="c-nav">
+        <span class="cloud"></span>
+        <ul>
+            <li><a href="javascript:">首页新闻</a></li>
+            <li><a href="javascript:">师资力量</a></li>
+            <li><a href="javascript:">活动策划</a></li>
+            <li><a href="javascript:">企业文化</a></li>
+            <li><a href="javascript:">招聘信息</a></li>
+            <li><a href="javascript:">公司简介</a></li>
+            <li><a href="javascript:">我是佩奇</a></li>
+            <li><a href="javascript:">啥是佩奇</a></li>
+        </ul>
+    </div>
+    <script>
+        /*         //这个东西卡了.cloud 类啊 也不是clound
+                var cloud = document.querySelector('.cloud')
+                console.log(cloud);
+                var lis = document.querySelectorAll('li')
+                //1.直接将整个li存进去，会稍微多占点空间
+                // var current = lis[0];
+                //2.用索引的方法会比较麻烦点
+                var index = 0;
+                for (var i = 0; i < lis.length; i++) {
+                    lis[i].setAttribute('index', i)
+                    lis[i].addEventListener('mouseenter', function () {
+                        animate(cloud, this.offsetLeft);
+                    })
+                    lis[i].addEventListener('mouseleave', function () {
+                        animate(cloud, lis[index].offsetLeft);
+                    })
+                    lis[i].addEventListener('click', function () {
+                        index = this.getAttribute('index')
+                    })
+                } */
+        // 3.这才是最好的第三种方法
+        var cloud = document.querySelector('.cloud')
+        console.log(cloud);
+        var lis = document.querySelectorAll('li')
+        var current = 0;
+        var index = 0;
+        for (var i = 0; i < lis.length; i++) {
+            lis[i].setAttribute('index', i)
+            lis[i].addEventListener('mouseenter', function () {
+                animate(cloud, this.offsetLeft);
+            })
+            lis[i].addEventListener('mouseleave', function () {
+                animate(cloud, current);
+            })
+            lis[i].addEventListener('click', function () {
+                current = this.offsetLeft
+            })
+        }
+    </script>
+</body>
+
+</html>
