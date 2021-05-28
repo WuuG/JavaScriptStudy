@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    alert('error occur')
+    // 方括号前是不会自动将换行当作隐式的分号的,所以会发生错误
+    [1, 2].forEach(element => {
+      console.log(element);
+    });
+  </script>
+</body>
+
+</html>
