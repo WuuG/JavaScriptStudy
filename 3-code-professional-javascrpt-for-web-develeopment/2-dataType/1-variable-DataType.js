@@ -227,3 +227,79 @@
 // 原始值:
 // \u009a 
 //  \n
+
+
+
+// let fooSymbol = Symbol('foo')
+// let otherfooSymbol = Symbol('foo')
+// console.log(fooSymbol == otherfooSymbol); //false 
+
+// let myBoolean = new Boolean() // 构造一个Boolean对象
+// console.log(myBoolean);
+// console.log(typeof myBoolean);
+// // let mySymbol = new Symbol() //TypeError
+// let mySymbol = Symbol()
+// let myWrappedSymbol = Object(mySymbol)
+// console.log(typeof myWrappedSymbol);
+
+
+// let fooGlobalSymbol = Symbol.for('foo')
+// let otherfooSymbol = Symbol.for('foo')  // 此时去检查注册表，查看是否有foo，若有返回实例
+// let otherfooSymbol1 = Symbol('foo')
+// console.log(fooGlobalSymbol == otherfooSymbol); //true
+// console.log(otherfooSymbol1 == fooGlobalSymbol); //false,此时只是描述相同罢了,并不是一个实例
+
+// // Symbol.for()会将描述转换为字符串
+// let emptyGlobalSymbol = Symbol.for()
+// let otheremptySymbol = Symbol.for(undefined)
+// let otheremptySymbol1 = Symbol.for()
+// console.log(emptyGlobalSymbol); //Symbol(undefined)
+// console.log(emptyGlobalSymbol === otheremptySymbol); //true
+// console.log(emptyGlobalSymbol === otheremptySymbol1); //true
+
+// Symbol.keyFor()用来查询全局变量，接受符号参数，返回改全局符号对应的字符串键(Symbol描述)
+// let s = Symbol.for('foo')
+// console.log(Symbol.keyFor(s));  // foo
+// let s2 = Symbol('foo')
+// console.log(Symbol.keyFor(s2)); // undefined
+// let s3 = Symbol.for()
+// console.log(Symbol.keyFor(s3)); // undefined,其实从某方面来看还是很合理的，因为确实是undefined
+// // console.log(Symbol.keyFor('foo')); // TypeError, 'foo'不是符号
+// console.log(Symbol.keyFor()); // 传入undefined，不是Symbol
+
+
+// let s1 = Symbol('foo'),
+//   s2 = Symbol('bar'),
+//   s3 = Symbol('buz'),
+//   s4 = Symbol('qux'),
+//   s5 = Symbol('foo')
+// let o = {
+//   [s1]: 'foo val',
+//   username: 'wuug'
+// }
+// o[s2] = 'bar val'
+// console.log(o[s1], o['username'], o[s2]); //foo val wuug bar val
+// // 也可以用 Object.defineProperty()和 Object.defineProperties()
+// Object.defineProperty(o, s3, { value: 'buz val', enumerable: true }); //node环境 默认不显示，需要加上 enumerable
+// console.log(o);
+// // {
+// //   username: "wuug"
+// //   Symbol(bar): "bar val"
+// //   Symbol(buz): "buz val"
+// //   Symbol(foo): "foo val"
+// // }
+// setTimeout(() => {
+//   Object.defineProperties(o, {
+//     [s4]: { value: 'qux val' },
+//     [s5]: { value: 'second foo val' }
+//   })
+//   console.log(o);
+//   // {
+//   //   username: "wuug"
+//   //   Symbol(bar): "bar val"
+//   //   Symbol(buz): "buz val"
+//   //   Symbol(foo): "foo val"
+//   //   Symbol(foo): "second foo val"
+//   //   Symbol(qux): "qux val"
+//   // }
+// }, 1000);
