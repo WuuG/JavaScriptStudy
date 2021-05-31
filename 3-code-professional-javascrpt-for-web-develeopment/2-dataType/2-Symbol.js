@@ -273,3 +273,122 @@
 // console.log('foobar'.search(new StringSearch('bar'))); // 3
 // console.log('foobar'.search(new StringSearch('foo'))); // 0
 // console.log('foobar'.search(new StringSearch('buz'))); // -1
+
+
+
+// Symbol.species
+// class Bar extends Array { }
+// class Buz extends Array {
+//   static get [Symbol.species]() {
+//     return Array;
+//   }
+// }
+
+// let bar = new Bar()
+// console.log(bar instanceof Array);  // true                              
+// console.log(bar instanceof Bar);    // true                            
+// console.log(bar instanceof Array);  // true                              
+// console.log(bar instanceof Bar);    // true                            
+
+// let buz = new Buz()
+// console.log(buz);                   // Buz(0) []
+// console.log(buz instanceof Array);  // true                              
+// console.log(buz instanceof Buz);    // true                            
+// //concat调用时，就会去调用上面的getter方法,但到底时什么呢？
+// // 这里调用了之后，foo成为了buz的派生对象，就回去调用[Symbol.species]对应函数，进行构造。在构造过程中通过return的改变，来使其所属的类发生了变化。
+// let foo = buz.concat([1])
+// console.log(foo instanceof Array);  // true                              
+// console.log(foo instanceof Buz);    // false                            
+
+
+
+// Symbol.splite
+// console.log(RegExp.prototype[Symbol.split]); // [Function: [Symbol.split]
+// console.log('foobarbuz'.split('bar')); // ['foo','buz']
+
+// class spliteByFoo {
+//   static [Symbol.split](target) {
+//     return target.split('foo')
+//   }
+// }
+// console.log('barfoobuz'.split(spliteByFoo)); //['bar','buz']
+
+// class spliteByStr {
+//   constructor(str) {
+//     this.str = str
+//   }
+//   [Symbol.split](target) {
+//     return target.split(this.str)
+//   }
+// }
+// console.log('barfoobuz'.split('foo')); // ['bar','buz']
+
+
+
+// Symbol.toPrimitive
+// class Foo { }
+// let foo = new Foo()
+
+// console.log(3 + foo); // '3[object object]'
+// console.log(3 - foo); //NaN
+// console.log(String(foo)); //[object object]
+
+// class Bar {
+//   constructor() {
+//     this[Symbol.toPrimitive] = function (hint) {
+//       switch (hint) {
+//         case 'number':
+//           return 2
+//         case 'String':
+//           return '转换成字符串啦'
+//         default:
+//           return '转换成其他东西'
+//       }
+//     }
+//   }
+// }
+
+// const bar = new Bar()
+// console.log(3 + bar); //'3转换成其他东西'
+// console.log(3 - bar); // 1
+// console.log(String(bar)); // '转换成字符串啦'
+
+
+
+// Symbol.toStringTag
+// let s = new Set()
+// console.log(s); // Set(0) {}
+// console.log(s.toString()); // [object Set] 
+// console.log(s[Symbol.toStringTag]); // Set
+
+// class Foo { }
+// let foo = new Foo()
+// console.log(foo); // Foo {}
+// console.log(foo.toString()); // [object object]  默认描述为object
+// console.log(foo[Symbol.toStringTag]); // undefined 
+
+// class Bar {
+//   constructor() {
+//     this[Symbol.toStringTag] = 'BarTag'
+//   }
+// }
+// let bar = new Bar()
+// console.log(bar); // Bar {...}
+// console.log(bar.toString()); // [object BarTag]  
+// console.log(bar[Symbol.toStringTag]); // BarTag
+
+
+
+// Symbol.unscopables
+let o = { foo: 'bar' }
+with (o) {
+  console.log(foo); //bar
+}
+
+o[Symbol.unscopables] = { //with语句中排除foo属性
+  foo: true
+}
+
+with (o) {
+  console.log(foo); // ReferenceError
+}

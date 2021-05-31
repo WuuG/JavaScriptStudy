@@ -294,3 +294,128 @@ console.log('foobar'.search(new StringSearch('bar'))); // 3
 console.log('foobar'.search(new StringSearch('foo'))); // 0
 console.log('foobar'.search(new StringSearch('buz'))); // -1
 ```
+# Symbol.species
+这个符号作为属性表示，一个函数值，该函数作为创建派生对象的构造函数。返回值表示其所属的类。
+> ??????????????
+``` js
+class Bar extends Array { }
+class Buz extends Array {
+  static get [Symbol.species]() {
+    return Array;
+  }
+}
+
+let bar = new Bar()
+console.log(bar instanceof Array);  // true                              
+console.log(bar instanceof Bar);    // true                            
+console.log(bar instanceof Array);  // true                              
+console.log(bar instanceof Bar);    // true                            
+
+let buz = new Buz()
+console.log(buz);                   // Buz(0) []
+console.log(buz instanceof Array);  // true                              
+console.log(buz instanceof Buz);    // true                            
+//concat调用时，就会去调用上面的getter方法,但到底时什么呢？
+// 这里调用了之后，foo成为了buz的派生对象，就回去调用[Symbol.species]对应函数，进行构造。在构造过程中通过return的改变，来使其所属的类发生了变化。
+let foo = buz.concat([1])
+console.log(foo instanceof Array);  // true                              
+console.log(foo instanceof Buz);    // false                            
+```
+# Symbol.split
+该符号作为属性时表示一个正则表示方法，在匹配正则表示的索引位置拆分字符串.通过String.prototype.split调用
+``` js
+console.log(RegExp.prototype[Symbol.split]); // [Function: [Symbol.split]
+console.log('foobarbuz'.split('bar')); // ['foo','buz']
+```
+修改默认行为
+``` js
+class spliteByFoo {
+  static [Symbol.split](target) {
+    return target.split('foo')
+  }
+}
+console.log('barfoobuz'.split(spliteByFoo)); //['bar','buz']
+
+class spliteByStr {
+  constructor(str) {
+    this.str = str
+  }
+  [Symbol.split](target) {
+    return target.split(this.str)
+  }
+}
+console.log('barfoobuz'.split('foo')); // ['bar','buz']
+```
+# Symbol.toPrimitive
+该符号作为一个属性表示：一个方法，该方法将对象转换为响应原始值,有ToPrimitive抽象操作使用。 其实就是类型转换时会进行调用。
+``` js
+class Foo { }
+let foo = new Foo()
+
+console.log(3 + foo); // '3[object object]'
+console.log(3 - foo); //NaN
+console.log(String(foo)); //[object object]
+```
+修改默认行为
+``` js
+class Bar {
+  constructor() {
+    this[Symbol.toPrimitive] = function (hint) {
+      switch (hint) {
+        case 'number':
+          return 2
+        case 'String':
+          return '转换成字符串啦'
+        default:
+          return '转换成其他东西'
+      }
+    }
+  }
+}
+
+const bar = new Bar()
+console.log(3 + bar); //'3转换成其他东西'
+console.log(3 - bar); // 1
+console.log(String(bar)); // '转换成字符串啦'
+```
+# Symbol.toStringTag
+该符号作为属性表示：一个字符串，该字符串用于创建对象的默认字符串描述。也就是说表明其toString()后该对象(其实是实例对象)的描述
+``` js
+let s = new Set()
+console.log(s); // Set(0) {}
+console.log(s.toString()); // [object Set] 
+console.log(s[Symbol.toStringTag]); // Set
+
+class Foo { }
+let foo = new Foo()
+console.log(foo); // Foo {}
+console.log(foo.toString()); // [object object]  默认描述为object
+console.log(foo[Symbol.toStringTag]); // undefined 
+
+class Bar {
+  constructor() {
+    this[Symbol.toStringTag] = 'BarTag'
+  }
+}
+let bar = new Bar()
+console.log(bar); // Bar {...}
+console.log(bar.toString()); // [object BarTag]  
+console.log(bar[Symbol.toStringTag]); // BarTag
+```
+# Symbol.unscopables
+该符号作为属性表示：一个对象，该对象所有的以及继承的属性，都会从关联对象的with环境绑定中解除。 也就是说，如果设置这个对象，并将某个对象内属性设为true，当用with是，就无法访问该属性
+``` js
+let o = { foo: 'bar' }
+with (o) {
+  console.log(foo); //bar
+}
+
+o[Symbol.unscopables] = { //with语句中排除foo属性
+  foo: true
+}
+
+with (o) {
+  console.log(foo); // ReferenceError
+}
+```
+> 不推荐使用with？ 为什么呢？
