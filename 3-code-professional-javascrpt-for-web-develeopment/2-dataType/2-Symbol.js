@@ -153,10 +153,123 @@
 // arrayLikeObject[Symbol.isConcatSpreadable] = true
 // console.log(initial.concat(arrayLikeObject)); // ['foo','bar','buz']
 
-// 3.set 对象
-let initial = ['foo']
-let OtherObject = { username: 'wuug', age: 19 } //类数组对象
-console.log(initial.concat(OtherObject)); // ['foo',{...}]
-OtherObject[Symbol.isConcatSpreadable] = true
-// 不是类数组对象的对象，在concat时直接被忽略了
-console.log(initial.concat(OtherObject)); // ['foo'] 
+
+// let OtherObject = { username: 'wuug', age: 19 } //类数组对象
+// console.log(initial.concat(OtherObject)); // ['foo',{...}]
+// OtherObject[Symbol.isConcatSpreadable] = true
+// // 不是类数组对象的对象，在concat时直接被忽略了
+// console.log(initial.concat(OtherObject)); // ['foo'] 
+
+
+
+// class Foo {
+//   *[Symbol.iterator]() {}
+// }
+// let f = new Foo()
+// console.log(f[Symbol.iterator]); // [GeneratorFunction: [Symbol.iterator]]
+
+
+// class Emiter {
+//   constructor(max) {
+//     this.max = max
+//     this.idx = 0
+//   }
+
+//   *[Symbol.iterator]() {
+//     while (this.idx < this.max) {
+//       yield this.idx++
+//     }
+//   }
+// }
+
+// let myEmiter = new Emiter(5)
+// for (const x of myEmiter) {
+//   console.log(x); // 0 1 2 3 4
+// }
+
+
+
+// Symbol.match
+// console.log(RegExp.prototype[Symbol.match]); //[Function: [Symbol.match]
+// console.log('footbar'.match(/foo/));
+// ['foo', index: 0, input: 'footbar', groups: undefined]
+
+
+// class FooMatch {
+//   static [Symbol.match](target) {
+//     return target.includes('foo')
+//   }
+// }
+
+// console.log('foobar'.match(FooMatch)); //true
+
+
+// class StringMatch {
+//   constructor(str) {
+//     this.str = str
+//   }
+//   [Symbol.match](target) {
+//     return target.includes(this.str)
+//   }
+// }
+
+// console.log('foobar'.match(new StringMatch('bar'))); // true
+// console.log('barbar'.match(new StringMatch('foo'))); // false
+
+
+
+// Symbol.replace
+// 该属性表示一个正则表达式方法，该方法替换一个字符串中匹配的子串
+// console.log(RegExp.prototype[Symbol.replace]); //[Function: [Symbol.replace]
+// console.log('foobar foobar'.replace('bar', 'foo')); // foofoo foobar
+
+
+// class FooReplace {
+//   static [Symbol.replace](target) {
+//     return target.split('foo').join('bar')
+//   }
+// }
+// console.log('foobar foobar'.replace(FooReplace)); //barbar barbar)
+
+
+// class RegReplace {
+//   constructor(reg) {
+//     this.reg = reg
+//   }
+//   [Symbol.replace](target, replacement) {
+//     return target.split(this.reg).join(replacement)
+//   }
+// }
+// console.log('buzfoo buzfoo'.replace(new RegReplace('buz'), 'bar')); //barfoo barfoo
+
+
+
+// Symbol.search
+// console.log(RegExp.prototype[Symbol.search]); // [Function: [Symbol.search]]
+// console.log('foobar bar'.search(/bar/)); // 3
+// console.log('foobar'.search(/buz/)); // -1
+
+
+// class FooSearch {
+//   static [Symbol.search](target) {
+//     return target.indexOf('foo')
+//   }
+// }
+
+// console.log('foobar'.search(FooSearch)); // 0
+// console.log('barfoo'.search(FooSearch)); // 3
+// console.log('barbuz'.search(FooSearch)); // -1
+
+
+// class StringSearch {
+//   constructor(str) {
+//     this.str = str
+//   }
+//   [Symbol.search](target) {
+//     return target.indexOf(this.str)
+//   }
+// }
+
+// console.log('foobar'.search(new StringSearch('bar'))); // 3
+// console.log('foobar'.search(new StringSearch('foo'))); // 0
+// console.log('foobar'.search(new StringSearch('buz'))); // -1
