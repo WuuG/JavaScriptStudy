@@ -227,3 +227,9 @@
 // 原始值:
 // \u009a 
 //  \n
+
+
+
+// object
+let o = new Object()
+let o1 = new Object // 无参数，合法但是不推荐

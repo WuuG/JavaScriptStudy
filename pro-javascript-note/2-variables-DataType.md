@@ -301,3 +301,8 @@ printRaw`\u009a${'ok'}\n`
 //  \n
 ```
 ## [Symbol](./3-Symbol.md)
+## Object 
+``` js
+let o = new Object()
+let o1 = new Object // 无参数，合法但是不推荐
+```
