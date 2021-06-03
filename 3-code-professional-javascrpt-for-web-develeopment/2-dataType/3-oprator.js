@@ -116,3 +116,99 @@
 
 
 // 逻辑或
+// let a = true || b
+// console.log(a); //true 
+
+
+
+// 乘性操作符
+// 乘法操作符
+// let res = Number.POSITIVE_INFINITY * 0
+// console.log(res); // NaN
+// res = Number.POSITIVE_INFINITY * 1
+// console.log(res); // Infinity
+
+
+// 除法操作符
+// const infinity = Number.POSITIVE_INFINITY
+// console.log(infinity / infinity); // NaN
+// console.log(0 / 0); // NaN
+// console.log(2 / 0); // Infinity
+
+
+// 取模运算符
+// console.log(26 % 5); //1
+// const infinity = Number.POSITIVE_INFINITY
+// console.log(infinity % 4); // NaN
+// console.log(infinity % 0); // NaN
+// console.log(infinity % infinity); // NaN
+// console.log(0 % infinity); // 0
+// console.log(4 % infinity); // 4
+
+
+
+// 指数操作符
+// console.log(Math.pow(2, 3)); // 8
+// console.log(2 ** 3); // 8
+// console.log(Math.pow(4, .5)); //2
+// console.log(4 ** .5); //2
+
+// let res = 2
+// res **= 3
+// console.log(res); // 8
+
+
+
+// 加性操作符
+// 数值
+// const infinity = Number.POSITIVE_INFINITY
+// console.log(infinity + -infinity); // NaN
+// console.log(-0 + 0); //0
+// console.log(0 + 0); //0
+// console.log(-0 + -0); -0
+// let randomNum = Math.random() * 1000
+// console.log(NaN + randomNum); // NaN
+
+
+// 字符串
+// console.log(5 + '5'); //55
+// const num1 = 5
+// const num2 = 10
+// let message = 'the sum of num1 and num2 = ' + num1 + num2
+// console.log(message); //the sum of num1 and num2 = 510
+
+
+// 减法操作符
+// const infinity = Number.POSITIVE_INFINITY
+// console.log(infinity - infinity);  //NaN
+// console.log(-infinity - -infinity);  //NaN
+// console.log(-infinity - infinity);  //-infinity
+// console.log(0 - 0); //0
+// console.log(0 + 0); //-0
+// console.log(-0 - -0); //0
+
+
+
+// 关系操作符
+// let res = "Brick" < "alphabet" // true
+// // 因为小写字符编码大于大写字符编码
+// res = "Brick".toLowerCase() < "alphabet".toLowerCase() //false
+
+// let res = '23' < '3' // true
+// res = '23' < 3  // false
+
+//任何NaN进行比较均返回NaN
+// let res = 'a' < 3 //false
+// let res1 = NaN < 3 //false
+
+
+
+// 条件操作符
+// let max = (5 > 3) ? 5 : 3 //5
+
+
+
+// 逗号操作符
+let num = 1, num2 = 2, num3 = 3
+let lastNum = (5, 1, 2, 3, 1, 0)
+console.log(lastNum); //0,赋值最后一个

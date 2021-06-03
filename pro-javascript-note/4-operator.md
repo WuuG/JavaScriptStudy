@@ -98,6 +98,7 @@ let num1 = -64
 console.log(num1 >>> 5); //134217726  右移后开头补0
 ```
 # 布尔操作符
+在布尔操作符中，对象是当作true的
 ## 逻辑非
 ``` js
 console.log(! false); // true
@@ -121,3 +122,128 @@ console.log(NaN && other); // NaN
 console.log(undefined && ohter); //undefined
 ```
 ## 逻辑或
+短路：遇到true 就不会继续执行后面的了，与逻辑与有一定的相似性
+``` js
+let a = true || b
+console.log(a); //true 
+```
+# 乘性操作符
+乘法，除法，取模。 在进行运算时，在后台使用Number()转换函数进行转换。
+## 乘法操作符
+``` js
+let res = Number.POSITIVE_INFINITY * 0
+console.log(res); // NaN
+res = Number.POSITIVE_INFINITY * 1
+console.log(res); // Infinity
+console.log(infinity * infinity); // Infinity
+```
+## 除法操作符
+``` js
+const infinity = Number.POSITIVE_INFINITY
+console.log(infinity / infinity); // NaN
+console.log(0 / 0); // NaN
+console.log(2 / 0); // Infinity
+```
+## 取模运算符
+``` js
+console.log(26 % 5); //1
+const infinity = Number.POSITIVE_INFINITY
+console.log(infinity % 4); // NaN
+console.log(infinity % 0); // NaN
+console.log(infinity % infinity); // NaN
+console.log(0 % infinity); // 0
+console.log(4 % infinity); // 4
+```
+# 指数操作符
+``` js
+console.log(Math.pow(2, 3)); // 8
+console.log(2 ** 3); // 8
+console.log(Math.pow(4, .5)); //2
+console.log(4 ** .5); //2
+
+let res = 2
+res **= 3
+console.log(res); // 8
+```
+# 加性操作符
+## 加法操作符
+两个操作数都是数值时
+``` js
+const infinity = Number.POSITIVE_INFINITY
+console.log(infinity + -infinity); // NaN
+console.log(-0 + 0); //0
+console.log(0 + 0); //0
+console.log(-0 + -0); -0
+let randomNum = Math.random() * 1000
+console.log(NaN + randomNum); // NaN
+```
+若是一个操作符是字符串
+``` js
+console.log(5 + '5'); //55
+const num1 = 5
+const num2 = 10
+let message = 'the sum of num1 and num2 = ' + num1 + num2
+console.log(message); //the sum of num1 and num2 = 510
+```
+如果任意操作数是对象，数值或者布尔值，则调用toString()后进行操作
+## 减法操作符
+``` js
+const infinity = Number.POSITIVE_INFINITY
+console.log(infinity - infinity);  //NaN
+console.log(-infinity - -infinity);  //NaN
+console.log(-infinity - infinity);  //-infinity
+console.log(0 - 0); //0
+console.log(0 + 0); //-0
+console.log(-0 - -0); //0
+```
+其他数据类型（除对象外）,调用Numbe().对象优先调用ValueOf(),若无ValueOf(),则调用toString()
+# 关系操作符
+``` js
+let res = "Brick" < "alphabet" // true
+// 因为小写字符编码大于大写字符编码
+res = "Brick".toLowerCase() < "alphabet".toLowerCase() //false
+
+let res = '23' < '3' // true
+res = '23' < 3  // false
+
+//任何NaN进行比较均返回NaN
+let res = 'a' < 3 //false
+let res1 = NaN < 3 //false
+```
+若是对象优先调用valueOf()进行比较，然后调用toString()
+# 相等操作符
+## 等于不等于
+== !=,类型转换时遵循:
+1. 布尔值，转换为数值再比较
+2. 字符串，数值。字符串转换为数值再比较
+3. 对象，另一个不是对象。调用ValueOf()进行比较
+
+遵循以下规则：
+1. null与undefined相等
+2. null和undefined比较时，不进行转换
+3. NaN不与任何东西相等，包括NaN本身
+4. 都是对象，则比较是不是同一个对象。
+## 全等和不全等
+不转换的前提下相等才返回true,推荐使用全等
+``` js
+null === undefined // false,数据类型不同
+```
+# 条件操作符
+``` js
+let max = (5 > 3) ? 5 : 3 //5
+```
+# 赋值操作符
++ *=
++ /=
++ %=
++ +=
++ -=
++ <<=
++ >>=
++ >>>=
+# 逗号操作符
+``` js
+let num = 1, num2 = 2, num3 = 3
+let lastNum = (5, 1, 2, 3, 1, 0)
+console.log(lastNum); //0,赋值最后一个
+```
