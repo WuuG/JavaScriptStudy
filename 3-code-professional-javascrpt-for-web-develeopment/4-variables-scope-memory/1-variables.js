@@ -83,11 +83,28 @@
 
 
 // 上下文 作用域
-(function buildUrl() {
-  let qs = 'url='
-  //with在作用域前端临时添加了一个上下文，所以外部是无法访问其内部设置的变量的。可是if也是这样啊，为什么if不算在上面的语句当中呢？
-  with (location) {
-    let url = qs + href
-  }
-  return url  //ReferenceError: url is not defind
-})()
+// (function buildUrl() {
+//   let qs = 'url='
+//   //with在作用域前端临时添加了一个上下文，所以外部是无法访问其内部设置的变量的。可是if也是这样啊，为什么if不算在上面的语句当中呢？
+//   with (location) {
+//     let url = qs + href
+//   }
+//   return url  //ReferenceError: url is not defind
+// })()
+
+
+// var
+// var name = 'Jake'
+// // 等价于
+// name = 'Jake'
+// var name
+
+
+//const 
+const obj = {
+  name: 'wuug',
+}
+Object.freeze(obj)
+obj.name = 'Niko'
+obj.age = 18
+console.log(obj); // {name:'wuug'}
