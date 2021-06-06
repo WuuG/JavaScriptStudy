@@ -101,10 +101,26 @@
 
 
 //const 
-const obj = {
-  name: 'wuug',
-}
-Object.freeze(obj)
-obj.name = 'Niko'
-obj.age = 18
-console.log(obj); // {name:'wuug'}
+// const obj = {
+//   name: 'wuug',
+// }
+// Object.freeze(obj)
+// obj.name = 'Niko'
+// obj.age = 18
+// console.log(obj); // {name:'wuug'}
+
+
+
+// leak of memory
+// 定时器导致内存泄露
+// let username = 'wuug'
+// setInterval(() => {
+//   console.log(username);
+// }, 1000);
+// 闭包所导致的内存泄露,因为返回闭包，所以username不会被清除
+// let out = function () {
+//   let username = 'wuug'
+//   return function () {
+//     return username
+//   }
+// }
