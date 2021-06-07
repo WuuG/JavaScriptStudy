@@ -185,8 +185,97 @@
 
 
 // isSafeInterger()
-let num = (2 ** 53)
-console.log(Number.isSafeInteger(-num)); //false
-console.log(Number.isSafeInteger(-num + 1)); // true
-console.log(Number.isSafeInteger(num)); //fasle
-console.log(Number.isSafeInteger(num - 1)); //true
+// let num = (2 ** 53)
+// console.log(Number.isSafeInteger(-num)); //false
+// console.log(Number.isSafeInteger(-num + 1)); // true
+// console.log(Number.isSafeInteger(num)); //fasle
+// console.log(Number.isSafeInteger(num - 1)); //true
+
+// String()
+// 对多数字符来说，16位表示一个码元
+// let message = 'abcde'
+// // 根据索引获取char
+// console.log(message.charAt(2)); //c
+// // 根据索引获取指定码元的字符编码
+// console.log(message.charCodeAt(2)); //99
+// // 根据字符编码返回字符串
+// console.log(String.fromCharCode(0x61, 0x62, 0x63, 0x64, 0x65)); //abcde
+// console.log(String.fromCharCode(97, 98, 99, 100, 101)); //abcde
+
+// 32位码元的字符
+// let message = 'ab😊de'
+// console.log(message.charAt(1)); // b
+// console.log(message.charAt(2)); // �
+// console.log(message.charAt(3)); // �
+// console.log(message.charCodeAt(1)); //98
+// console.log(message.charCodeAt(2)); // 55357  
+// console.log(message.charCodeAt(3)); // 56842
+// console.log(String.fromCodePoint(0x1f60a)); // 😊
+// console.log(String.fromCharCode(98, 55357, 56842)); //b😊
+
+// codePointAt(),
+// let message = 'ab😊de'
+// console.log(message.codePointAt(1));
+// console.log(message.codePointAt(2)); //128522  --> 0x1f60a 也就是笑脸的32位编码,说明其可以识别完整的码点
+// // 虽然可以识别完整码点，当若索引不是代理对开头就会返回错误的码点
+// console.log(message.codePointAt(3)); // 56842
+// console.log(String.fromCharCode(28522)); //  
+
+// // formCodePoint(),可以接受任意数量的码点，返回字符串
+// console.log(String.fromCharCode(128522)); // 
+// console.log(String.fromCodePoint(128522)); // 😊
+
+
+
+// normalize()
+// let a1 = String.fromCharCode(0x00c5),
+//   a2 = String.fromCharCode(0x212b),
+//   a3 = String.fromCharCode(0x0041, 0x030a)
+// console.log(a1, a2, a3); // Å Å Å
+// console.log(a1 == a2); // false
+// console.log(a1 == a3); // false
+// console.log(a2 == a3); // false
+// // 尽管字符是一样的，但是编码不同，所以互不相等，需要进行表转化处理
+// // 四种规范化形式 NFD,NFC,NFKD,NFKC
+// console.log(a1 === a1.normalize('NFD')); //false
+// console.log(a1 === a1.normalize('NFC')); //true
+// console.log(a1 === a1.normalize('NFKD')); //true
+// console.log(a1 === a1.normalize('NFKC')); //true
+// // 通过同一种规范化形式，可以使比较操作符返回正确的结果
+// console.log(a1.normalize("NFC") === a2.normalize('NFC')); // true
+// console.log(a1.normalize("NFC") === a3.normalize('NFC')); // true
+// console.log(a2.normalize("NFC") === a3.normalize('NFC')); // true
+
+
+
+// 字符串操作方法
+// concat()
+// let message = 'hello'
+// let result = message.concat(' ', 'world ', '!')
+// console.log(result); // hello world ！
+
+
+// 提取子字符串
+let str = "hello world"
+// console.log(str.slice(3)); // lo world
+// console.log(str.substring(3));// lo world
+// console.log(str.substr(3));// lo world
+// console.log(str.slice(3, 7)); // lo w
+// console.log(str.substring(3, 7));// lo w
+// console.log(str.substr(3, 7));// lo worl 这里不同是因为，第二个参数，表示截取7个字符串
+
+console.log(str.slice(-3)); // rld  -3 --> 8
+console.log(str.substring(-3));// hello world  -3 --> 0
+console.log(str.substr(-3));// rld  -3 --> 8
+console.log(str.slice(3, -4)); // lo w  -4 --> 7  -4+长度=7
+console.log(str.substring(3, -4));// hel -4 --> 0  (3,0) -->(0,3)
+console.log(str.substr(3, -4));// '' -4 --> 0
+
+console.log(str.slice(3, -1)); // lo worl
+console.log(str.substring(3, -1));// hel
+console.log(str.substr(3, -1));// ''
+
+console.log(str.slice(-3, -1)); // rl
+console.log(str.substring(-3, -1));// ''  (0,0)
+console.log(str.substr(-3, -1));// ''  (0,0)
+// 总结 后两个遇到负数都会转成0
