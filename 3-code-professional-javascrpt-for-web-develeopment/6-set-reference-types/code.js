@@ -153,3 +153,109 @@
 // console.log(zeroes); // [ 0, 8, 8, 8, 0 ] 
 
 
+// const zeroes = [0, 0, 0, 0, 0]
+// zeroes.fill(8, 3, 2) //忽略
+// zeroes.fill(8, 5, 10) //忽略
+// zeroes.fill(8, -10, -6) //忽略
+
+
+
+// let ints = [],
+//   reset = () => { ints = [0, 1, 2, 3, 4, 5, 6, 7, 8] }
+
+// reset()
+// // 复制0开始，从索引5插入
+// ints.copyWithin(5)
+// console.log(ints);// [0, 1, 2, 3, 4, 0, 1, 2, 3]
+
+// reset()
+// // 从5开始复制，从索引0位置插入
+// ints.copyWithin(0, 5)
+// console.log(ints);// [5, 6, 7, 8, 4, 5, 6, 7, 8]
+
+// reset()
+// // 从0开始复制至2(3不包括和fill一样)，在4位置插入
+// ints.copyWithin(4, 0, 3)
+// console.log(ints); // [0, 1, 2, 3, 0, 1, 2, 7, 8]
+
+// reset()
+// // JavaScript在查之前，会完整复制，不存在重写的问题
+// ints.copyWithin(2, 0, 6)
+// console.log(ints); // [0, 1, 0, 1, 2, 3, 4, 5, 8]
+
+// //对负索引的处理和fill是一样的
+// reset()
+// ints.copyWithin(2, -8, -3)
+// console.log(ints); // [0, 1, 1, 2, 3, 5, 6, 7, 8]
+
+
+
+// 转换方法
+// let color = ['green', 'blue', 'yellow']
+// console.log(color.toString()); //green,blue,yellow
+// console.log(color.valueOf()); //[ 'green', 'blue', 'yellow' ]
+
+
+// let person1 = {
+//   toString() {
+//     return 'Niko'
+//   },
+//   toLocaleString() {
+//     return 'NNNNNN'
+//   }
+// }
+// let person2 = {
+//   toString() {
+//     return 'Gero'
+//   },
+//   toLocaleString() {
+//     return 'GGGG'
+//   }
+// }
+// let persons = [person1, person2]
+// alert(persons) // Niko,Gero
+// console.log(persons.toString());
+// console.log(persons.toLocaleString());
+
+
+// let colors = ['green', 'red', undefined, 'yellow'] 
+// let colorsStr = colors.join('|')// 若是没参数，则默认使用','
+// console.log(colorsStr);// green|red||yellow  undefined被当作空字符处理了
+
+
+
+// // push() pop()
+// let names = ['wu', 'nico']
+// console.log(names.push('gero', 'sks')); //4 返回数组长度
+// console.log(names.pop()); // sks
+
+
+// // shift() unshift()
+// let names = ['wu', 'nico']
+// console.log(names.shift()); //wu
+// console.log(names.unshift('gero')); //2,返回数组长度
+
+
+
+
+// sort() reverse()
+// let values = [0, 1, 5, 10, 15]
+// values.reverse()
+// console.log(values); // [15, 10, 5, 1, 0]
+// values.sort()
+// console.log(values); // [0, 1, 10, 15, 5] 转换为string，由字符串来决定顺序
+
+
+// // 比较函数接受两个参数,value1需要排在value2之前，就返回-1 反之返回1 .相等返回0
+// function compare(value1, value2) {
+//   if (value1 > value2) {
+//     return 1
+//   } else if (value1 < value2) {
+//     return -1
+//   } else {
+//     return 0
+//   }
+// }
+// let values = [0, 1, 5, 10, 15]
+// values.sort(compare)
+// console.log(values);
