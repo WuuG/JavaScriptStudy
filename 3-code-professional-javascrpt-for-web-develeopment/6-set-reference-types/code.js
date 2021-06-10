@@ -259,3 +259,104 @@
 // let values = [0, 1, 5, 10, 15]
 // values.sort(compare)
 // console.log(values);
+
+
+
+// // 操作方法
+// let colors = ['green', 'red', 'blue']
+// let colors2 = colors.concat('black', colors)
+// console.log(colors2); // ['green', 'red', 'blue', 'black', 'green', 'red', 'blue']
+
+
+// 重写concat的flat行为
+// let nums = [1, 2, 3, 4]
+// let newNums = [5, 6, 7]
+// newNums[Symbol.isConcatSpreadable] = false // true则打平数组，false不打平
+// console.log(nums.concat(newNums));  // [ 1, 2, 3, 4, [ 5, 6, 7 ] ]
+
+
+// slice()
+// let nums = [1, 2, 3, 4, 5, 6]
+// let nums2 = nums.slice(1) // [2, 3, 4, 5, 6]
+// let nums3 = nums.slice(1, 3) // [2, 3]
+
+
+// // splice(),
+// let nums = [0, 1, 2, 3, 4, 5]
+// console.log(nums.splice(0, 2)); //[0,1]  返回被删除的值组成的数组
+// console.log(nums); // [2,3,4,5]  
+
+// nums = [0, 1, 2, 3, 4, 5]
+// console.log(nums.splice(1, 0, 'fist', 'second'));  // []
+// console.log(nums); // // [0,'first','second',1,2,3,4,5] 在指定位置前插入
+
+// nums = [0, 1, 2, 3, 4, 5]
+// console.log(nums.splice(1, 1, 'first', 'second')); // [1]
+// console.log(nums);// [0,'first','second',2,3,4,5] // 删除同时指定位置前插入
+
+
+
+// 搜索和位置方法
+// 接受两个参数，要查找的元素和从一个起始位置
+// let nums = [1, 2, 3, 4, 5, 4, 3, 2, 1]
+// console.log(nums.indexOf(4)); // 3 返回4所在位置的索引
+// console.log(nums.lastIndexOf(4)) // 5
+// console.log(nums.includes(4)); // true
+// console.log(nums.indexOf(4, 4)); // 5
+// console.log(nums.lastIndexOf(4, 4)) // 3
+// console.log(nums.includes(4, 7)); // false
+
+// let person = { name: 'Nico' }
+// let people = [{ name: 'Nico' }]
+// let people2 = [person]
+// console.log(people.indexOf(person));  // -1
+// console.log(people2.indexOf(person)); // 0
+// console.log(people.includes(person)); // false
+// console.log(people2.includes(person)); // true
+
+
+// 断言函数
+// 断言函数接受三个参数：元素，索引和数组本身,断言返回针织。表示是否匹配
+// find(),findIndex(),[断言函数[指定this值]]
+// const people = [
+//   { name: 'Nico', age: 17 },
+//   { name: 'Gero', age: 20 }
+// ]
+// const judgeAge = (element, index, array) => element.age <= 18
+// console.log(people.find(judgeAge)); // [{ name: 'Nico', age: '17' }]
+// console.log(people.findIndex(judgeAge)); // 0
+
+// const num = [0, 1, 2, 3, 4]
+// const result = num.find((element, index, array) => {
+//   console.log(element, index, array);
+//   return element === 2
+// })
+// // 0 0 [ 0, 1, 2, 3, 4 ]
+// // 1 1 [ 0, 1, 2, 3, 4 ]
+// // 2 2 [ 0, 1, 2, 3, 4 ]
+// console.log(result); // [2]
+
+
+
+// 迭代方法
+// let num = [1, 2, 3, 4, 5, 4, 3, 2, 1]
+// let everyResult = num.every((item, index, array) => item > 2) // false
+// let someResult = num.some((item, index, array) => item > 2) // true
+// console.log(num.includes(2));// true,不能使用断言函数
+
+
+// filter()
+// let nums = [1, 2, 3, 4, 3, 2, 1]
+// let filterResult = nums.filter((item, index, array) => item < 2)
+// console.log(filterResult); //[1, 1]
+
+
+// map()
+// let nums = [1, 2, 3, 4, 5, 4, 3, 2, 1]
+// let mapRes = nums.map((item, index, array) => item ** 2)
+// console.log(mapRes);[1, 4, 9, 16] // [1, 4, 9, 16, 25, 16, 9, 4, 1]
+
+
+// forEach()
+let nums = [1, 2, 3, 4]
+console.log(nums.forEach((item, index, array) => item > 2)); //undefined
