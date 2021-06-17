@@ -794,14 +794,279 @@
 
 
 // 原型的问题
-function Person() { }
-Person.prototype = {
-	constructor: Person,
-	friends: ['Shely', 'Court']
+// function Person() { }
+// Person.prototype = {
+// 	constructor: Person,
+// 	friends: ['Shely', 'Court']
+// }
+// const person1 = new Person()
+// const person2 = new Person()
+// person1.friends.push('vash')
+// console.log(person1.friends);// [ 'Shely', 'Court', 'vash' ]
+// console.log(person2.friends);// [ 'Shely', 'Court', 'vash' ]
+// console.log(person1.friends === person2.friends);
+
+
+
+
+// 继承
+// function SuperType() {
+// 	this.property = true
+// }
+// SuperType.prototype.getSuperValue = function () {
+// 	return this.property
+// }
+// function SubType() {
+// 	this.subproperty = false;
+// }
+// // 这里将SubType的原型重写为SuperType的实例,并且使用了SuperType的构造函数。
+// SubType.prototype = new SuperType()
+// SubType.prototype.getSubValue = function () {
+// 	return this.subproperty
+// }
+// // instance使用了SubType构造函数，其原型指向SubType.prototype.
+// let instance = new SubType()
+// console.log(instance.getSuperValue()); // true
+
+// console.log(SubType.prototype.constructor);// SuperType { property: true, getSubValue: [Function (anonymous)] }
+// console.log(instance.__proto__);// SuperType { property: true, getSubValue: [Function (anonymous)] }
+// console.log(instance);// SuperType { subproperty: false }
+
+
+// console.log(instance instanceof SubType); // true
+// console.log(instance instanceof SuperType); // true
+// console.log(instance instanceof Object); // true
+
+// console.log(Object.prototype.isPrototypeOf(instance)); // true
+// console.log(SuperType.prototype.isPrototypeOf(instance)); // true
+// console.log(SubType.prototype.isPrototypeOf(instance)); // true
+
+
+
+// 子类若是要覆盖父类的方法，或增加父类没有的方法。必须在原型赋值之后再添加到原型上。
+// function SuperType() {
+// 	this.proterty = true
+// }
+// SuperType.prototype.getSuperValue = function () {
+// 	return this.proterty
+// }
+// function SubType() {
+// 	this.subproperty = false
+// }
+// // 继承
+// SubType.prototype = new SuperType()
+// // 增加新方法
+// SubType.prototype.getSubValue = function () {
+// 	return this.subproperty
+// }
+// // 覆盖已有同名方法
+// SubType.prototype.getSuperValue = function () {
+// 	return false
+// }
+// const instance = new SubType()
+// console.log(instance.getSuperValue()); // false
+
+// // 重写了SubType的原型，重写了原型链
+// SubType.prototype = {
+// 	sayhi() {
+// 		console.log("hi");
+// 	}
+// }
+// const instance1 = new SubType()
+// console.log(instance1.__proto__); // { sayhi: [function: sayhi] }
+// console.log(instance1.getsubvalue()); // typeerror
+
+
+
+// 原型链的问题（引用值）
+// function SuperType() {
+// 	this.colors = ['red', 'green', 'blue']
+// }
+// function SubType() { }
+// SubType.prototype = new SuperType()
+// const instance1 = new SubType()
+// const instance2 = new SubType()
+// instance1.colors.push('yellow')
+// console.log(instance1.colors);// [ 'red', 'green', 'blue', 'yellow' ]
+// console.log(instance1.colors);// [ 'red', 'green', 'blue', 'yellow' ]
+
+
+
+
+// 盗用构造函数
+// function SuperType() {
+// 	this.numbers = [0, 1, 2, 3]
+// }
+// function SubType() {
+// 	// 在子类中调用父类的构造函数
+// 	SuperType.call(this)
+// }
+// const instance1 = new SubType()
+// const instance2 = new SubType()
+// instance1.numbers.push(4, 5, 6)
+// // 解决了引用值的问题
+// console.log(instance1.numbers);// [  0, 1, 2, 3,  4, 5, 6]
+// console.log(instance2.numbers);// [ 0, 1, 2, 3 ]
+
+
+
+// 传递参数
+// function SuperType(name) {
+// 	this.name = name
+// }
+// function SubType() {
+// 	SuperType.call(this, "Nico")
+// 	this.age = 19
+// }
+// let instance = new SubType()
+// console.log(instance.name); // Nico
+
+
+
+// 组合继承
+// function SuperType(name) {
+// 	this.name = name;
+// 	this.numbers = [0, 1, 2]
+// }
+// SuperType.prototype.sayName = function () {
+// 	console.log(this.name);
+// }
+// function SubType(name, age) {
+// 	this.age = age
+// 	SuperType.call(this, name)
+// }
+// SubType.prototype = new SuperType();
+// SubType.prototype.sayAge = function () {
+// 	console.log(this.age);
+// }
+// const instance1 = new SubType('Nico', 19)
+// const instance2 = new SubType('Gery', 40)
+// instance1.numbers.push(3, 4, 5, 6)
+// console.log(instance1.numbers);// [0, 1, 2, 3, 4, 5, 6]
+// console.log(instance2.numbers);// [0, 1, 2]
+// instance1.sayName()// Nico
+// instance1.sayAge()// 19
+// instance2.sayName()// Gery
+// instance2.sayAge()// 40
+
+
+
+
+// 原型式继承
+// 这个函数目的是为了实现不需要自定义类型也可以通过原型实现对象之间的信息共享。
+// object本质上会创建一个临时构造函数，将传入的对象作为这个构造函数的原型，然后返回这个原型的实例。
+// function object(o) {
+// 	function F() { }
+// 	F.prototype = o
+// 	return new F()
+// }
+
+// let person = {
+// 	name: "Nico",
+// 	friends: ['Gery', 'Court']
+// }
+// let anotherPerson = object(person)
+// // 返回的实例的name被shadow了
+// anotherPerson.name = "Greg"
+// // friends是多个对象共享的，因为其在实例的原型上。
+// anotherPerson.friends.push('Rob')
+
+// let yetAanotherPerson = object(person)
+// yetAanotherPerson.name = "Linda"
+// yetAanotherPerson.friends.push('Baribie')
+// console.log(person.friends);// [ 'Gery', 'Court', 'Rob', 'Baribie' ]
+
+
+
+// Object.create()
+// let person = {
+// 	name: 'Nico',
+// 	friends: ['Gery', 'Jerry']
+// }
+// let anotherPerson = Object.create(person)
+// anotherPerson.name = "Court"
+// anotherPerson.friends.push('Rob')
+// let yetAnotherPerson = Object.create(person)
+// yetAnotherPerson.name = "Linda"
+// yetAnotherPerson.friends.push('Stevern')
+// console.log(person.friends);// [ 'Gery', 'Jerry', 'Rob', 'Stevern' ]
+
+
+
+// let person = {
+// 	name: 'Nico',
+// 	friends: ['Gery', 'Jerry']
+// }
+// let anotherPerson = Object.create(person, {
+// 	name: {
+// 		value: 'Court',
+// 		enumerable: true
+// 	}
+// })
+// console.log(anotherPerson);// { name: 'Court' }
+
+
+
+// 寄生式继承
+// function createAnother(original) {
+// 	// 通过调用函数创建一个新对象,这里进行浅复制，不一定要Object.create()这个函数
+// 	let clone = Object.create(original) 
+// 	console.log(clone === original);
+// 	clone.sayHi = function () { // 增强对象
+// 		console.log('Hi');
+// 	}
+// 	return clone // 返回这个对象
+// }
+
+// let person = {
+// 	name: "Nico",
+// 	friends: ['Shely', 'Court']
+// }
+// let anotherPerson = createAnother(person)
+// anotherPerson.sayHi() // Hi
+// person.sayHi()
+
+
+
+// 寄生组合继承
+// function SuperType(name) {
+// 	this.name = name
+// 	this.numbers = [0, 1, 2]
+// }
+// SuperType.sayName = function () {
+// 	console.log(this.name);
+// }
+// function SubType(name, age) {
+// 	this.age = age
+// 	SuperType.call(this, name) // 第二次调用SuperType()
+// }
+// SubType.prototype = new SuperType()// 第一次调用SuperType()
+// SubType.prototype.constructor = SubType
+// SubType.prototype.sayAge = function () {
+// 	console.log(this.age);
+// }
+// // 第一次调用SuperType()时在SubType的原型上构造了name和numbers
+// // 第二次生成实例的时候，再实例上有构造了name和numbers，以此遮蔽了其原型上的同名属性
+
+
+function inheritPrototype(SubType, SuperType) {
+	const prototype = Object.create(SuperType.prototype) // 获取SuperType原型的实例副本
+	prototype.constructor = SubType
+	return prototype
 }
-const person1 = new Person()
-const person2 = new Person()
-person1.friends.push('vash')
-console.log(person1.friends);// [ 'Shely', 'Court', 'vash' ]
-console.log(person2.friends);// [ 'Shely', 'Court', 'vash' ]
-console.log(person1.friends === person2.friends);
+function SuperType(name) {
+	this.name = name
+	this.numbers = [0, 1, 2]
+}
+SuperType.sayName = function () {
+	console.log(this.name);
+}
+function SubType(name, age) {
+	this.age = age
+	SuperType.call(this, name)
+}
+// 通过寄生式继承来处理父类原型,而不用执行构造函数
+SubType.prototype = inheritPrototype(SubType, SuperType)
+SubType.prototype.sayAge = function () {
+	console.log(this.age);
+}
