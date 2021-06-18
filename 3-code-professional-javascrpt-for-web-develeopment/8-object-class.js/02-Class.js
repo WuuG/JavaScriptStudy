@@ -591,8 +591,11 @@ let BazMixin = (Superclass) => class Baz extends Superclass {
 }
 class Bus extends FooMixin(BarMixin(BazMixin(Vehicle))) { }
 let bus = new Bus()
-console.log(bus.__proto__);
-console.log(bus.__proto__.__proto__);
-console.log(bus.__proto__.__proto__.__proto__);
-console.log(bus.__proto__.__proto__.__proto__.__proto__);
+console.log(bus.__proto__); // Foo {}
+console.log(bus.__proto__.__proto__); // Bar {}
+console.log(bus.__proto__.__proto__.__proto__); // Baz {}
+console.log(bus.__proto__.__proto__.__proto__.__proto__); // Vehicle {}
+
+
+
 
