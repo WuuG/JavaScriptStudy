@@ -407,11 +407,166 @@
 
 
 // construct()捕获器会在new操作时被调用。对应反射API方法为Reflect.construct()
-const myTarget = function () { }
-const proxy = new Proxy(myTarget, {
-	construct(target, argumentList, newTarget) {
-		console.log('construct()');
-		return Reflect.construct(...arguments)
+// const myTarget = function () { }
+// const proxy = new Proxy(myTarget, {
+// 	construct(target, argumentList, newTarget) {
+// 		console.log('construct()');
+// 		return Reflect.construct(...arguments)
+// 	}
+// })
+// new proxy // construct()
+
+
+
+
+
+// 跟踪属性访问
+// const user = {
+// 	name: 'Nico'
+// }
+// const proxy = new Proxy(user, {
+// 	get(target, property, receiver) {
+// 		const s = new Date()
+// 		console.log(`Getting ${property} in ${s}`);
+// 		return Reflect.get(...arguments)
+// 	},
+// 	set(target, property, value, receiver) {
+// 		console.log(`Setting ${property}=${value}`);
+// 		return Reflect.set(...arguments)
+// 	}
+// })
+// proxy.name // Getting name in [[time]]
+// proxy.name = 'Grey' // Setting name=Gery
+
+
+
+// const hiddenProperties = ['foo', 'bar']
+// const targetObject = {
+// 	foo: 1,
+// 	bar: 2,
+// 	baz: 3
+// }
+// const proxy = new Proxy(targetObject, {
+// 	get(target, property, receiver) {
+// 		if (hiddenProperties.includes(property)) {
+// 			return undefined
+// 		}
+// 		return Reflect.get(...arguments)
+// 	},
+// 	has(target, property) {
+// 		if (hiddenProperties.includes(property)) {
+// 			return undefined
+// 		}
+// 		return Reflect.has(...arguments)
+// 	}
+// })
+// console.log(proxy.foo); // undefined
+// console.log(proxy.bar); // undefined
+// console.log(proxy.baz); // 3
+
+// console.log('foo' in proxy); // false
+// console.log('bar' in proxy); // false
+// console.log('baz' in proxy); // true
+
+
+
+// 属性验证
+// const target = {
+// 	onlyNumbersGohere: 0
+// }
+// const proxy = new Proxy(target, {
+// 	set(target, p, value) {
+// 		if (typeof value != 'number') {
+// 			return false
+// 		}
+// 		return Reflect.set(...arguments)
+// 	}
+// })
+// proxy.onlyNumbersGohere = 1
+// console.log(proxy.onlyNumbersGohere); // 1
+// proxy.onlyNumbersGohere = '2'
+// console.log(proxy.onlyNumbersGohere); // 1
+
+
+
+// 同属性验证类似，也可以对函数和构造函数参数进行审查。
+// function median(...nums) { // 中位数
+// 	return nums.sort(
+// 		(num1, num2) => num1 > num2 ? 1 : -1
+// 	)[Math.floor(nums.length / 2)]
+// }
+// const proxy = new Proxy(median, {
+// 	apply(target, thisArg, argumentsList) {
+// 		for (const arg of argumentsList) {
+// 			if (typeof arg !== 'number') {
+// 				throw 'Non-number argument provided'
+// 			}
+// 		}
+// 		return Reflect.apply(...arguments)
+// 	}
+// })
+// console.log(proxy(1, 2, 92, 4, 29));
+// console.log(proxy(1, '2', 3)); // Non-number argument provided
+
+
+// 构造函数传参
+// class User {
+// 	constructor(id) {
+// 		this.id_ = id
+// 	}
+// }
+// const proxy = new Proxy(User, {
+// 	construct(target, argumentsList, newTarget) {
+// 		if (argumentsList[0] === undefined) {
+// 			throw 'User cannot be instantiated without id'
+// 		} else {
+// 			return Reflect.construct(...arguments)
+// 		}
+// 	}
+// })
+// new proxy(1)
+// new proxy() // User cannot be instantiated without id
+
+
+
+// 将代理的类绑定到一个全局实例集合，让所有被创建的实例都添加到这个集合中。
+// const userList = []
+// class User {
+// 	constructor(name) {
+// 		this.name_ = name
+// 	}
+// }
+// const proxy = new Proxy(User, {
+// 	construct(target, aryArray, newTarget) {
+// 		const newUser = Reflect.construct(...arguments)
+// 		userList.push(newUser)
+// 		return newUser
+// 	}
+// })
+// new proxy('John')
+// new proxy('Nico')
+// new proxy('Gery')
+// console.log(userList);
+// // [User { name_: 'John' }, User { name_: 'Nico' }, User { name_: 'Gery' }]
+
+
+// 或者把集合绑定到一个时间分派程序，每次插入新实例就发送消息：
+const user = []
+function emit(newValue) {
+	console.log(`push value = ${newValue}`);
+}
+const proxy = new Proxy(user, {
+	set(target, p, value, receiver) {
+		const result = Reflect.set(...arguments)
+		if (result) {
+			emit(value)
+		}
+		return result
 	}
 })
-new proxy // construct()
+proxy.push('john')// 有点意思,set了两次,应该是length
+// push value = john
+// push value = 1
+proxy.push('Nico')
+// push value = Nico
+// push value = 2
