@@ -605,13 +605,90 @@
 
 
 // 一种优化的方法,满足尾调用的所有条件
-"use strict"
-function fib(n) {
-	return fibImpl(0, 1, n)
-}
-function fibImpl(a, b, n) {
-	if (n === 0) {
-		return a
-	}
-	return fibImpl(b, a + b, n - 1)
+// "use strict"
+// function fib(n) {
+// 	return fibImpl(0, 1, n)
+// }
+// function fibImpl(a, b, n) {
+// 	if (n === 0) {
+// 		return a
+// 	}
+// 	return fibImpl(b, a + b, n - 1)
+// }
+
+
+
+/** 
+ * 闭包
+*/
+// function compare(value1, value2) {
+// 	if (value1 < value2) {
+// 		return -1
+// 	} else if (value1 > value2) {
+// 		return 1
+// 	} else {
+// 		return 0
+// 	}
+// }
+// 在定义compare函数时，会为其创建作用域链，预装载全局变量对象，保存在内部的[[scope]]中。在调用这个函数时，会创建相应执行上下文，然后通过复制函数内部的[[scope]]来创建其作用域。接着会创建函数的活动对象并将其推入作用域前端(在这个例子中，就是全局作用域前面)。
+
+
+// 销毁函数
+// let compareNames = createCompareFunction('name')
+// let result = compareNames({name:'Nico',name:'Matt'})
+// compareNames = null // 此时才接触对函数的引用，原先的create...函数才会销毁
+
+
+
+// 闭包中的this
+// window.identity = 'The window'
+// let o = {
+// 	identity: 'My Object',
+// 	getIdentyFunc() {
+// 		return function () {
+// 			return this.identity
+// 		}
+// 	}
+// }
+// console.log(o.getIdentyFunc()()); // The window
+
+// window.identity = 'The window'
+// let o = {
+// 	identity: 'My Object',
+// 	getIdentyFunc() {
+// 		const that = this
+// 		return function () {
+// 			return that.identity
+// 		}
+// 	}
+// }
+// console.log(o.getIdentyFunc()()); // My Object
+
+
+// this的变化
+// global.identity = 'The window'
+// let o = {
+// 	identity: 'My Object',
+// 	getIdentyFunc() {
+// 		console.log(this.identity);
+// 	}
+// }
+// o.getIdentyFunc(); // My Object
+// (o.getIdentyFunc)(); // My Object
+// (o.getIdentyFunc = o.getIdentyFunc)(); // The window
+
+
+// 闭包 内存泄露
+// function assignHandler() {
+// 	let element = document.querySelector('div')
+// 	element.onclick = () => console.log(element.id);
+// }
+
+
+// 修改代码,将闭包内的element.id改为id消除循环引用。又因为闭包包含着函数的活动对象（其中存在element）所以还要将element置为null
+function assignHandler() {
+	let element = document.querySelector('div')
+	let id = element.id
+	element.onclick = () => console.log(id);
+	element = null
 }
