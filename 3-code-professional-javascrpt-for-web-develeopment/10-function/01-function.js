@@ -481,17 +481,137 @@
 // sayColor.call(o) // blue
 
 
-window.color = 'red'
-var o = {
-	color: 'blue'
-}
-const sayColor = function () {
-	console.log(this.color);
-}
-let objectSayColor = sayColor.bind(o)
-objectSayColor() // blue
+// window.color = 'red'
+// var o = {
+// 	color: 'blue'
+// }
+// const sayColor = function () {
+// 	console.log(this.color);
+// }
+// let objectSayColor = sayColor.bind(o)
+// objectSayColor() // blue
 
-// 对函数而言继承的方法toLocaleString()和toString()始终返回函数的代码(具体格式因浏览器格式而异).valueOf()则返回函数本身
-console.log(sayColor.toString());
-console.log(sayColor.toLocaleString());
-console.log(sayColor.valueOf());
+// // 对函数而言继承的方法toLocaleString()和toString()始终返回函数的代码(具体格式因浏览器格式而异).valueOf()则返回函数本身
+// console.log(sayColor.toString());
+// console.log(sayColor.toLocaleString());
+// console.log(sayColor.valueOf());
+
+
+
+/**
+ * 函数表达式
+*/
+// 一个危险的写法
+// let condition = true
+// if (condition) {
+// 	function sayHi() {
+// 		console.log('Hi!');
+// 	}
+// } else {
+// 	function sayHi() {
+// 		console.log('Hello!');
+// 	}
+// }
+// sayHi()
+
+
+
+/**
+ * 递归
+*/
+// 如之前的阶乘中使用的递归相同
+// function factorial(num) {
+// 	if (num <= 1) {
+// 		return 1
+// 	} else {
+// 		return num * arguments.callee(num - 1)
+// 	}
+// }
+// console.log(factorial(3)); // 6
+
+// 由于严格模式下无法访问arguments.callee.因此可以使用命名函数表达式达到目的
+// let factorial = function f(num) {
+// 	if (num <= 1) {
+// 		return 1
+// 	} else {
+// 		return num * f(num - 1)
+// 	}
+// }
+// let anotherFactorital = factorial
+// factorial = null
+// console.log(anotherFactorital(3)); // 6
+
+
+
+/**
+ * 尾调用优化
+*/
+// function outerFunction() {
+// 	return innerFunction() // 尾调用
+// }
+
+
+// 不符合尾调用优化的例子
+// "use strict"
+// // 尾调用没有返回
+// function outerFunction() {
+// 	innerFunction()
+// }
+// // 尾调用没有直接返回
+// function outerFuncion() {
+// 	let innerFunctionResult = innerFunction()
+// 	return innerFunctionResult
+// }
+// // 尾调用返回后必须转型为字符串,多了一步额外逻辑
+// function outerFunction() {
+// 	return innerFunction().toString()
+// }
+// // 尾调用是一个闭包
+// function outerFunction() {
+// 	let foo = 'bar'
+// 	function innerFunction() { return foo }
+// 	return innerFunction()
+// }
+
+
+// 符合尾调用优化的例子
+// "use strict"
+// // 栈帧销毁前执行参数计算
+// function outerFunction(a, b) {
+// 	return innerFunction(a + b)
+// }
+// // 初始返回值不涉及栈帧
+// function outerFunction(a, b) {
+// 	if (a < b) {
+// 		return a;
+// 	}
+// 	return innerFunction(a + b)
+// }
+// // 两个内部函数都在尾部
+// function outerFunction() {
+// 	return condition ? innerFunctionA() : innerFunctionB()
+// }
+
+
+
+// 尾调用例子
+// 显然不符合尾调用调条件。因为返回语句中有相加操作
+// function fib(n) {
+// 	if (n < 2) {
+// 		return n;
+// 	}
+// 	return fib(n - 1) + fib(n - 2)
+// }
+
+
+// 一种优化的方法,满足尾调用的所有条件
+"use strict"
+function fib(n) {
+	return fibImpl(0, 1, n)
+}
+function fibImpl(a, b, n) {
+	if (n === 0) {
+		return a
+	}
+	return fibImpl(b, a + b, n - 1)
+}
