@@ -1058,7 +1058,7 @@ function SuperType(name) {
 	this.name = name
 	this.numbers = [0, 1, 2]
 }
-SuperType.sayName = function () {
+SuperType.prototype.sayName = function () {
 	console.log(this.name);
 }
 function SubType(name, age) {
@@ -1070,3 +1070,5 @@ SubType.prototype = inheritPrototype(SubType, SuperType)
 SubType.prototype.sayAge = function () {
 	console.log(this.age);
 }
+let sub = new SubType('Nico', 18)
+sub.sayName() //Nico
