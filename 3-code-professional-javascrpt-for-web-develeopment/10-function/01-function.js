@@ -618,7 +618,7 @@
 
 
 
-/** 
+/**
  * 闭包
 */
 // function compare(value1, value2) {
@@ -686,9 +686,204 @@
 
 
 // 修改代码,将闭包内的element.id改为id消除循环引用。又因为闭包包含着函数的活动对象（其中存在element）所以还要将element置为null
-function assignHandler() {
-	let element = document.querySelector('div')
-	let id = element.id
-	element.onclick = () => console.log(id);
-	element = null
+// function assignHandler() {
+// 	let element = document.querySelector('div')
+// 	let id = element.id
+// 	element.onclick = () => console.log(id);
+// 	element = null
+// }
+
+
+
+/**
+ * IIFE
+*/
+// (function () {
+// 	for (var i = 0; i < 10; i++) {
+// 		console.log(i);
+// 	}
+// })()
+// console.log(i); // ReferenceError
+
+
+// IIFE锁定参数值。
+// let divs = document.querySelectorAll('div')
+// // 无法达到目的
+// for (var i = 0; i < divs.length; i++) {
+// 	divs[i].addEventListener('click', function () {
+// 		console.log(i); // 打印出来都是2
+// 	})
+// }
+
+// // 使用IIFE
+// for (var i = 0; i < divs.length; i++) {
+// 	divs[i].addEventListener('click', (function (frozenCounter) {
+// 		return function () {
+// 			console.log(frozenCounter);
+// 		}
+// 	})(i))
+// }
+
+
+
+/** 
+ * 特权方法
+*/
+// function MyObject() {
+// 	let privateVariable = 10
+// 	function privateFunction() { // 这个是闭包耶
+// 		return false
+// 	}
+// 	this.publicMethod = function () {
+// 		privateVariable++
+// 		return privateFunction()
+// 	}
+// }
+// let myObject = new MyObject()
+// console.log(myObject.privateVariable); // undefined
+// console.log(myObject.publicMethod()); // false
+
+
+// 例子
+// 在构造函数中定义私有变量和特权方法
+// function Person(name) {
+// 	this.getName = function () {
+// 		return name
+// 	}
+// 	this.setName = function (newValue) {
+// 		name = newValue
+// 	}
+// }
+// let person = new Person("Nico")
+// console.log(person.getName()); // Nico
+// person.setName('John')
+// console.log(person.getName()); // John
+
+
+// 静态私有变量
+// (function () {
+// 	// 私有变量和私有函数
+// 	let privateVariable = 10;
+// 	function privateFunction() {
+// 		return false
+// 	}
+// 	// 构造函数
+// 	MyObject = function () { }  // 无关键字，全局变量,且使用函数表达式（因为函数声明并不是必须的，在此处）
+// 	// 公有和特权方法
+// 	MyObject.prototype.publicMethod = function () {
+// 		privateVariable++
+// 		return privateFunction()
+// 	}
+// })()
+// const myObject = new MyObject()
+// console.log(myObject.publicMethod()); // false
+
+
+// 私有作用域定义私有变量和函数
+// (function () {
+// 	let name = ''
+// 	Person = function (value) {
+// 		name = value
+// 	}
+// 	Person.prototype.getName = function () {
+// 		return name
+// 	}
+// 	Person.prototype.setName = function (newValue) {
+// 		name = newValue
+// 	}
+// })()
+// let person1 = new Person("Nico")
+// console.log(person1.getName()); // Nico
+// person1.setName('John')
+// console.log(person1.getName()); // John
+
+// let person2 = new Person('Matt')
+// console.log(person2.getName()); // Matt
+// console.log(person1.getName()); // Matt
+
+
+
+// 模块模式
+// 单例对象。
+// let singleton = {
+// 	name: value,
+// 	method() {
+// 		// ...方法的代码
+// 	}
+// }
+
+
+// 模块模式样板代码
+/* let singleton = function () {
+	// 私有变量和私有函数
+	let privateVariable = 10;
+	function privateFunction() {
+		return false
+	}
+	// 特权/公有方法和属性
+	return {
+		publicProperty: true,
+		publicMethod() {
+			privateVariable++
+			return privateFunction()
+		}
+	}
+}()
+
+
+// 创建一个application对象用于管理组件
+let application = function () {
+	// 私有变量和私有函数
+	let components = new Array()
+	// 初始化
+	components.push(new BaseComponent())
+	// 公共接口
+	return {
+		getComponentCount() {
+			return components.length
+		},
+		registerComponent(component) {
+			if (typeof component == 'object') {
+				components.push(component)
+			}
+		}
+	}
+} */
+
+
+
+// 模块增强模式
+let singleton = function () {
+	let privateVariable = 20
+	function privateFunction() {
+		return false
+	}
+	let object = new CustonType()
+	object.publicProperty = true
+	object.publicMethod = function () {
+		privateVariable++
+		return privateFunction()
+	}
+	return object
+}
+
+
+// 若application对象必须是BaseComponent的实例则可以用对象增强模式，将要返回的对象进行new个构造函数
+let application = function () {
+	// 私有变量的私有函数
+	let components = new Array()
+	// 初始化
+	components.push(new BaseComponent())
+	// 创建局部变量保存实例
+	let app = new BaseComponent()
+	// 公共接口
+	app.getComponents = function () {
+		return components.length
+	}
+	app.registerComponents = function (component) {
+		if (typeof component === 'object') {
+			components.push(component)
+		}
+	}
+	return app
 }
