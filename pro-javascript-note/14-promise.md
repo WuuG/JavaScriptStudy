@@ -24,6 +24,15 @@
 		- [期约拓展](#期约拓展)
 			- [期约取消](#期约取消)
 			- [期约进度通知](#期约进度通知)
+- [异步函数](#异步函数)
+	- [异步函数基础](#异步函数基础)
+		- [async](#async)
+		- [await](#await)
+		- [await的限制](#await的限制)
+	- [停止和恢复执行](#停止和恢复执行)
+	- [异步函数策略](#异步函数策略)
+		- [实现sleep()](#实现sleep)
+		- [利用平行执行](#利用平行执行)
 # 异步编程
 ## 以往的异步编程模式
 异步返回值,回调函数
@@ -875,3 +884,319 @@ p.notify((x) => setTimeout(console.log, 0, 'progress A:', x))
 // complete
 ```
 > ES6不支持取消期约和通知进度，是因为会导致期约连锁和期约合成过度复杂化。
+# 异步函数
+ES8 的async/await旨在解决利用异步结构组织代码的问题。这个特性从行为和语法上增强了JavaScript，让以同步方式写的代码能够异步执行。
+## 异步函数基础
+### async
+async关键字用于声明异步函数。这个关键字可以用在函数声明、函数表达式、箭头函数和方法上
+``` js
+async function foo() { }
+let bar = async function () { }
+let baz = async () => { }
+class Qux {
+	async qux()
+}
+```
+使用async关键字可以让函数具有异步特征，但总体上代码仍是同步求值的。在闭包或参数方面，具有正常的JavaScript函数的正常行为。
+``` js
+async function foo() {
+	console.log(1);
+}
+foo()
+console.log(2);
+// 1
+// 2
+```
+异步函数如果使用async关键字返回了值(如果没有return返回undefined),这个值会被promise.resolve()包装成为一个期约对象。异步函数始终返回期约对象。在函数外部调用这个函数可以得到它返回的期约。
+``` js
+async function foo() {
+	return 3
+}
+foo().then(x => console.log(x)) // 3
+```
+异步函数期待一个实现thenable的接口，但常规值也可。若是实现了thenable接口的对象，则这个对象可以由提供给then()处理程序"解包".若不是，则返回值会经过Promise.resolve()进行封装。
+``` js
+// 返回一个原始值
+async function foo() {
+	return 'foo'
+}
+foo().then(console.log)
+// foo
+
+// 返回一个没有实现thenable接口的对象
+async function bar() {
+	return { bar: 'bar' }
+}
+bar().then(console.log)
+// {bar:'bar}
+
+// 返回一个实现了thenable的非期约对象
+async function baz() {
+	const thenable = {
+		then(callback) {
+			console.log('baz then');
+			callback('baz')
+		}
+	}
+	return thenable
+}
+baz().then(console.log)
+// baz then
+// baz
+
+// 返回一个期约
+async function qux() {
+	return Promise.resolve('qux')
+}
+qux().then(console.log)
+// qux
+```
+抛出错误会返回拒绝的期约
+``` js
+async function foo() {
+	console.log(1);
+	throw 3
+}
+foo().catch(console.log)
+console.log(2);
+// 1
+// 2
+// 3
+```
+拒绝期约的错误不会被异步函数捕获,但是return的话可以包装成rejcet了的promise。
+``` js
+async function foo() {
+	console.log(1);
+	Promise.reject(3)
+}
+foo().catch(console.log)
+console.log(2);
+// 1
+// 2
+// Uncaught (in promise) 3
+```
+### await
+异步函数主要针对需要等待的任务，因此await关键字可以暂停异步函数代码的执行，等待期约解决。
+``` js
+async function foo() {
+	let p = new Promise((resolve, reject) => setTimeout(resolve, 1000, 3))
+	console.log(await p);
+}
+foo()
+// 3 （一秒后打印）
+```
+await关键字，会暂停异步函数后面的代码，让出Javascript运行时的执行线程。这个行为与生成器函数中的yield关键字一样。await关键字同样是尝试"解包"对象的值，然后将这个值传给表达式，再异步恢复异步函数的执行。
+
+await关键字的一些基础用法
+``` js
+async function foo() {
+	console.log(await Promise.resolve('foo'));
+}
+foo()
+// 'foo'
+async function bar() {
+	return await Promise.resolve('bar')
+}
+bar().then(console.log)
+// bar
+async function baz() {
+	await new Promise((resolve, reject) => {
+		setTimeout(resolve, 1000)
+	})
+	console.log('baz')
+}
+baz()
+// baz (一秒后打印)
+```
+awati期待(实际上并不要求)一个实现了thenable接口的对象，但常规的值也可以。如果是实现thenable接口的对象，则这个对象可以有await"解包"。如果不是，则这个值就会被当作已经解决的期约
+``` js
+// 原始值
+async function foo() {
+	console.log(await 'foo');
+}
+foo()
+// 'foo'
+
+// 等待一个没有thenable接口的对象
+async function bar() {
+	console.log(await ['bar']);
+}
+bar()
+// ['bar']
+
+//等待一个实现了thenable接口的非期约对象
+async function baz() {
+	const thenable = {
+		then(callback) {
+			callback('baz')
+		}
+	}
+	console.log(await thenable);
+}
+baz()
+// 'baz'
+
+// 等待一个期约
+async function qux() {
+	console.log(await Promise.resolve('qux'));
+}
+qux()
+// 'qux'
+```
+等待抛出错误的同步操作，async函数,会返回拒绝的期约
+``` js
+async function foo() {
+	console.log(1);
+	await (() => { throw 3 })()
+}
+foo().catch(console.log)
+console.log(2);
+// 1
+// 2
+// 3
+```
+单独的Promise.reject()不会被async函数捕获，而会抛出未捕获错误。但若是用await去接受拒绝的promise，则会释放(unwrap)错误值(将拒绝期约返回 <-- return)
+``` js
+async function foo() {
+	console.log(1);
+	await Promise.reject(3)
+	console.log('不执行');
+}
+foo().catch(console.log)
+console.log(2);
+// 1
+// 2
+// 3
+```
+### await的限制
+await关键字必须在异步函数中使用。
+``` js
+// 立即执行的async/await函数
+(async function foo() {
+	console.log(await Promise.resolve(3));
+})()
+// 3
+```
+异步函数的特质不会扩展到内部嵌套的函数，因此下面例子均会报错
+``` js
+async function foo() {
+	const syncFn = () => {
+		return await Promise.resolve('foo')
+	}
+	console.log(syncFn);
+}
+async function baz() {
+	(function () {
+		console.log(await Promise.resolve('baz'));
+	})()
+}
+```
+## 停止和恢复执行
+使用await关键字后有一些微妙的地方。如下例，输出顺序和执行顺序相反(在TC39中对await进行了修改，所以并不是相反的顺序)。
+``` js
+async function foo() {
+	console.log(await Promise.resolve('foo'));
+}
+async function bar() {
+	console.log(await 'bar');
+}
+async function baz() {
+	console.log('baz');
+}
+foo()
+bar()
+baz()
+// baz
+// foo
+// bar
+```
+async/await中真正起作用的是await。async可以看成是一个标识符。若是async函数不包含await，则其执行和普通函数没有什么区别。
+``` js
+async function foo() {
+	console.log(2);
+}
+console.log(1);
+foo()
+console.log(3);
+// 1 2 3
+```
+await并不是等待一个值而已。JavaScript运行时碰到await，会记录再哪里暂停执行。等到await右边的值可用了，JavaScript运行时会向消息队列中推送一个任务，这个任务会恢复异步函数的执行。
+
+因此await后哪怕跟着立即可用的值，函数的其余部分也会被异步求值。
+``` js
+async function foo() {
+	console.log(2);
+	// 立即推入消息队列，进行等待。待同步线程执行完毕后，从消息队列中去除任务，恢复异步函数执行。
+	await null
+	console.log(4);
+}
+console.log(1);
+foo()
+console.log(3);
+// 1 2 3 4
+```
+在遇到await后会在推入消息队列。按队列顺序执行(在TC39后，Promise不会多推入执行队列中)。
+``` js
+async function foo() {
+	console.log(2);
+	console.log(await Promise.resolve(6));
+	console.log(7);
+}
+async function bar() {
+	console.log(4);
+	console.log(await 8);
+	console.log(9);
+}
+console.log(1);
+foo()
+console.log(3);
+bar()
+console.log(5);
+// 1 2 3 4 5 6 7 8
+```
+## 异步函数策略
+### 实现sleep()
+``` js
+async function sleep(delay) {
+	// setTimeout无法直接使用await哦
+	return new Promise((resolve, reject) => setTimeout(resolve, delay))
+}
+async function foo() {
+	const t0 = Date.now()
+	await sleep(1500)
+	console.log(Date.now() - t0); 
+} 
+foo() // 1517
+```
+### 利用平行执行
+使用await若是不留心，会错过平行加速的机会。如下面的例子，每个randomDealy,都需要等待其之前的异步函数结束，才能执行。
+``` js
+async function randomDelay(id) {
+  const random = Math.random() * 1000;
+  return await new Promise((resolve, reject) =>
+    setTimeout(() => {
+      console.log(`${id} finished`);
+      resolve();
+    }, random)
+  );
+}
+
+async function foo() {
+  const t0 = Date.now();
+  await randomDelay(0);
+  await randomDelay(1);
+  await randomDelay(2);
+  await randomDelay(3);
+  await randomDelay(4);
+  await randomDelay(5);
+  console.log(`${Date.now() - t0}ms all finished`);
+}
+foo();
+// 0 finished
+// 1 finished
+// 2 finished
+// 3 finished
+// 4 finished
+// 5 finished
+// 3257ms all finished
+```
