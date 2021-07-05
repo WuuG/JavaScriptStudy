@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>cancelToken</title>
+</head>
+
+<body>
+	<button id="start">start</button>
+	<button id="cancel">cancel</button>
+	<script>
+		class CancelToken {
+			constructor(cancelFn) {
+				this.promise = new Promise((resolve, reject) => {
+					// 2. 执行函数,执行后，这个promise切换为fulfilled状态。
+					cancelFn(() => {
+						setTimeout(console.log, 0, "delay cancelled")
+						resolve()
+					})
+				})
+			}
+		}
+		const startButton = document.querySelector('#start')
+		const cancelButton = document.querySelector('#cancel')
+		function cancelDelayedResolved(delay) {
+			setTimeout(console.log, 0, 'set delay')
+			const promise = new Promise((resolve, reject) => {
+				const id = setTimeout(() => {
+					setTimeout(console.log, 0, 'delay resolve')
+					resolve('resolve')
+				}, delay);
+				const cancelToken = new CancelToken(
+					// 1. 传了个函数参数进去,同时这个函数的作用是，将获取的参数作为取消按钮的点击事件
+					(callback) => cancelButton.onclick = callback
+				)
+				// 3. 一旦内部的promise切换为fulfilled状态，则clear掉之前的定时器,此后外部promise就不会取执行resolve()，因而无法进入fulfilled状态,并一直处于pending状态（可以根据需求进行处理）。
+				cancelToken.promise.then(() => {
+					clearTimeout(id)
+					reject()
+				})
+			})
+			// 4. 1.4s打印promise，来判断其所处状态
+			setTimeout(console.log, 1400, promise)
+			return promise
+		}
+		const handlePromise = () => cancelDelayedResolved(1000)
+			.then(x => console.log(`handle ${x}`))
+			.catch(x => console.log(`handle ${x}`))
+		startButton.addEventListener('click', handlePromise)
+	</script>
+</body>
+
+</html>

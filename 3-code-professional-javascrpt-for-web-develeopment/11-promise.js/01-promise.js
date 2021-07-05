@@ -555,4 +555,245 @@ setTimeout(console.log, 0, Promise.reject(Promise.resolve()))
 // // p3 executo
 
 
-// 
+
+// 工厂函数封装期约连锁
+// function delayResolve(str) {
+// 	return new Promise((resolve, reject) => {
+// 		console.log(`${str} executor`);
+// 		setTimeout(() => {
+// 			resolve()
+// 		}, 1000);
+// 	});
+// }
+// let p1 = delayResolve('p1')
+// p1.then(delayResolve('p2'))
+// 	.then(delayResolve('p3'))
+// 	.then(delayResolve('p4'))
+// 	.then(delayResolve('p5'))
+// p1 executor
+// p2 executor
+// p3 executor
+// p4 executor
+// p5 executor
+
+
+// 若是不使用期约则需要
+// function delayExecute(str, clallback = null) {
+// 	return new Promise((resolve, reject) => {
+// 		console.log(`${str} executor`);
+// 		setTimeout(() => {
+// 			clallback && clallback()
+// 		}, 1000);
+// 	});
+// }
+// // 回调地狱问题
+// delayExecute('p1 callback', () => {
+// 	delayExecute('p2 callback', () => {
+// 		delayExecute('p3 callbakc')
+// 	})
+// })
+// // p1 callback executor
+// // p2 callback executor
+// // p3 callbakc executor
+
+
+// then(),catch(),finally()串联使用
+// let p = new Promise((resolve, reject) => {
+// 	console.log(`initial promise rejects`);
+// 	reject()
+// })
+// p.catch(() => {
+// 	console.log(`reject handler`);
+// }).then(() => {
+// 	console.log(`resolve handler`);
+// }).finally(() => {
+// 	console.log(`finally handler`);
+// })
+// // initial promise rejects
+// // reject handler
+// // resolve handler
+// // finally handler
+
+
+
+// Promise.all
+// let p1 = Promise.all([
+// 	Promise.resolve(),
+// 	Promise.resolve()
+// ])
+// // 可迭代对象中的元素会通过Promise.resolve()转换为期约
+// let p2 = Promise.all([3, 4])
+// // 空的可迭代对象等价于Promise.resolve()
+// let p3 = Promise.all([])
+// // 不传参数，无效
+// let p4 = Promise.all() // TypeError: undefined is not iterable 
+
+
+// 合成的期约要在每个期约都解决之后解决
+// let p = Promise.all([
+// 	Promise.resolve(),
+// 	new Promise((resolve, rejcet) => setTimeout(resolve, 1000))
+// ])
+// setTimeout(console.log, 0, p)
+// p.then(() => setTimeout(console.log, 0, `all() resolved`))
+// Promise { <pending> }
+// all() resolved (一秒后..)
+
+
+// 如果至少有一个期约待定，则合成期约待定。如果一个包含的期约拒绝，则合成的期约也会拒绝。
+// let p1 = Promise.all([new Promise(() => { })])
+// setTimeout(console.log, 0, p1) // Promise { <rejected> undefined }
+
+// let p2 = Promise.all([
+// 	Promise.resolve(),
+// 	Promise.reject(),
+// 	Promise.resolve()
+// ])
+// setTimeout(console.log, 0, p2) // Promise { <pending> }
+
+
+// 若是所有期约都成功解决，则合成的期约的解决值是所有包含期约解决值的数组
+// let p = Promise.all([
+// 	Promise.resolve(3),
+// 	Promise.resolve(),
+// 	Promise.resolve('all')
+// ])
+// setTimeout(console.log, 0, p) // Promise { [ 3, undefined, 'all' ] }
+
+
+// 若是有期约拒绝，则第一个拒绝的期约会将自己的理由作为合成期约的拒绝理由。之后再拒绝的期约不会影响到合成期约的理由。但是其余期约的拒绝期约的正常操作还是会在后台静默进行,会静默处理所有包含期约的拒绝操作。
+// let p = Promise.all([
+// 	Promise.reject(3),
+// 	new Promise((resolve, rejcet) => setTimeout(rejcet, 0))
+// ])
+// p.catch((reason) => console.log(reason)) // 3
+// // 没有未处理的错误，因为后台会静默处理其他拒绝操作。
+
+
+
+// Promise.race()
+// let p1 = Promise.race([
+// 	Promise.resolve(),
+// 	Promise.resolve()
+// ])
+// // 通过Promise.resolve()转化为期约
+// let p2 = Promise.race([3,4])
+// // 空的可迭代对象，等价于new Promise(()=>{})
+// let p3 = Promise.race([])
+// // 无效语法
+// let p4 = Promise.race()
+
+
+// Promise.race()对拒绝和解决一视同仁，只要第一个落定，就会包装成期约对象返回
+// let p1 = Promise.race([
+// 	Promise.resolve(3),
+// 	new Promise((resolve, rejcet) => setTimeout(rejcet, 1000))
+// ])
+// setTimeout(console.log, 0, p1) // Promise { 3 }
+// let p2 = Promise.race([
+// 	Promise.reject(4),
+// 	new Promise((resolve, reject) => setTimeout(resolve, 1000))
+// ])
+// setTimeout(console.log, 0, p2) // Promise { <rejected> 4 }
+// // 迭代顺序决定了落定顺序
+// let p3 = Promise.race([
+// 	Promise.resolve(5),
+// 	Promise.resolve(6),
+// 	Promise.resolve(7),
+// ])
+// setTimeout(console.log, 0, p3) // Promise { 5 }
+
+
+// 与Promise.all()类似，只要有一个期约拒绝(第一个落定)，其就会成为拒绝合成期约的理由。其他拒绝期约会在后台处理其拒绝操作。
+// let p = Promise.race([
+// 	Promise.reject(3),
+// 	new Promise((resolve, reject) => setTimeout(reject, 1000))
+// ])
+// p.catch(reason => setTimeout(console.log, 0, reason)) // 3
+// 无其他错误，后台静默拒绝操作处理
+
+
+
+// 类似函数调用间的传参。 期约也可以利用前一个期约的参数
+// function addTwo(x) { return x + 2 }
+// function addThree(x) { return x + 3 }
+// function addFive(x) { return x + 5 }
+// function addTen(x) {
+// 	return Promise.resolve(x).then(addTwo).then(addThree).then(addFive)
+// }
+// addTen(2).then((x) => console.log(x)) // 12
+
+// // 使用Array.prototype.reduce()可以写成更简洁的模式
+// function addTen_1(x) {
+// 	return [addTwo, addThree, addFive].reduce((pre, cur) => pre.then(cur), Promise.resolve(x))
+// }
+// addTen_1(2).then(console.log) // 12
+
+
+// 这个模式可以提炼出一个通用函数，将任意多个函数作为处理程序合成一个连续传值的期约连锁。
+// function addTwo(x) { return x + 2 }
+// function addThree(x) { return x + 3 }
+// function addFive(x) { return x + 5 }
+// function compose(...fns) {
+// 	return (x) => fns.reduce((pre, cur) => pre.then(cur), Promise.resolve(x))
+// }
+// let addTen = compose(addTwo, addThree, addFive)
+// addTen(2).then(console.log) // 12
+
+
+
+//扩张promise，添加notify方法
+class TrackPromise extends Promise {
+	constructor(excutor) {
+		const notifyHandler = []
+		super((resolve, reject) => {
+			return excutor(resolve, reject, (status) => {
+				// 2. 对每一个状态去调用通知函数（通知函数在notifyHandler中）
+				notifyHandler.map((handler) => handler(status))
+			})
+		})
+		this.notifyHandler = notifyHandler
+	}
+	// 1. 添加通知函数进入notifyHander
+	notify(notifyHandler) {
+		this.notifyHandler.push(notifyHandler)
+		return this
+	}
+}
+
+let p = new TrackPromise((resolve, rejcet, notify) => {
+	function countdown(x) {
+		if (x > 0) {
+			// 3. 调用(status)=> {}那个函数，进而去调用通知函数
+			notify(`${20 * x}% remaining`)
+			setTimeout(() => countdown(x - 1), 1000)
+		} else {
+			resolve()
+		}
+	}
+	countdown(5)
+})
+// 添加通知函数
+// p.notify((x) => setTimeout(console.log, 0, 'progress:', x))
+// p.then(() => setTimeout(console.log, 0, 'complete'))
+// progress: 100% remaining
+// progress: 80% remaining
+// progress: 60% remaining
+// progress: 40% remaining
+// progress: 20% remaining
+// complete
+
+
+// 因为是return this, 所以可以在p上进行连缀调用。连缀会添加多个处理程序
+p.notify((x) => setTimeout(console.log, 0, 'progress A:', x))
+	.notify((x) => setTimeout(console.log, 0, 'progress B:', x))
+	.then(() => setTimeout(console.log, 0, 'complete'))
+// progress A: 80% remaining
+// progress B: 80% remaining
+// progress A: 60% remaining
+// progress B: 60% remaining
+// progress A: 40% remaining
+// progress B: 40% remaining
+// progress A: 20% remaining
+// progress B: 20% remaining
+// complete
