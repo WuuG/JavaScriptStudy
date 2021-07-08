@@ -234,3 +234,21 @@
 // setTimeout(() => {
 // 	location.replace('http://www.baidu.com')
 // }, 1000);
+
+
+// 查找是否存在插件，模糊搜索
+// let hasPlugin = function (name) {
+// 	name = name.toLowerCase()
+// 	for (let plugin of window.navigator.plugins) {
+// 		if (plugin.name.toLowerCase().indexOf(name) > -1) {
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }
+// console.log(hasPlugin('PDF')); // true
+
+
+
+// 注册处理程序
+navigator.registerProtocolHandler('mailto', 'https://mail.qq.com/cgi-bin/frame_html?sid=K0IPJUJ21KlPOHIS&r=d9683e3f93ebab1371d62fa7c71554cb&cmd=%s', "some Mail content")

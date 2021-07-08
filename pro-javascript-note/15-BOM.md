@@ -14,6 +14,9 @@
 - [location对象](#location对象)
 	- [查询字符串](#查询字符串)
 	- [操作地址](#操作地址)
+- [navigator对象](#navigator对象)
+	- [检测插件](#检测插件)
+	- [注册处理程序](#注册处理程序)
 # window对象
 window对象，表示浏览器实例。其有两重身份一个为ES中的Global对象，另一个就是浏览器窗口的Javascript接口。
 ## Global作用域
@@ -330,3 +333,38 @@ location.reload() // 重新加载，可能从缓存加载
 location.reload(true) // 重新加载，从服务器加载
 ```
 脚本中位于reload()调用之后的代码可能执行也可能不执行。因此最好将作为最后一行代码。
+# navigator对象
+下面列出了navigator的这些接口定义的属性和方法,navigator对象的属性通常用于确定浏览器的类型
+![](index_files/15-3.png)
+![](index_files/15-4.png)
+## 检测插件
+通过plugins数组来确定浏览器是否安装了某个插件。
++ name:插件名称
++ description:插件介绍
++ filename:插件的文件名
++ length:由但钱插件处理的MIME类型数量。
+``` js
+// 查找是否存在插件，模糊搜索
+let hasPlugin = function (name) {
+	name = name.toLowerCase()
+	for (let plugin of window.navigator.plugins) {
+		if (plugin.name.toLowerCase().indexOf(name) > -1) {
+			return true
+		}
+	}
+	return false
+}
+console.log(hasPlugin('PDF')); // true
+```
+> plugins数组中的每个插件还有个MimeType对象，可通过中括号访问。每个Mime对象有4个属性：description,enablePlugin(指向插件对象指针),suffixes是该MIME类型对应扩展名的逗号分割的字符，type是完整的MIME类型字符串。
+
+旧版本IE可以通过ActiveXObject构造函数实例化特定插件来判断。
+
+因为涉及两种方式，所以一般要针对特定插件写一个函数。 先调用非IE检测方法，然后在调用IE检测方法。
+## 注册处理程序
+现代浏览器支持navigator上的registerProtocalHandler()方法。这个方法可以将网站注册为处理某种特定类型信息应用程序。
+
+要使用registerProtocalHandler()方法，必须传入3个参数：要处理的协议、处理该协议的URL、以及应用名称。
+``` js
+navigator.registerProtocolHandler('mailto', 'https://mail.qq.com?cmd=%s', "some Mail content")
+```
