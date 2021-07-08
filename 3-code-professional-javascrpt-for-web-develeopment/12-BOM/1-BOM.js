@@ -251,4 +251,26 @@
 
 
 // 注册处理程序
-navigator.registerProtocolHandler('mailto', 'https://mail.qq.com/cgi-bin/frame_html?sid=K0IPJUJ21KlPOHIS&r=d9683e3f93ebab1371d62fa7c71554cb&cmd=%s', "some Mail content")
+// navigator.registerProtocolHandler('mailto', 'https://mail.qq.com/cgi-bin/frame_html?sid=K0IPJUJ21KlPOHIS&r=d9683e3f93ebab1371d62fa7c71554cb&cmd=%s', "some Mail content")
+
+
+
+/**
+ * history对象
+*/
+// const pushState = () => {
+// 	let stateObj = { foo: 'bar' }
+// 	history.pushState(stateObj, "my title", '?=num=10')
+// }
+
+// "后退"和"前进”时都会触发这个事件。
+// window.addEventListener('popstate', (event) => {
+// 	let state = event.state
+// 	if (state) { // 第一个页面加载时的状态是null
+// 		console.log(state);
+// 		//... 可以在这里对state进行处理
+// 	}
+// })
+
+
+// history.replaceState({ newFoo: 'foo' }, 'New title')

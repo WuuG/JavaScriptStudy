@@ -17,6 +17,10 @@
 - [navigator对象](#navigator对象)
 	- [检测插件](#检测插件)
 	- [注册处理程序](#注册处理程序)
+- [screen对象](#screen对象)
+- [history对象](#history对象)
+	- [导航](#导航)
+	- [历史状态管理](#历史状态管理)
 # window对象
 window对象，表示浏览器实例。其有两重身份一个为ES中的Global对象，另一个就是浏览器窗口的Javascript接口。
 ## Global作用域
@@ -368,3 +372,55 @@ console.log(hasPlugin('PDF')); // true
 ``` js
 navigator.registerProtocolHandler('mailto', 'https://mail.qq.com?cmd=%s', "some Mail content")
 ```
+# screen对象
+window的另一个属性screen对象，是为数不多几个在变成中很少用的JavaScript对象。这个对象中保存的纯粹的客户端能力信息，也就是浏览器窗口外面的客户端显示器的信息.
+![](index_files/15-5.png)
+# history对象
+history对象表示当前窗口首次使用依赖用户的导航历史记录。history是window的属性，因此每个window都有自己的history对象。出于安全考虑，这个对象不会暴露用户访问过的URL,但是可以通过它前进后退。
+## 导航
+go()方法可以在用户历史记录中沿任何方向导航,可以前进也可以后退.这个方法只接受一个参数，参数可以是一个整数，表示前进或后退多少步。
+``` js
+// 后退一页
+history.go(-1) 
+// 前进一页
+history.go(1) 
+```
+在旧版本的一些浏览器中，go()方法的参数也可以是一个字符串，这种情况下浏览器会导航到历史中包含该字符串的第一个位置。好像在edge中不太管用的样子
+
+go()有两个简写方法：back()和forward().
+``` js
+// 后退一页
+history.back()
+// 前进一页
+history.forward()
+```
+history对象还有一个length属性，表示历史记录中有多个条目。可以通过length是否等于1来判断是否用户浏览器的起点页面。
+> 如果页面URL发生变化，则会在历史记录中生成一个新的条目。对于2009年以来的主流浏览器，这包括改变URL的散列值（因此修改location.hash会在浏览器历史记录中增加一条记录）。因此单页面应用程序框架常利用这个行为来模拟前进和后退，并不会因为导航而触发页面刷新。
+## 历史状态管理
+hashchange会在页面URL的散列发生变化时被触发，开发者可以在此时执行某些操作。而状态管理API则可以让开发者改变浏览器URL而不会加载新页面。为此，可以使用history.pushState()方法。这个方法接受3个参数：一个state对象、一个新状态的标题和一个(可选的)相对URL
+``` js
+	let stateObj = { foo: 'bar' }
+	history.pushState(stateObj, "my title", '?=num=10')  // 跳转，修改了url。但是页面并没有刷新
+```
+pushState()方法执行后，状态信息就会被推到历史记录中，浏览器地址栏也会改变以反映新的相对的URL。除了这些变化之外，即使location.href返回的时地址栏中的内容，浏览器页也不会向服务器发送请求。第一个参数应该包含正确初始化页面状态所必须的信息。为防止滥用，这个状态大小是有限制的，通常在500KB~1MB
+
+因为pushState()会创建新的历史记录，所以也会启用相应的"后退"按钮。通过点击按钮可以触发window对象上的window popstate事件。其会传入一个state属性，其中包含通过pushState()传入的state对象参数
+``` js
+// "后退"和"前进”时都会触发这个事件。
+window.addEventListener('popstate', (event) => {
+	let state = event.state
+	if (state) { // 第一个页面加载时的状态是null
+		console.log(state);
+		//... 可以在这里对state进行处理
+	}
+})
+```
+基于这个状态，应该把页面重置为状态对象所表示的状态(浏览器不会自动会做处理)。页面初次加载没有状态。因此点击“后退”按钮直到返回最初页面时，event.state为null.
+
+可以通过history.state获取当前的状态对象，也可以使用replaceState()并传入与pushState()同样的前两个参数来更新状态。更新状态不会创建新历史记录，只会覆盖当前状态。
+``` js
+history.replaceState({ newFoo: 'foo' }, 'New title')
+history.state // { newFoo: 'foo' }
+```
+传给pushState()和replaceState()的state对象应该只包含可以被序列化的信息。因此，DOM元素之类并不适合放到状态对象里保存。
+> 使用HTML5状态管理时，要确保通过pushState()创建的每个"假"URL背后都对应着服务器上一个真实的物理URL。否则，单击“刷新”按钮导致404错误。所有单页面应用程序框架都必须通过服务器或客户端的某些配置解决这个问题。
