@@ -167,7 +167,70 @@
 // }
 
 
-// 打印的对话框。
-window.print()
-// 查找
-window.find('butt')
+// // 打印的对话框。
+// window.print()
+// // 查找
+// window.find('butt')
+
+
+
+/**
+ * location对象
+*/
+// location.search的处理
+// let getQueryString = function () {
+// 	let qs = (location.search.length > 0 ? location.search.substring(1) : ''),
+// 		args = {};
+// 	for (let item of qs.split("&").map(kv => kv.split("="))) {
+// 		let name = decodeURIComponent(item[0]),
+// 			value = decodeURIComponent(item[1]);
+// 		if (name.length) {
+// 			arg[name] = value
+// 		}
+// 	}
+// 	return args
+// }
+
+
+// URLSearchParams
+// let qs = "?q=javascript&num=10"
+// let searchParams = new URLSearchParams(qs)
+// console.log(searchParams.toString()); // q=javascript&num=10
+// console.log(searchParams.has('num')); // true
+// searchParams.set('page', '3')
+// console.log(searchParams.toString()); // q=javascript&num=10&page=3
+// searchParams.delete('q')
+// console.log(searchParams.toString());// num=10&page=3
+
+
+// URLSearchParams可迭代
+// let qs = "?q=javascript&num=10"
+// let searchParams = new URLSearchParams(qs)
+// for (let param of searchParams) {
+// 	console.log(param);
+// }
+// // [ 'q', 'javascript' ]
+// // [ 'num', '10' ]
+
+
+
+// 操作地址
+// location.assign("http://www.baidu.com")
+
+
+// href location
+// window.location = 'http://www.baidu.com'
+// location.href = "http://www.baidu.com"
+// window.location.href = "http://www.baidu.com"
+
+
+// location.hash = "#aaa"
+// location.search = "?num=10"
+// location.hostname = 'www.baidu.com'
+// location.pathname = "mydir"
+// location.port = "8000"
+
+
+// setTimeout(() => {
+// 	location.replace('http://www.baidu.com')
+// }, 1000);

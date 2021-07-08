@@ -11,6 +11,9 @@
 		- [弹窗屏蔽程序](#弹窗屏蔽程序)
 		- [定时器 setTimeout() setInterval()](#定时器-settimeout-setinterval)
 		- [系统对话框](#系统对话框)
+- [location对象](#location对象)
+	- [查询字符串](#查询字符串)
+	- [操作地址](#操作地址)
 # window对象
 window对象，表示浏览器实例。其有两重身份一个为ES中的Global对象，另一个就是浏览器窗口的Javascript接口。
 ## Global作用域
@@ -252,3 +255,78 @@ window.print()
 window.find('butt')
 ```
 这两个方法不会返回任何有关用户在对话框中执行了什么操作的信息，因此很难加以利用。且二者异步，所以浏览器对话框计数器不会涉及他们，且用户选择禁用对话框对这二者也没有影响。
+# location对象
+location提供了当前窗口中加载文档的信息，以及通常的导航功能。这个对象独特地方在于，其既是window的属性，也是document的属性。location不仅保存着当前加载文档的信息，也保存着把URL解析为离散片段后通过属性访问的信息。
+
+以下是URL：http://foouser:barpassword@www.wrox.com:80/WileyCDA/?q=javascript#contents
+![](index_files/15-2.png)
+## 查询字符串
+location的多数信息都很容易获取，但是search的查询字符串，需要进行处理才可以逐个访问查询参数。
+``` js
+let getQueryString = function () {
+	let qs = (location.search.length > 0 ? location.search.substring(1) : ''),
+		args = {};
+	for (let item of qs.split("&").map(kv => kv.split("="))) {
+		let name = decodeURIComponent(item[0]),
+			value = decodeURIComponent(item[1]);
+		if (name.length) {
+			arg[name] = value
+		}
+	}
+	return args
+}
+```
+URLSearchParams提供了一组标准API方法，通过他们可以检查和修改查询字符串。给URLSearchParams构造函数传入一个查询字符串，就可以创建一个实例。在这个实例上暴露了get(),set()和delete等方法，可以对查询字符串执行相应操作。
+``` js
+let qs = "?q=javascript&num=10"
+let searchParams = new URLSearchParams(qs)
+console.log(searchParams.toString()); // q=javascript&num=10
+console.log(searchParams.has('num')); // true
+searchParams.set('page', '3')
+console.log(searchParams.toString()); // q=javascript&num=10&page=3
+searchParams.delete('q')
+console.log(searchParams.toString());// num=10&page=3
+```
+大多数支持URLSearchParams的浏览器也支持将其实例作为可迭代对象
+``` js
+let qs = "?q=javascript&num=10"
+let searchParams = new URLSearchParams(qs)
+for (let param of searchParams) {
+	console.log(param);
+}
+// [ 'q', 'javascript' ]
+// [ 'num', '10' ]
+```
+## 操作地址
+可以通过修改location对象，修改浏览器的地址(会进行跳转)。 跳转至新URL的同时，会在浏览器历史记录中增加一条记录。
+``` js
+location.assign("http://www.baidu.com")
+```
+如果给location.herf或window.location设置一个URL，也会以同一个URL值调用assign()方法。
+``` js
+window.location = 'http://www.baidu.com'
+location.href = "http://www.baidu.com"
+window.location.href = "http://www.baidu.com"
+```
+修改location对象的属性也会修改当前加载的页面。其中,hash,search,hostname,pathname,和port属性被设为新值后都会修改当前URL
+``` js
+location.hash = "#aaa"
+location.search = "?num=10"
+location.hostname = 'www.baidu.com'
+location.pathname = "mydir"
+location.port = "8000"
+```
+除了hash外，只要修改location的一个属性，就会导致页面重新加载新URL
+
+> 修改hash的值会在浏览器历史中增加一个新纪录。老IE中hash属性在"前进","后退"时不会更新hash属性。
+
+前面的方法，修改URL之后浏览器记录中会增加相应记录。当用户点击"后退"时，就可以导航至前一个页面。若是不希望增加历史记录，可以使用replace()方法。
+``` js
+location.replace('http://www.baidu.com')
+```
+最后一个修改地址的方法是reload()
+``` js
+location.reload() // 重新加载，可能从缓存加载
+location.reload(true) // 重新加载，从服务器加载
+```
+脚本中位于reload()调用之后的代码可能执行也可能不执行。因此最好将作为最后一行代码。
