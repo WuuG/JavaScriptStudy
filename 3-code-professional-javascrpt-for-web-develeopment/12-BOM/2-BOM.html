@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>BOM</title>
+	<style>
+		body {
+			width: 2000px;
+			height: 2000px;
+			background-color: #eee;
+		}
+
+		#btn {
+			margin: 200px;
+		}
+	</style>
+</head>
+
+<body>
+	<button id="btn">button</button>
+	<script src="./1-BOM.js"></script>
+	<script>
+		const btn = document.querySelector('#btn')
+		btn.addEventListener('click', () => {
+			const innerWidth = document.documentElement.clientWidth
+			const innerHeight = document.documentElement.clientHeight
+			console.log(innerWidth, innerHeight);
+		})
+		// btn.addEventListener('click', resize)
+		// btn.addEventListener('click', scrollMyView)
+	</script>
+</body>
+
+</html>
