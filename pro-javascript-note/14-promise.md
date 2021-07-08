@@ -33,6 +33,8 @@
 	- [异步函数策略](#异步函数策略)
 		- [实现sleep()](#实现sleep)
 		- [利用平行执行](#利用平行执行)
+		- [串行执行期约](#串行执行期约)
+		- [栈追踪和内存管理](#栈追踪和内存管理)
 # 异步编程
 ## 以往的异步编程模式
 异步返回值,回调函数
@@ -1199,4 +1201,151 @@ foo();
 // 4 finished
 // 5 finished
 // 3257ms all finished
+```
+如果顺序不是必须的，可以让其并发执行。通过一次性初始化所有期约，再分别等待其结果。
+``` js
+async function randomDelay(id) {
+  const random = Math.random() * 1000;
+  return await new Promise((resolve, reject) =>
+    setTimeout(() => {
+      console.log(`${id} finished`);
+      resolve(id);
+    }, random)
+  );
+}
+async function foo() {
+  const t0 = Date.now();
+  const p0 = randomDelay(0);
+  const p1 = randomDelay(1);
+  const p2 = randomDelay(2);
+  const p3 = randomDelay(3);
+  const p4 = randomDelay(4);
+  await p0;
+  await p1;
+  await p2;
+  await p3;
+  await p4;
+  console.log(`${Date.now() - t0}ms all finished`);
+}
+foo(); 
+// 0 finished
+// 4 finished
+// 1 finished
+// 3 finished
+// 2 finished
+// 617ms all finishe
+```
+虽然期约没有按顺序执行，但await按顺序收到了每个期约的值
+``` js
+// 虽然期约没有按顺序执行，但await按顺序收到了每个期约的值
+async function randomDelay(id) {
+  const random = Math.random() * 1000;
+  return await new Promise((resolve, reject) =>
+    setTimeout(() => {
+      resolve(id);
+      console.log(`${id} finished`);
+    }, random)
+  );
+}
+async function foo() {
+  const t0 = Date.now();
+  const promises = Array(5)
+    .fill(null)
+    .map((_, i) => randomDelay(i));
+  for (const p of promises) {
+    console.log(`await ${await p}`);
+  }
+}
+foo();
+// 1 finished
+// 4 finished
+// 3 finished
+// 0 finished
+// await 0
+// await 1
+// 2 finished
+// await 2
+// await 3
+// await 4
+```
+
+尝试实现一个promise.all
+``` js
+async function randomDelay(id) {
+  const random = Math.random() * 1000;
+  return await new Promise((resolve, reject) =>
+    setTimeout(() => {
+      resolve(id);
+    }, random)
+  );
+}
+const pArr = [randomDelay(0), randomDelay(1), randomDelay(2), randomDelay(3)];
+async function myPromiseAll(pArr) {
+  try {
+    const res = [];
+    for (const promise of pArr) {
+      const result = await promise;
+      res.push(result);
+    }
+    return Promise.resolve(res);
+  } catch (error) {
+    throw error;
+  }
+}
+myPromiseAll(pArr)
+  .then((res) => console.log(res))
+  .catch((err) => console.log(err));
+```
+### 串行执行期约
+async/await，实现期约连锁
+``` js
+async function addTwo(x) {
+  return x + 2;
+}
+async function addThree(x) {
+  return x + 3;
+}
+async function addFive(x) {
+  return x + 5;
+}
+async function addTen(x) {
+  for (const p of [addTwo, addThree, addFive]) {
+    x = await p(x);
+  }
+  return x;
+}
+addTen(9).then((res) => console.log(res));
+```
+### 栈追踪和内存管理
+期约与异步函数的功能有相当程度的重叠，但它们在内存中的表示，则差别很大。
+
+JavaScript引擎创建期约时尽可能保存完整的调用栈。在抛出错误时，调用栈可以获取运行时的处理逻辑。这样意味着会增加额外的计算和存储成本
+``` js
+function fooPromiseExecutor(resolve, reject) {
+  setTimeout(reject, 1000, "bar");
+}
+function foo() {
+  new Promise(fooPromiseExecutor);
+}
+foo();
+Uncaught (in promise) bar
+setTimeout (async)
+fooPromiseExecutor
+foo
+(anonymous)
+```
+异步函数的追踪信息则时准确反映当前的调用栈。其中已经返回的函数，就不会出现在栈中了。
+``` js
+function fooPromiseExecutor(resolve, reject) {
+  setTimeout(reject, 1000, "bar");
+}
+async function foo() {
+  await new Promise(fooPromiseExecutor);
+}
+foo();
+// Uncaught (in promise) bar
+// foo
+// async function (async)
+// foo
+// (anonymous)
 ```
