@@ -171,5 +171,144 @@ const bodyNode = document.body
 // 文档写入
 
 
-document.write('<span>' + (new Date()).toString() + '</span>')
-document.writeln('<strong>' + (new Date()).toString() + '</strong>')
+// document.write('<span>' + (new Date()).toString() + '</span>')
+// document.writeln('<strong>' + (new Date()).toString() + '</strong>')
+
+
+
+/** 
+ * Element节点
+*/
+// const test = document.querySelector('#test')
+// console.log(test.tagName); // DIV
+// console.log(test.tagName === test.nodeName); // true
+
+
+// const test = document.querySelector('#test')
+// if (test.tagName.toLowerCase() === 'div') {
+// 	console.log('XML文档也可识别');
+// }
+
+
+
+// HTML均有的属性
+// const div = document.getElementById('myDiv')
+// console.log(div.id); // myDiv
+// console.log(div.className); // bd
+// console.log(div.title); // body Text
+// console.log(div.lang); // en
+// console.log(div.dir); // ltr
+
+// div.id = 'otherId'
+// div.className = 'test'
+// div.title = 'some other title'
+// div.lang = 'zh_cn'
+// div.dir = 'rtl'
+
+// console.log(div.id); // otherId
+// console.log(div.className); // test
+// console.log(div.title); // some other title
+// console.log(div.lang); // zh_cn
+// console.log(div.dir); // rtl
+
+
+
+// 取得属性
+// const div = document.getElementById('myDiv')
+// console.log(div.getAttribute('id')); // myDiv
+// console.log(div.getAttribute('class')); // bd
+// console.log(div.getAttribute('dir')); // ltr
+
+// console.log(div.getAttribute('my_spical_attribute')); // hello!
+
+
+// 差异属性,style
+// console.log(div.getAttribute('style'));  // text-align: center;
+// console.log(div.style); // CSSStyleDeclaration {...}
+
+
+// 事件属性
+// const div = document.getElementById('myDiv')
+// div.onclick = function (e) {
+// 	console.log(e);
+// }
+// console.log(div.onclick); // 函数代码
+// console.log(div.getAttribute("onclick")); // null ?
+// console.log(div.attributes); // 内部确实时没有onclick属性
+
+
+
+// 设置属性
+// const div = document.getElementById('myDiv')
+// div.setAttribute('id', 'someOtherId')
+// div.setAttribute('class', 'test')
+
+
+// DOM对象赋值
+// const div = document.getElementById('myDiv')
+// div.align = 'center'
+
+
+// div.mycolor = 'red'
+// console.log(div.getAttribute('mycolor')); // null
+
+
+// console.log(...div.attributes);
+// div.removeAttribute('align')
+// console.log(...div.attributes); // align属性被删去
+
+
+
+// Attributes属性
+// const div = document.querySelector('#myDiv')
+// console.log(div.attributes);
+// console.log(div.attributes.getNamedItem('id').nodeValue); // myDiv
+// console.log(div.attributes['id'].nodeValue); // myDiv
+// console.log(div.attributes[0]); // myDiv
+
+
+// 设置属性
+// const div = document.querySelector('#myDiv')
+// div.attributes.getNamedItem('class').nodeValue = 'test'
+
+// // 删除属性
+// let oldAttr = div.attributes.removeNamedItem('class')
+// console.log(oldAttr); // class="test"
+
+// // 设置属性
+// div.attributes.setNamedItem(oldAttr)
+
+
+// 生成结构化字符串
+// function outputAtteributes(element) {
+// 	let pair = []
+// 	for (const attribute of element.attributes) {
+// 		pair.push(`${attribute.nodeName}=${attribute.nodeValue}`)
+// 	}
+// 	return pair.join(" ")
+// }
+// const div = document.querySelector('#myDiv')
+// console.log(outputAtteributes(div)); // id=myDiv class=bd title=body Text lang=en dir=ltr my_spical_attribute=hello! style=text-align: center;
+
+
+
+// 创建元素
+// const div = document.createElement('div')
+// console.log(div.ownerDocument); // 新建新元素的同时，会将其ownerDocument属性设置为document
+// div.id = 'myNewDiv'
+// div.className = "test"
+// div.innerHTML = '测试元素'
+// bodyNode.appendChild(div)
+
+
+
+// 元素后代
+const ul = document.querySelector('ul')
+console.log(ul.childNodes); // NodeList(7) [text, li, text, li, text, li, text]
+
+// 只对元素节点进行操作
+for (const li of ul.childNodes) {
+	if (li.nodeType == 1) {
+		console.log(li);
+	}
+}

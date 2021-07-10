@@ -12,6 +12,12 @@
 		- [DOM兼容性测试](#dom兼容性测试)
 		- [文档写入](#文档写入)
 	- [Element类型](#element类型)
+		- [HTML元素](#html元素)
+		- [取得属性](#取得属性)
+		- [设置属性](#设置属性)
+		- [attributes属性](#attributes属性)
+		- [创建元素](#创建元素)
+		- [元素后代](#元素后代)
 # 节点层级
 任何HTML或XML都可以用DOM表示为一个节点构成的层级结构。
 
@@ -273,3 +279,206 @@ document.writeln('<strong>' + (new Date()).toString() + '</strong>')
 open()和close()方法分别用于打开和关闭网页输出流。再调用write()和writeln()时，这两个方法都不是必须的。
 > 严格的XHTML文档不支持文档写入。对于内容类型为application/xml+xhtml的页面，这些方法无法使用。
 ## Element类型
+除了Document类型，Element类型就是Web开发中最常用的类型了。Element标识XML或HTML元素，对外暴露出元素标签名、子节点和属性的能力。Element类型的节点具有以下特征：
++ nodeType等于1
++ nodeName值为元素的标签名
++ nodeValue值为null
++ parentNode值为Document或Element对象
++ 子节点可以Element、Text、Comment、ProcessingInstruction、CDATASectoin、EnityReference类型。
+可以通过nodeName或tagName属性来获取元素的标签名。这两个属性返回同样的值(添加后一个属性是为了不让人误会)。
+``` js
+const test = document.querySelector('#test')
+console.log(test.tagName); // DIV
+console.log(test.tagName === test.nodeName); // true
+```
+例子中的元素标签名为div,ID为"test". 注意，div.tagName实际返回的是"DIV"而不是"div"。在HTML中，元素标签名始终以全大写标识。在XML中标签名始终与源代码的大小写保持一致。若是不缺脚本在HTML还是XML，最好将标签名转换为小写形式，以便于比较
+``` js
+const test = document.querySelector('#test')
+if (test.tagName.toLowerCase() === 'div') {
+	console.log('XML文档也可识别');
+}
+```
+### HTML元素
+所有HTML元素都通过HTMLElement类型标识，包括其直接实例和间接实例。另外，HTMLElement直接继承Element并增加了一些属性。每个属性都对应下列属性之一，他们是所有HTML元素上都有的标准属性：
++ id,元素在文档中的唯一标识符
++ title，包括元素的额外信息，通常以提示条形式展示
++ lang,元素内容的语言代码（很少用）
++ dir,语言的书写方向（"ltr"左至右，"rtl"右至左，很少用）,左右对齐的问题。
++ className, 相当于class属性，用于指定元素的CSS类。(因为class是ECMAScirpt的关键字，所以不能直接使用这个名字)
+``` js
+const div = document.getElementById('myDiv')
+console.log(div.id); // myDiv
+console.log(div.className); // bd
+console.log(div.title); // body Text
+console.log(div.lang); // en
+console.log(div.dir); // ltr
+
+div.id = 'otherId'
+div.className = 'test'
+div.title = 'some other title'
+div.lang = 'zh_cn'
+div.dir = 'rtl'
+
+console.log(div.id); // otherId
+console.log(div.className); // test
+console.log(div.title); // some other title
+console.log(div.lang); // zh_cn
+console.log(div.dir); // rtl
+```
+并非所有属性的修改都会对页面产生影响。如id和lang的修改对用户是不可见的。
+
+所有HTML元素都是HTMLElement或其子类型的实例。下表列出了所有HTML元素以及其对应的类型（斜体表示已经废弃的元素）
+![](index_files/17-1.png)
+![](index_files/17-2.png)
+
+### 取得属性
+每个元素都有零个或者多个属性，通常用于为元素或其内容附加更多信息。与属性相关的DOM方法主要有三个：getAttribute(),setAttribute(),removeAttribute().这些方法主要用操作属性。
+
+注意传给getAttribute()的属性名与它们实际的属性名一样。因此需要传class。如果给定属性不存在，则getAttribute()返回null
+``` html
+	<div id="myDiv" class="bd" title="body Text" lang="en" dir="ltr" my_spical_attribute="hello!" style="text-align: center;">HTML元素属性</div>
+```
+``` js
+const div = document.getElementById('myDiv')
+console.log(div.getAttribute('id')); // myDiv
+console.log(div.getAttribute('class')); // bd
+console.log(div.getAttribute('dir')); // ltr
+```
+getAttribute()方法也能取得自定义属性的值
+``` js
+console.log(div.getAttribute('my_spical_attribute')); // hello!
+```
+注意，属性名不区分大小写，因此"ID"和"id"被认为是同一个属性。另外根据HTML5规范的要求，自定义属性名前缀data-以方便验证。
+
+元素所有属性也可以通过相应DOM元素对象的属性来取得。这些属性即包括HTMLElement上定义的直接映射的5个属性，还有其他非自定义属性也被添加DOM对象属性。
+
+通过DOM对象访问的属性中有两个返回的值和使用getAttribute()取得值不一样。
+
+首先是style属性，这个属性用于为元素设定CSS样式。使用getAttribute()获取的是字符串，而DOM访问，返回的是一个对象
+``` js
+console.log(div.getAttribute('style'));  // text-align: center;
+console.log(div.style); // CSSStyleDeclaration {...}
+```
+第二个属性是一类，即时间处理程序（或者称为事件属性），比如onclick。在元素上使用事件属性时，属性的值是一段JavaScript代码。如果使用getAttribute()访问事件属性，则返回的是字符串形式的源代码。而通过DOM对象的属性访问事件属性时返回的则是一个JavaScript函数（未指定则是null）.这是因为因为onclick及其他事件属性时可以接受函数作为值的。
+
+考虑到以上差异，开发者在进行DOM编程时通常会放弃使用getAttribute()而只使用对象属性。getAttritbute()主要用于取得自定义属性的值。
+``` js
+const div = document.getElementById('myDiv')
+div.onclick = function (e) {
+	console.log(e);
+}
+console.log(div.onclick); // 函数代码
+console.log(div.getAttribute("onclick")); // null ?
+console.log(div.attributes); // 内部确实时没有onclick属性
+```
+### 设置属性
+setAttribute()。该方法接受两个参数：要设置的属性名和属性的值。如果属性以存在则替换，否则创建。
+
+setAttrubute()使用与HTML属性，也适用于自定义数学属性。另外使用setAttribute()方法设置的属性名会规范为小写形式，因此"ID"会变成"id"
+``` js
+const div = document.getElementById('myDiv')
+div.setAttribute('id', 'someOtherId')
+div.setAttribute('class', 'test')
+```
+因为元素属性也是DOM对象属性，因此可以直接给DOM对象属性赋值。
+``` js
+const div = document.getElementById('myDiv')
+div.align = 'center'
+```
+注意在DOM对象上添加的自定义属性，并不会让它变成元素的属性。
+``` js
+div.mycolor = 'red'
+console.log(div.getAttribute('mycolor')); // null
+```
+removeAttribute()从元素中删除属性。这样不单单时清除属性的值，而是会将整个属性完全从元素中去掉。
+``` js
+console.log(...div.attributes);
+div.removeAttribute('align') 
+console.log(...div.attributes); // align属性被删去
+```
+### attributes属性
+Element类型是唯一使用attributes属性的DOM节点类型。attributes属性包含一个NamedNodeMap实例，是一个类似NodeList的"实时"集合。元素中的每个属性都表示为一个Attr节点,并保存在这个NamedNodeMap实例对象中。这个对象包含以下方法：
++ getNamedItem(name),返回nodeName属性等于name的节点。
++ removeNamedItem(name),删除nodeName属性等于name的节点。
++ setNamedItem(node),向列表中添加node节点，以其nodeName为索引.
++ item(pos),返回索引位置pos处的节点。
+
+attributes属性中的每个节点的nodeName是对应属性的名字，nodeValue是属性的值。
+``` js
+const div = document.querySelector('#myDiv')
+console.log(div.attributes);
+console.log(div.attributes.getNamedItem('id').nodeValue); // myDiv
+console.log(div.attributes['id'].nodeValue); // myDiv
+console.log(div.attributes[0]); // myDiv
+```
+同样也可以设置属性的值。
+``` js
+const div = document.querySelector('#myDiv')
+div.attributes.getNamedItem('class').nodeValue = 'test'
+```
+removeNamedItem()方法于元素上的removeAttribute()方法类似，也是删除指定名字的属性。二者唯一不同的是，removeNamedItem()返回被删除属性的Attr节点
+``` js
+let oldAttr = div.attributes.removeNamedItem('class')
+console.log(oldAttr); // class="test"
+```
+setNamedItem()方法很少使用，接受一个属性节点，然后给元素添加一个新属性。
+``` js
+div.attributes.setNamedItem(oldAttr) // 这个oldAttr必须是一个属性节点
+```
+一般而言不会使用attributes的方法对属性进行改变等。
+
+attribus属性最有用的场景是需要迭代元素上所有属性的时候。如下例，将DOM结构结构序列化为XML和HTML字符串。但不同浏览器返回的属性顺序可能不一样。且HTML和XML代码中属性出现的顺序也不一定于attributes中的顺序一致。
+``` js
+function outputAtteributes(element) {
+	let pair = []
+	for (const attribute of element.attributes) {
+		pair.push(`${attribute.nodeName}=${attribute.nodeValue}`)
+	}
+	return pair.join(" ")
+}
+const div = document.querySelector('#myDiv')
+console.log(outputAtteributes(div)); // id=myDiv class=bd title=body Text lang=en dir=ltr my_spical_attribute=hello! style=text-align: center;
+```
+### 创建元素
+document.createElement()创建元素。接受元素标签名，在HTML中不区分大小写，在XML中区分大小写.
+
+可以新建的DOM对象进行属性添加，子元素添加等。
+``` js
+const div = document.createElement('div')
+console.log(div.ownerDocument); // 新建新元素的同时，会将其ownerDocument属性设置为document
+div.id = 'myNewDiv'
+div.className = "test"
+```
+新建的元素需要添加至文档树，才会浏览器内显示。添加后会立即渲染，之后的改动都会在浏览器中反映出来。
+``` js
+div.innerHTML = '测试元素'
+bodyNode.appendChild(div)
+```
+### 元素后代
+元素可以拥有多个子元素或后代元素。childNodes属性包含元素的所有子节点，这些子节点可能是其他元素、文本节点、注释或处理指令。不同浏览器在识别节点时的表现有明显不同。
+
+在解析下面代码时，ul会包含7个子元素(Edg/91.0.864.67),其中3个是li元素，还有四个Text节点.
+``` html
+	<ul>
+		<li>1</li>
+		<li name="second-li">2</li>
+		<li>3</li>
+	</ul>
+```
+``` js
+const ul = document.querySelector('ul')
+console.log(ul.childNodes); // NodeList(7) [text, li, text, li, text, li, text]
+```
+若是将元素间的空格删掉，则所有浏览器解析代码时，都包含3个节点。
+``` html
+<ul><li>1</li><li name="second-li">2</li><li>3</li>
+```
+考虑到存在文本节点的情况,因此通常在执行某个操作之后需要先检测下节点的nodeType
+``` js
+// 只对元素节点进行操作
+for (const li of ul.childNodes) {
+	if (li.nodeType == 1) {
+		console.log(li);
+	}
+}
+```
