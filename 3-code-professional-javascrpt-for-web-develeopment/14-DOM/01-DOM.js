@@ -557,8 +557,309 @@ const bodyNode = document.body
 
 
 // 反向迭代
-const divs = document.getElementsByTagName('div')
-for (let i = divs.length - 1; i >= 0; i--) {
-	let newDiv = document.createElement('div')
-	bodyNode.appendChild(newDiv)
-}
+// const divs = document.getElementsByTagName('div')
+// for (let i = divs.length - 1; i >= 0; i--) {
+// 	let newDiv = document.createElement('div')
+// 	bodyNode.appendChild(newDiv)
+// }
+
+
+
+/**
+ * MutaionObserver接口
+*/
+// 基本用法
+// const observer = new MutationObserver(()=> {
+// 	console.log('DOM was mutated!');
+// })
+
+
+// observer()
+// const observer = new MutationObserver(() => console.log('<body> attributes changed'))
+// observer.observe(bodyNode, { attributes: true })
+// document.body.className = 'test'
+// console.log("change body class");
+// // change body class
+// // attributes changed  后执行，所以是异步的
+
+
+// MutationRecord
+// const observer = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+// observer.observe(bodyNode, { attributes: true })
+// bodyNode.className = "test"
+// // [
+// // 	{
+// // 		addedNodes: NodeList[],
+// // 		attributeName: "class",
+// // 		attributeNamespace: null,
+// // 		nextSibling: null,
+// // 		oldValue: null,
+// // 		previousSibling: null,
+// // 		removedNodes: NodeList[],
+// // 		target: body.test,
+// // 		type: "attributes"
+// // 	}
+// // ]
+
+
+// const obsever = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+// obsever.observe(bodyNode, { attributes: true })
+// bodyNode.setAttribute('foo', 'bar')
+// [
+// 	{
+// 		addedNodes: NodeList[],
+// 		attributeName: "foo",
+// 		attributeNamespace: null,
+// 		nextSibling: null,
+// 		oldValue: null,
+// 		previousSibling: null,
+// 		removedNodes: NodeList[],
+// 		target: body,
+// 		type: "attributes"
+// 	}
+// ]
+
+
+// 连续修改时
+// const obsever = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+// obsever.observe(bodyNode, { attributes: true })
+// bodyNode.setAttribute('foo', 'bar')
+// bodyNode.setAttribute('foo', 'bar')
+// bodyNode.setAttribute('foo', 'bar')
+// //  [MutationRecord, MutationRecord, MutationRecord]
+
+
+// 第二个参数
+// const obsever = new MutationObserver((mutationRecord, mutationObserver) => console.log(mutationRecord, mutationObserver))
+// obsever.observe(bodyNode, { attributes: true })
+// bodyNode.setAttribute('foo', 'bar')
+// [MutationRecord] MutationObserver {}
+
+
+// disconnect
+// const obsever = new MutationObserver((mutationRecord, mutationObserver) => console.log(mutationRecord, mutationObserver))
+// obsever.observe(bodyNode, { attributes: true })
+// bodyNode.setAttribute('foo', 'bar')
+// obsever.disconnect()
+// bodyNode.setAttribute('foo', 'bar')
+// 无日志输出
+
+
+// 执行已加入任务队列的回调
+// const obsever = new MutationObserver((mutationRecord, mutationObserver) => console.log(mutationRecord, mutationObserver))
+// obsever.observe(bodyNode, { attributes: true })
+// bodyNode.setAttribute('foo', 'bar')
+// setTimeout(() => {
+// 	obsever.disconnect()
+// 	bodyNode.setAttribute('foo', 'bar')
+// }, 0);
+// // [MutationRecord] MutationObserver {}
+
+
+
+// 复用MutationObserver
+// const obsever = new MutationObserver((mutationRecord) => mutationRecord.map(x => console.log(x.target)))
+// obsever.observe(bodyNode, { attributes: true })
+// const trs = document.querySelectorAll('tr')
+// obsever.observe(trs[0], { attributes: true })
+// obsever.observe(trs[1], { attributes: true })
+// trs[0].setAttribute('class', 'tr0')
+// trs[1].setAttribute('class', 'tr1')
+// [<tr>,</tr>]
+
+
+// disconnect()
+// const obsever = new MutationObserver((mutationRecord) => mutationRecord.map(x => console.log(x.target)))
+// obsever.observe(bodyNode, { attributes: true })
+// const trs = document.querySelectorAll('tr')
+// obsever.observe(trs[0], { attributes: true })
+// obsever.observe(trs[1], { attributes: true })
+// obsever.disconnect()
+// trs[0].setAttribute('class', 'tr0')
+// trs[1].setAttribute('class', 'tr1')
+// 无日志输出
+
+
+
+// 重用MutationObserver
+// const obsever = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+// obsever.observe(bodyNode, { attributes: true })
+// bodyNode.setAttribute('foo', 'bar')
+// setTimeout(() => {
+// 	obsever.disconnect()
+// 	bodyNode.setAttribute('baz', 'qux')
+// }, 0);
+// setTimeout(() => {
+// 	obsever.observe(bodyNode, { attributes: true })
+// 	bodyNode.setAttribute('quz', 'qoo')
+// }, 0);
+// [MutationRecord](foo)
+// [MutationRecord](quz)
+
+
+
+/** 
+ * 观察属性
+*/
+// const obsever = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+// obsever.observe(bodyNode, { attributes: true })
+// bodyNode.setAttribute('foo', 'bar')
+// bodyNode.setAttribute('foo', 'bar')
+// bodyNode.removeAttribute('foo', 'bar')
+// [MutationRecord, MutationRecord, MutationRecord]
+
+
+// attributeFilter
+// const obsever = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+// obsever.observe(bodyNode, { attributeFilter: ['foo', 'class'] })
+// bodyNode.setAttribute('foo', 'bar')
+// bodyNode.setAttribute('qux', 'bar')
+// [MutationRecord] 是foo的
+
+
+// attributeOldValue
+// const obsever = new MutationObserver((mutationRecord) => mutationRecord.map(x => console.log(x.oldValue)))
+// obsever.observe(bodyNode, { attributes: true })
+// bodyNode.setAttribute('foo', 'baz')
+// bodyNode.setAttribute('foo', 'qux')
+// // null
+// // null
+// setTimeout(() => {
+// 	obsever.observe(bodyNode, { attributeOldValue: true })
+// 	bodyNode.setAttribute('foo', 'fuz')
+// 	bodyNode.setAttribute('foo', 'yxx')
+// 	// qux
+// 	// fuz
+// }, 0);
+
+
+
+// 观察字符数据
+// const observer = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+// const text = bodyNode.firstChild
+// text.textContent = 'foo'
+// observer.observe(text, { characterData: true })
+// // 赋值为相同字符串
+// text.textContent = 'foo'
+// // 赋值为新字符串
+// text.textContent = 'bar'
+// // 通过节点设置赋值
+// text.nodeValue = 'qux'
+// // [MutationRecord, MutationRecord, MutationRecord] 记录了后三个变化
+
+
+// oldValue
+// const observer = new MutationObserver((mutationRecord) => mutationRecord.map(x => console.log(x.oldValue)))
+// const text = bodyNode.firstChild
+// text.textContent = 'a'
+// observer.observe(text, { characterDataOldValue: true })
+// text.textContent = 'foo'
+// text.textContent = 'bar'
+// text.nodeValue = 'qux'
+// // a
+// // foo
+// // bar
+
+
+
+// 添加子节点
+// bodyNode.innerHTML = ''
+// const observer = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+// observer.observe(bodyNode, { childList: true })
+// bodyNode.appendChild(document.createElement('div'))
+// // [MutationRecord] // 添加的div节点
+// // (2) [MutationRecord, MutationRecord] //将最后的注释和文本都添加进body了
+
+// 删除子节点
+// const div = bodyNode.querySelector('div')
+// bodyNode.removeChild(div)
+// [{
+// 	addedNodes: NodeList []
+// 	attributeName: null
+// 	attributeNamespace: null
+// 	nextSibling: null
+// 	oldValue: null
+// 	previousSibling: null
+// 	removedNodes: NodeList [div]
+// 	target: body
+// 	type: "childList"
+// }]
+
+
+// 子节点重新排序
+// bodyNode.innerHTML = ''
+// const observer = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+// const span = bodyNode.appendChild(document.createElement('span'))
+// const div = bodyNode.appendChild(document.createElement('div'))
+// observer.observe(bodyNode, { childList: true })
+// bodyNode.replaceChild(div, span)
+// [
+// 	{
+// 		addedNodes: NodeList[],
+// 		attributeName: null,
+// 		attributeNamespace: null,
+// 		nextSibling: null,
+// 		oldValue: null,
+// 		previousSibling: span,
+// 		removedNodes: NodeList[div],
+// 		target: body,
+// 		type: "childList"
+// 	},
+// 	{
+// 		addedNodes: NodeList[div],
+// 		attributeName: null,
+// 		attributeNamespace: null,
+// 		nextSibling: null,
+// 		oldValue: null,
+// 		previousSibling: null,
+// 		removedNodes: NodeList[span],
+// 		target: body,
+// 		type: "childList"
+// 	}
+// ]
+
+
+
+// 观察子树
+// bodyNode.innerHTML = ''
+// const observer = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+// observer.observe(bodyNode, { attributes: true, subtree: true, attributeOldValue: true })
+// const div = bodyNode.appendChild(document.createElement('div'))
+// div.setAttribute('foo', 'bar')
+// [{
+// 		addedNodes: NodeList[],
+// 		attributeName: "foo",
+// 		attributeNamespace: null,
+// 		nextSibling: null,
+// 		oldValue: null,
+// 		previousSibling: null,
+// 		removedNodes: NodeList[],
+// 		target: div,
+// 		type: "attributes"
+// }]
+
+// 移除子树后
+// bodyNode.removeChild(div)
+// div.setAttribute('foo', 'qux')
+// [{
+// 		addedNodes: NodeList[],
+// 		attributeName: "foo",
+// 		attributeNamespace: null,
+// 		nextSibling: null,
+// 		oldValue: "bar",
+// 		previousSibling: null,
+// 		removedNodes: NodeList[],
+// 		target: div,
+// 		type: "attributes"
+// }]
+
+
+
+// takeRecords()方法
+const observer = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+observer.observe(bodyNode, { attributes: true })
+bodyNode.className = 'foo'
+bodyNode.className = 'foo'
+
+console.log(observer.takeRecords()); // (2) [MutationRecord, MutationRecord]
+console.log(observer.takeRecords()); // []

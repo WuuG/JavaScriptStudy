@@ -32,6 +32,24 @@
 	- [动态样式](#动态样式)
 	- [操作表格](#操作表格)
 	- [使用NodeList](#使用nodelist)
+- [MutationObserve接口](#mutationobserve接口)
+	- [基本用法](#基本用法)
+		- [observe()方法](#observe方法)
+		- [回调与MutationRecord](#回调与mutationrecord)
+		- [disconnect()方法](#disconnect方法)
+		- [复用MutationObserver](#复用mutationobserver)
+		- [重用MutationObserver](#重用mutationobserver)
+	- [MutationObserverInit与观察范围](#mutationobserverinit与观察范围)
+		- [观察属性](#观察属性)
+		- [观察字符数据](#观察字符数据)
+		- [观察子节点](#观察子节点)
+		- [观察子树](#观察子树)
+		- [异步回调与记录队列](#异步回调与记录队列)
+			- [记录队列](#记录队列)
+			- [takeRecords()方法](#takerecords方法)
+		- [性能、内存与垃圾处理](#性能内存与垃圾处理)
+			- [MutationObserver的引用](#mutationobserver的引用)
+			- [Mutation的引用](#mutation的引用)
 # 节点层级
 任何HTML或XML都可以用DOM表示为一个节点构成的层级结构。
 
@@ -882,3 +900,341 @@ for (let i = divs.length - 1; i >= 0; i--) {
 }
 ```
 一般来说，最好限制操作NodeList的次数。因为每次查询都会搜索整个文档，所以最好把查询到的NodeList缓存起来。
+# MutationObserve接口
+不久前添加的MutationObserver接口，可以在DOM被修改时异步执行回调。使用MutationObserver可以观察整个文档、DOM树的一部分，或某个元素。此外还可以观察元素属性、子节点、文本，或者前三者任意组合的变化。
+> 新引进的MutationObserver接口是为了取代废弃的MutationEvent
+## 基本用法
+MutationObserver的实例要通过调用MutationObserver构造函数一个回调函数来创建:
+``` js
+const observer = new MutationObserver(()=> {
+	console.log('DOM was mutated!');
+})
+```
+### observe()方法
+新创建的实例，不会关联DOM的任何部分。要把这个observer与DOM关联起来，需要使用observe()方法。 该方法接受两个必须参数：DOM节点，以及一个MutationObserver对象。
+
+MutationObserverInit对象用于控制观察那些方面的变化，是一个键/值对的形式配置选项的字典。例如，下面的代码会创建一个观察者(observer)并配置它观察\<body>元素上的属性变化。
+``` js
+const observer = new MutationObserver(() => console.log('<body> attributes changed'))
+observer.observe(bodyNode, { attributes: true })
+document.body.className = 'test'  
+console.log("change body class");
+// change body class
+// attributes changed  后执行，所以是异步的
+```
+### 回调与MutationRecord
+每个回调都会收到一个MutationRecord实例的数组。MutationRecord实例包含的信息包括发生了什么变化，以及DOM的哪个部分收到了影响。因为回调执行之前可能同步发生多个满足观察条件的事件，所以每次执行回调都会传入一个包含按顺序入队的MutationRecord实例的数组。
+``` js
+const observer = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+observer.observe(bodyNode, { attributes: true })
+bodyNode.className = "test"
+// [
+// 	{
+// 		addedNodes: NodeList[],
+// 		attributeName: "class",
+// 		attributeNamespace: null,
+// 		nextSibling: null,
+// 		oldValue: null,
+// 		previousSibling: null,
+// 		removedNodes: NodeList[],
+// 		target: body.test,
+// 		type: "attributes"
+// 	}
+// ]
+```
+下面是一个涉及命名空间(?)的类似的变化
+``` js
+const obsever = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+obsever.observe(bodyNode, { attributes: true })
+bodyNode.setAttribute('foo', 'bar')
+[
+	{
+		addedNodes: NodeList[],
+		attributeName: "foo",
+		attributeNamespace: null,
+		nextSibling: null,
+		oldValue: null,
+		previousSibling: null,
+		removedNodes: NodeList[],
+		target: body,
+		type: "attributes"
+	}
+]
+```
+若是连续修改会生成多个MutationRecord实例，下次回调执行时就会收到包含所有这些实例的数组，顺序为变化发生的顺序。
+``` js
+const obsever = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+obsever.observe(bodyNode, { attributes: true })
+bodyNode.setAttribute('foo', 'bar')
+bodyNode.setAttribute('foo', 'bar')
+bodyNode.setAttribute('foo', 'bar')
+//  [MutationRecord, MutationRecord, MutationRecord] 注意就一个
+```
+![](index_files/17-3.png)
+
+传给回调函数的第二个参数时观察变化的MutationObserver的实例
+``` js
+const obsever = new MutationObserver((mutationRecord, mutationObserver) => console.log(mutationRecord, mutationObserver))
+obsever.observe(bodyNode, { attributes: true })
+bodyNode.setAttribute('foo', 'bar')
+// [MutationRecord] MutationObserver {}
+```
+### disconnect()方法
+默认情况下，只要被观察的元素不被垃圾回收，MutationObserver的回调就会响应DOM变化事件，从而被执行。要提前终止执行回调，可以调用disconnect()方法。 若是通过调用disconnetc()方法，不仅会停止此后变化事件的回调，还会抛弃已经加入任务队列要异步执行的回调：
+``` js
+const obsever = new MutationObserver((mutationRecord, mutationObserver) => console.log(mutationRecord, mutationObserver))
+obsever.observe(bodyNode, { attributes: true })
+bodyNode.setAttribute('foo', 'bar')
+obsever.disconnect()
+bodyNode.setAttribute('foo', 'bar')
+// 无日志输出
+```
+若想让已经加入的回调执行，可以通过setTimeout()将其推入任务队列。
+``` js
+const obsever = new MutationObserver((mutationRecord, mutationObserver) => console.log(mutationRecord, mutationObserver))
+obsever.observe(bodyNode, { attributes: true })
+bodyNode.setAttribute('foo', 'bar')
+setTimeout(() => {
+	obsever.disconnect()
+	bodyNode.setAttribute('foo', 'bar')
+}, 0);
+// [MutationRecord] MutationObserver {}
+```
+### 复用MutationObserver
+多次调用observe()方法，可以复用一个MutationObserver对象观察多个不同的目标节点。此时，MutationRecord的target属性可以表示发生变化事件的目标节点。
+``` js
+const obsever = new MutationObserver((mutationRecord) => mutationRecord.map(x => console.log(x.target)))
+obsever.observe(bodyNode, { attributes: true })
+const trs = document.querySelectorAll('tr')
+obsever.observe(trs[0], { attributes: true })
+obsever.observe(trs[1], { attributes: true })
+trs[0].setAttribute('class', 'tr0')
+trs[1].setAttribute('class', 'tr1')
+// [<tr>,</tr>]
+```
+disconnect()一旦调用就会停止观察所有目标：
+``` js
+const obsever = new MutationObserver((mutationRecord) => mutationRecord.map(x => console.log(x.target)))
+obsever.observe(bodyNode, { attributes: true })
+const trs = document.querySelectorAll('tr')
+obsever.observe(trs[0], { attributes: true })
+obsever.observe(trs[1], { attributes: true })
+obsever.disconnect()
+trs[0].setAttribute('class', 'tr0')
+trs[1].setAttribute('class', 'tr1')
+// 无日志输出
+```
+### 重用MutationObserver
+调用disconnet()并未结束MutationObserver的生命。还可以重新使用这个观察者。
+``` js
+const obsever = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+obsever.observe(bodyNode, { attributes: true })
+bodyNode.setAttribute('foo', 'bar')
+setTimeout(() => {
+	obsever.disconnect()
+	bodyNode.setAttribute('baz', 'qux')
+}, 0);
+setTimeout(() => {
+	obsever.observe(bodyNode, { attributes: true })
+	bodyNode.setAttribute('quz', 'qoo')
+}, 0);
+// [MutationRecord](foo)
+// [MutationRecord](quz)
+```
+## MutationObserverInit与观察范围
+MutationObserverInit对象用于控制对目标节点的观察范围。粗略的讲，观察者可以观察的事件包括，属性变化，文本变化和子节点变化。
+
+下表列出了MutationObserverInit对象的属性。
+![](index_files/17-4.png)
+> 在调用observe()时，MutationObserverInit对象中的attributes,chrarcterData或childList属性至少需要有一项为true（直接或间接都可）否则报错。因为没有任何事件会触发回调
+### 观察属性
+MutationObserver可以观察节点属性的添加、移除和修改。
+``` js
+const obsever = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+obsever.observe(bodyNode, { attributes: true })
+bodyNode.setAttribute('foo', 'bar')
+bodyNode.setAttribute('foo', 'bar')
+bodyNode.removeAttribute('foo', 'bar')
+// [MutationRecord, MutationRecord, MutationRecord]
+```
+若是想观察某个或某几个属性，可以使用attributeFilter属性来设置白名单,即一个属性名字符串数组。
+``` js
+const obsever = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+obsever.observe(bodyNode, { attributeFilter: ['foo', 'class'] })
+bodyNode.setAttribute('foo', 'bar')
+bodyNode.setAttribute('qux', 'bar')
+// [MutationRecord] 是foo的
+```
+如过想要在变化记录中保存属性原来的值，可以讲attributeOldValue属性设置为true
+``` js
+const obsever = new MutationObserver((mutationRecord) => mutationRecord.map(x => console.log(x.oldValue)))
+obsever.observe(bodyNode, { attributes: true })
+bodyNode.setAttribute('foo', 'baz')
+bodyNode.setAttribute('foo', 'qux')
+// null
+// null
+setTimeout(() => {
+	obsever.observe(bodyNode, { attributeOldValue: true })
+	bodyNode.setAttribute('foo', 'fuz')
+	bodyNode.setAttribute('foo', 'yxx')
+  // qux
+  // fuz
+}, 0);
+```
+### 观察字符数据
+观察文本节点中字符的添加、删除和修改。(innerText属性虽然也可修改，但因为兼容性问题，且定义不严谨，因此不建议使用)
+``` js
+const observer = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+const text = bodyNode.firstChild
+text.textContent = 'foo'
+observer.observe(text, { characterData: true })
+// 赋值为相同字符串
+text.textContent = 'foo'
+// 赋值为新字符串
+text.textContent = 'bar'
+// 通过节点设置赋值
+text.nodeValue = 'qux'
+// [MutationRecord, MutationRecord, MutationRecord] 记录了后三个变化
+```
+同样的默认不会记录原来的字符数据，需要将characterDataOldValue设置为true
+``` js
+const observer = new MutationObserver((mutationRecord) => mutationRecord.map(x => console.log(x.oldValue)))
+const text = bodyNode.firstChild
+text.textContent = 'a'
+observer.observe(text, { characterDataOldValue: true })
+text.textContent = 'foo'
+text.textContent = 'bar'
+text.nodeValue = 'qux'
+// a
+// foo
+// bar
+```
+### 观察子节点
+MutationObserver可以观察目标节子节点的添加和移除。将childList属性设置为ture
+
+下面例子演示了添加子节点：
+``` js
+bodyNode.innerHTML = ''
+const observer = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+observer.observe(bodyNode, { childList: true })
+bodyNode.appendChild(document.createElement('div'))
+// [MutationRecord] // 添加的div节点
+// (2) [MutationRecord, MutationRecord] //将最后的注释和文本都添加进body了
+```
+下面的例子演示移除子节点
+``` js
+const div = bodyNode.querySelector('div')
+bodyNode.removeChild(div)
+// [{
+// 	addedNodes: NodeList []
+// 	attributeName: null
+// 	attributeNamespace: null
+// 	nextSibling: null
+// 	oldValue: null
+// 	previousSibling: null
+// 	removedNodes: NodeList [div]
+// 	target: body
+// 	type: "childList"
+// }]
+```
+对子节点重新排序会报告两次变化事件，因为技术上会先移除和再添加：
+``` js
+bodyNode.innerHTML = ''
+const observer = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+const span = bodyNode.appendChild(document.createElement('span'))
+const div = bodyNode.appendChild(document.createElement('div'))
+observer.observe(bodyNode, { childList: true })
+bodyNode.replaceChild(div, span)
+// [
+// 	{
+// 		addedNodes: NodeList[],
+// 		attributeName: null,
+// 		attributeNamespace: null,
+// 		nextSibling: null,
+// 		oldValue: null,
+// 		previousSibling: span,
+// 		removedNodes: NodeList[div],
+// 		target: body,
+// 		type: "childList"
+// 	},
+// 	{
+// 		addedNodes: NodeList[div],
+// 		attributeName: null,
+// 		attributeNamespace: null,
+// 		nextSibling: null,
+// 		oldValue: null,
+// 		previousSibling: null,
+// 		removedNodes: NodeList[span],
+// 		target: body,
+// 		type: "childList"
+// 	}
+// ]
+```
+### 观察子树
+默认情况观察元素和其子节点的变换。可通过subtree属性设置为true，将观察对象扩大到整个子树
+``` js
+bodyNode.innerHTML = ''
+const observer = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+observer.observe(bodyNode, { attributes: true, subtree: true })
+const div = bodyNode.appendChild(document.createElement('div'))
+div.setAttribute('foo', 'bar')
+// [{
+// 		addedNodes: NodeList[],
+// 		attributeName: "foo",
+// 		attributeNamespace: null,
+// 		nextSibling: null,
+// 		oldValue: null,
+// 		previousSibling: null,
+// 		removedNodes: NodeList[],
+// 		target: div,
+// 		type: "attributes"
+// }]
+```
+哪怕被观察的子树中的节点被移出子树后，仍然能够触发变化事件。
+``` js
+bodyNode.removeChild(div)
+div.setAttribute('foo', 'qux')
+// [{
+// 		addedNodes: NodeList[],
+// 		attributeName: "foo",
+// 		attributeNamespace: null,
+// 		nextSibling: null,
+// 		oldValue: "bar",
+// 		previousSibling: null,
+// 		removedNodes: NodeList[],
+// 		target: div,
+// 		type: "attributes"
+// }]
+```
+### 异步回调与记录队列
+MutationObserver接口是处于性能考虑涉及的，其核心是异步回调与记录队列模型。为了再大量变化事件发生时不影响性能，每次变化的信息会保存再MutationRcord实例中，然后添加到记录队列。这个对队列对每个MutationObserver实例时唯一的，是所有DOM变化事件的有序列表。
+#### 记录队列
+每次MutationRecord被添加到MutationObserver的记录队列时，只有在没有已排期的微任务回调时（队列中微任务长度为0，也就是说没有其他观察者的回调在执行）,才会将观察者注册的回调作为微任务调度到任务队列上。以此来保证记录队列的内容不会被回调处理两次。
+
+在回调的微任务执行期间，可能会发生更多变化时间。因此被调用的回调会接受一个MutationRecord实例的数组，顺序为它们进入队列的顺序。 回调要负责处理这个数组的每个实例，因为函数退出后这些实现就不存在了。回调执行后，这些mutationRecord就用不着了，因此记录队列会被清空，其内容会被丢弃。
+#### takeRecords()方法
+调用MutationObserver实例的takeRecords()方法可以清空记录队列,取出并返回所有MutationRecord实例。
+``` js
+const observer = new MutationObserver((mutationRecord) => console.log(mutationRecord))
+observer.observe(bodyNode, { attributes: true })
+bodyNode.className = 'foo'
+bodyNode.className = 'foo'
+
+console.log(observer.takeRecords()); // (2) [MutationRecord, MutationRecord]
+console.log(observer.takeRecords()); // []
+```
+这个方法对于希望断开连接，有需要MutationRecord实例时比较有用。
+### 性能、内存与垃圾处理
+DOM Level 2中设计了一组DOM变化时触发的事件，但出现了严重的性能问题。 因此DOM Level 3提出了MutationObserver接口。
+
+将变化回调委托给微任务来执行可以保证事件同步触发。为Mutation-Observer而实现的记录队列，可以保证即便事件被爆发式的触发，也不会显著的拖慢浏览器。
+
+但无论如何，使用MutationObserver还是有代价的。
+#### MutationObserver的引用
+MutationObserver实例域目标节点之间的引用关系是非对称的。MutationObserver拥有对要观察的目标节点的弱引用。因此不会妨碍垃圾回收程序回收目标节点。
+
+但目标节点拥有对MutationObserver的强引用。如果目标节点从DOM中移除，随后被垃圾回收，则关联的MutationObserver也会被垃圾回收。
+#### Mutation的引用
+记录队列中的每个MutationRecord实例至少包含对已有DOM节点的一个引用。如果变化是childList类型，则会包含多个节点的引用。记录队列和回调处理的默认行为是耗尽这个队列，处理每个MutationRecord，然后让它们超出作用域并被垃圾回收(设置为null吗？)
+
+有时候可能需要保存某个观察者的完整变化记录。保存这些MutationRecord实例，也就会保存它们引用的节点，因而会妨碍这些节点被回收。如果需要尽快释放内存，建议从每个MutationRecord中抽取出最有用的信息，然后保存到一个新对象中，最后抛弃MutationRecord。
