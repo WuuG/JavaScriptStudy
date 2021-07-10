@@ -176,7 +176,7 @@ const bodyNode = document.body
 
 
 
-/** 
+/**
  * Element节点
 */
 // const test = document.querySelector('#test')
@@ -303,12 +303,97 @@ const bodyNode = document.body
 
 
 // 元素后代
-const ul = document.querySelector('ul')
-console.log(ul.childNodes); // NodeList(7) [text, li, text, li, text, li, text]
+// const ul = document.querySelector('ul')
+// console.log(ul.childNodes); // NodeList(7) [text, li, text, li, text, li, text]
 
-// 只对元素节点进行操作
-for (const li of ul.childNodes) {
-	if (li.nodeType == 1) {
-		console.log(li);
-	}
-}
+// // 只对元素节点进行操作
+// for (const li of ul.childNodes) {
+// 	if (li.nodeType == 1) {
+// 		console.log(li);
+// 	}
+// }
+
+
+
+/**
+ * 文本节点
+*/
+// const text = bodyNode.childNodes[0]
+// console.log(text.length); // 2
+// console.log(text.nodeValue.indexOf('\n\t')); // 0
+// console.log(text.nodeValue); // \n\t
+
+
+
+// 文本转义
+// const test = document.querySelector('#test')
+// console.log(test.childNodes);
+// test.firstChild.nodeValue = "中间是 <strong>加粗字体</strong> 哦"
+
+
+
+// 创建文本
+// document.createTextNode()，接受一个参数，即要插入节点的文本。
+// let textNode = document.createTextNode("<strong>Hello</strong> world! ")
+// bodyNode.append(textNode)
+
+// let another = document.createTextNode('Yippee!')
+// bodyNode.append(another)
+// console.log(bodyNode.childNodes); // NodeList
+
+// // 规范化文本节点
+// console.log(bodyNode.childNodes); // NodeList(12)
+// bodyNode.normalize()
+// console.log(bodyNode.childNodes); // NodeList(11) 合并了同胞文本节点
+
+// //拆分文本节点
+// console.log(bodyNode.childNodes[10].splitText(22)); // 拆分了文本节点
+
+
+
+/** 
+ * Comment类型
+*/
+// const myDiv = document.querySelector('#myDiv')
+// const comment = myDiv.childNodes[1]
+// console.log(comment.data); // "注释节点"
+
+// // 创建注释节点
+// const newComment = document.createComment('新创建的注释节点')
+// myDiv.appendChild(newComment)
+
+
+
+/** 
+ * DocumentType类型
+*/
+// console.log(document.doctype.name); //html
+
+
+
+/** 
+ * 文档片段
+*/
+// const fragment = document.createDocumentFragment()
+
+// const content = document.querySelector('#docFramentContent')
+// const ul = document.createElement('ul')
+// for (let i = 0; i < 3; i++) {
+// 	const li = document.createElement('li')
+// 	li.appendChild(document.createTextNode(`第${i}个li`))
+// 	ul.appendChild(li)
+// }
+// fragment.appendChild(ul)
+// content.appendChild(fragment)
+
+
+
+/** 
+ * 属性节点
+*/
+let attr = document.createAttribute('align')
+attr.value = "center"
+bodyNode.setAttributeNode(attr)
+console.log(bodyNode.getAttribute('align')); // center
+console.log(bodyNode.getAttributeNode('align').value); // center
+console.log(bodyNode.attributes.align.value); // center

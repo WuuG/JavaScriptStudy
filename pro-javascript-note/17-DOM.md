@@ -18,6 +18,15 @@
 		- [attributes属性](#attributes属性)
 		- [创建元素](#创建元素)
 		- [元素后代](#元素后代)
+	- [Text类型](#text类型)
+		- [创建文本节点](#创建文本节点)
+		- [规范化文本节点](#规范化文本节点)
+		- [拆分文本节点](#拆分文本节点)
+	- [Comment类型](#comment类型)
+	- [CDATASection类型](#cdatasection类型)
+	- [DocumentType类型](#documenttype类型)
+	- [DocumentFragment类型](#documentfragment类型)
+	- [Attr类型](#attr类型)
 # 节点层级
 任何HTML或XML都可以用DOM表示为一个节点构成的层级结构。
 
@@ -482,3 +491,167 @@ for (const li of ul.childNodes) {
 	}
 }
 ```
+## Text类型
+Text节点由Text类型表示，包含按字面解释的纯文本。也可能包含转义后的HTML字符，但不包含HTML代码。Text类型的节点具有以下特征：
++ nodeType等于3
++ nodeName等于"#text"
++ nodeValue值为节点中包含的文本
++ parentNode值为Element对象
++ 不支持子节点
+Text文本中包含的文本可以通过nodeValue属性访问，也可以通过data属性访问。修改二者都会在另一个属性反映出来。文本节点暴露了以下操作文本的方法：
++ appendData(text):  向节点末尾添加文本text
++ deleteData(offset,count), 从位置offset开始删除count个字符
++ inserData(offset,text), 在位置offset插入text
++ replaceData(offset,count,text), 用text替换从offset到offset+count的文本。
++ splitText(offst), 在位置offset将当前文本节点拆分为两个文本节点。
++ substringData(offset,count), 提取从offset到offset+count的文本
+
+除了这些方法，还可以通过length属性获取文本节点中包含的字符数量。这个值等于nodeValue,length和data.length
+``` js
+const text = bodyNode.childNodes[0]
+console.log(text.length); // 2
+console.log(text.nodeValue.indexOf('\n\t')); // 0
+console.log(text.nodeValue); // \n\t
+```
+默认情况下、包含文本内容的每个元素最多只能有一个文本节点，例如：
+
+下例中第一个div无文本节点，第二个存在文本节点，但只有空格。第三个为文本节点且其nodeValue等于'Hello world!'
+``` js
+	<div></div>
+	<div> </div>
+	<div>Hello World!</div>
+	<script>
+		const divs = document.querySelectorAll('div')
+		for (const div of divs) {
+			console.log(div.childNodes.length); // 0 1 1 
+		}
+	</script>
+```
+取得文本节点的引用之后，可以修改属性，只要节点在文档树内，则修改会立刻显示出来
+``` js
+text = divs[2].childNodes[0]
+text.nodeValue = 'hello textNode' // 网页上内容发生修改
+```
+修改文本节点还有一个问题就是HTML或XML代码会被转换为实体编码，即小于号、大于号或引号等会被转义<-- 这里并没有发生转义。
+``` js
+const test = document.querySelector('#test')
+console.log(test.childNodes);
+test.firstChild.nodeValue = "中间是 <strong>加粗字体</strong> 哦"
+```
+### 创建文本节点
+document.createTextNode()，接受一个参数，即要插入节点的文本。
+``` js
+let textNode = document.createTextNode("<strong>Hello</strong> world! ")
+bodyNode.append(textNode)
+```
+一般来说一个元素只包含一个文本子节点。不过，也可以让元素包含多个文本子节点。<-- 不过多个文本子节点还是挺常见的吧> 如下例所示(下例形成了两个互为同胞的文本节点)： 
+``` js
+let another = document.createTextNode('Yippee!')
+bodyNode.append(another)
+console.log(bodyNode.childNodes); 
+```
+将一个文本作为另一个文本节点的同胞插入后，两个文本节点的文本之间不会包含空格。 
+### 规范化文本节点
+因为一个文本节点就可表示文本了,所以同胞节点文本好不必要。因此如前文所提的[normalize](#操纵节点)可以将两个或多个相邻文本节点合并为一个节点。
+``` js
+console.log(bodyNode.childNodes); // NodeList(12)
+bodyNode.normalize()
+console.log(bodyNode.childNodes); // NodeList(11) 合并了同胞文本节点
+```
+### 拆分文本节点
+Text类型定义了一个与normalize()相反的方法——splitText().该方法在指定偏移位置拆分nodeValue. 拆分为偏移位置前文本+剩下的文本。
+``` js
+console.log(bodyNode.childNodes[10].splitText(22));
+```
+拆分文本节点最常用于从文本节点中提取数据的DOM解析技术。
+## Comment类型
+DOM中的注释通过Comment类型表示，其具有以下特征：
++ nodeType等于6
++ nodeName值为"#comment"
++ nodeValue值为注释的内容
++ parentNode值为Document或Element对象
++ 不支持子节点
+
+Comment类型与Test类型继承自同一个基类(CharacterData),因此拥有除splitText()外所有字符串操作方式。
+``` js
+const myDiv = document.querySelector('#myDiv')
+const comment = myDiv.childNodes[1]
+console.log(comment.data); // "注释节点"
+```
+可以使用document.createComment()方法创建注释节点。
+``` js
+const newComment = document.createComment('新创建的注释节点')
+myDiv.appendChild(newComment)
+```
+注释节点很少通过JavaScript创建和访问。因为注释几乎不涉及算法逻辑。另外在\<html>标签外的注释，不被承认（在chrominum版edge中会将外部的注释移到html内部）
+## CDATASection类型
+CDATASection表示XML中特有的CDATA区块。CDATASection继承Text类型。其节点具有以下特征:
++ nodeType等于4
++ nodeName值为"#cdata-section"
++ nodeValue值为CDATA区块的内容
++ parentNode值为Document或Element对象
++ 不支持子节点
+
+CDATA区块只在XML文档中生效。
+## DocumentType类型
+DocumentType类型的节点包含文档的文档类型(doctype)信息,具有以下特征：
++ nodeType等于10
++ nodeName值为文档类型名称
++ nodeValue为null
++ parentNode值为Document对象
++ 不支持子节点。
+
+DocuemntType对象保存在document.doctype属性中。DOM Level 1规定了DocumentType对象的3个属性：name、entities和notation。因为浏览器文档通常是HTML或XHTML所以entities和notations列表为空。无论如何，只有name属性是有用的。
+``` js
+console.log(document.doctype.name); //html
+```
+## DocumentFragment类型
+在所有节点类型中，DocumentFragment类型是唯一一个在标记中没有对应表示的类型。DOM将文档片段定义为“轻量级”文档，能够包含和操作节点,却没有完整文档那样额外的消耗。其节点具有以下特征：
++ nodeType等于11
++ nodeName值为"#document-fragment"
++ nodeValue值为null
++ parentNode值为null
++ 子节点可以是Element、ProcessingInstruction、Comment、Text、CDATASection或EntityReference
+
+不能直接把文档片段添加到文档。相反，文档片段的作用是充当其他要被添加到文档的节点的仓库。可以使用document.createDocumentFragment()方法创建文档片段。
+``` js
+const fragment = document.createDocumentFragment()
+```
+文档片段从Node类型继承了所有文档类型具备的可以执行DOM操作的方法。若文档中的一个节点被添加到文档片段，则该节点会从文档树中移除，不会再被浏览器渲染。添加到文档片段的新节点也不属于文档树，所有也不会被渲染。可以通过appendChild()或insertBefore()方法将文档片段的内容添加到文档。但只是将文档片段下所有子节点添加至文档中相应位置，文档片段本身是永远不会添加到文档树的。
+``` js
+const fragment = document.createDocumentFragment()
+
+const content = document.querySelector('#docFramentContent')
+const ul = document.createElement('ul')
+for (let i = 0; i < 3; i++) {
+	const li = document.createElement('li')
+	li.appendChild(document.createTextNode(`第${i}个li`))
+	ul.appendChild(li)
+}
+fragment.appendChild(ul)
+content.appendChild(fragment)
+```
+使用fragment添加的好处，在于不用重复渲染,而是一次性渲染。比如说添加li,可以先添加到frament上，再一次性添加到document中，进行渲染。若是直接添加的话，会添加一次页面重新渲染一次。
+## Attr类型
+元素数据在DOM中通过Attr类型表示。Attr类型构造函数和原型在所有类型中都可以直接访问。技术上讲，属性是存在于元素attributes属性中的节点。Attr节点具有以下特征：
++ nodeType等于2
++ nodeName值为属性名
++ nodeValue值为属性值
++ parentNode值为null
++ 在HTML中不支持子节点
++ 在XML中子节点可以是Text或EntityReference
+
+属性节点尽管是节点，却不被认为是DOM树的一部分。Attr节点很少被直接引用。一般使用getAttributs,removeAttribute()和setAttribute()方法操作属性。
+
+Attr对象上有3个属性,name(nodeName),value(nodeValue)和specified(布尔值，使用的是默认值还是被指定的值)
+
+可以使用document.createAttribute()方法创建新的Attr节点，参数为属性名。<--跟setAttribute()的区别是什么呢？
+``` js
+let attr = document.createAttribute('align')
+attr.value = "center"
+bodyNode.setAttributeNode(attr)
+console.log(bodyNode.getAttribute('align')); // center
+console.log(bodyNode.getAttributeNode('align').value); // center
+console.log(bodyNode.attributes.align.value); // center
+```
+> 将属性作为节点来访问大多数情况下并无必要。推荐使用getAttribute()...来操作属性。
