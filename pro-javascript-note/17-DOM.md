@@ -27,6 +27,11 @@
 	- [DocumentType类型](#documenttype类型)
 	- [DocumentFragment类型](#documentfragment类型)
 	- [Attr类型](#attr类型)
+- [DOM编程](#dom编程)
+	- [动态脚本](#动态脚本)
+	- [动态样式](#动态样式)
+	- [操作表格](#操作表格)
+	- [使用NodeList](#使用nodelist)
 # 节点层级
 任何HTML或XML都可以用DOM表示为一个节点构成的层级结构。
 
@@ -655,3 +660,225 @@ console.log(bodyNode.getAttributeNode('align').value); // center
 console.log(bodyNode.attributes.align.value); // center
 ```
 > 将属性作为节点来访问大多数情况下并无必要。推荐使用getAttribute()...来操作属性。
+# DOM编程
+DOM操作因为浏览器能力的参差不齐的原因，会导致DOM的某些方面会比较复杂。
+## 动态脚本
+\<scirpt>元素用于向网页中插入Javascript代码。
+
+可以通过html直接使用scipt标签引入外部js文件，也可以通过DOM编程创建这个节点后插入。
+``` js
+const scipt = document.createElement('script')
+scipt.src = './04-test.js'
+bodyNode.appendChild(scipt)
+```
+也可以抽象为函数。
+``` js
+function loadScript(src) {
+	const scipt = document.createElement('script')
+	scipt.src = src
+	bodyNode.appendChild(scipt)
+}
+```
+另一种动态插入JavaScript的方式是直接嵌入源代码
+``` html
+<script>
+	console.log('动态嵌入源代码');
+</script>
+```
+此时使用DOM可以这样插入
+``` js
+const srcipt = document.createElement('script')
+srcipt.appendChild(document.createTextNode("console.log('动态嵌入源代码')"))
+bodyNode.appendChild(srcipt)
+```
+以上代码在FireFox、safari、Chorme和Opera中运行。不过在旧版的IE中可能导致会出现问题。因为IE对scipt标签进行滚了特殊处理，不允许常规DOM访问其子节点。不给过scitp元素上有一个text属性，可以用来添加Javascript代码
+``` js
+const script = document.createElement('script')
+script.text = "console.log('动态嵌入源代码');"
+bodyNode.appendChild(script)
+```
+修改后，上面代码可以在IE、Firefox、Opera和Safari3及更高的版本中运行。但Safari3之前的版本不能正确支持这个text属性。因此对于早期的Safari需要使用以下代码
+``` js
+const script = document.createElement('script')
+const code = "console.log('动态嵌入源代码');"
+
+try {
+	script.appendChild(document.createTextNode(code))
+} catch (error) {
+	script.text = code
+}
+bodyNode.appendChild(script)
+```
+因此抽象处一个跨浏览器添加动态脚本的函数：
+``` js
+function loadScriptString(code) {
+	const script = document.createElement('script')
+	script.type = "text/javascript"
+	try {
+		script.appendChild(document.createTextNode(code))
+	} catch (error) {
+		script.text = code
+	}
+	bodyNode.appendChild(script)
+}
+
+loadScriptString("console.log('动态显示代码')")
+```
+## 动态样式
+CSS样式在HTML页面中可以通过\<link>和<style\>添加嵌入式样式.与动态脚本类似，动态样式也是页面初始加载时并不存在，而是在之后才添加到页面中的。
+
+通过过link添加时
+``` js
+<link rel="stylesheet" href="./05-styles.css">
+```
+使用DOM编程创建
+``` js
+const link = document.createElement('link')
+link.rel = 'stylesheet'
+link.type = 'text/css'
+link.href = './05-styles.css'
+headNode.appendChild(link)
+```
+同样也可以很容易抽象为函数
+``` js
+function loadStyles(url) {
+	const link = document.createElement('link')
+	link.rel = 'stylesheet'
+	link.type = 'text/css'
+	link.href = url
+	const head = document.getElementsByTagName('head')[0]
+	headNode.appendChild(link)
+}
+
+loadStyles('./05-styles.css')
+```
+> 通过外部文件加载样式是一个异步的过程。因此、样式的加载和正在执行的JavaScript代码并没有先后顺序。
+
+另一种是通过<style\>元素包含嵌入的CSS规则
+``` html 
+<style>
+	body {
+		background-color: seagreen;
+	}
+</style>
+```
+通过DOM也可以实现,当然同scipt一样 IE也会对<style\>添加限制。所以也需要做兼容性处理，下面为一个添加的通用函数
+``` js
+function loadStyleString(css) {
+	const style = document.createElement("style")
+	style.type = "text/css"
+	try {
+		style.appendChild(document.createTextNode(css))
+	} catch (error) {
+		// style.text = css  // 这个也可以啊
+		style.styleSheet.cssText = css 
+	}
+	const head = document.getElementsByTagName('head')[0]
+	head.appendChild(style)
+}
+const css = 'body {background-color: seagreen;}'
+loadStyleString(css)
+```
+> 对于IE，需要小心使用stleSeet.cssText，若是重用同一个<sytle\>元素并设置该属性超过一次，则浏览器会崩溃。将其设置为空也会导致浏览器奔溃。
+## 操作表格
+表格是HTML中最复杂的结构之一。通过DOM编程创建\<table>元素，通常要涉及大量标签，包括表行、表元、表题等等。因此通过DOM编程创建和修改表格需要写很多代码。
+``` js
+// 创建表格
+const table = document.createElement('table')
+table.border = 1
+table.width = "100%"
+// 创建tbody
+const tbody = document.createElement('tbody')
+table.appendChild(tbody)
+// 第一行
+const row1 = document.createElement('tr')
+const cell1_1 = document.createElement('td')
+cell1_1.appendChild(document.createTextNode('cell1_1'))
+const cell1_2 = document.createElement('td')
+cell1_2.appendChild(document.createTextNode('cell1_2'))
+row1.appendChild(cell1_1)
+row1.appendChild(cell1_2)
+tbody.appendChild(row1)
+// 第二行
+const row2 = document.createElement('tr')
+const cell2_1 = document.createElement('td')
+cell2_1.appendChild(document.createTextNode('cell2_1'))
+const cell2_2 = document.createElement('td')
+cell2_2.appendChild(document.createTextNode('cell2_2'))
+row2.appendChild(cell2_1)
+row2.appendChild(cell2_2)
+tbody.appendChild(row2)
+bodyNode.appendChild(table)
+```
+上面的代码十分复杂且不好理解。为了方便创建表格，HTML DOM给\<table>，\<tbody>和\<tr>元素添加了一些特性和方法：
+
+\<table>添加了以下属性和方法：
++ caption，指向<caption>元素的指针（如果存在）；
++ tBodies，包含<tbody>元素的HTMLCollection；
++ tFoot，指向<tfoot>元素（如果存在）；
++ tHead，指向<thead>元素（如果存在）；
++ rows，包含表示所有行的HTMLCollection；
++ createTHead()，创建<thead>元素，放到表格中，返回引用；
++ createTFoot()，创建<tfoot>元素，放到表格中，返回引用；
++ createCaption()，创建<caption>元素，放到表格中，返回引用；
++ deleteTHead()，删除<thead>元素；
++ deleteTFoot()，删除<tfoot>元素；
++ deleteCaption()，删除<caption>元素；
++ deleteRow（pos），删除给定位置的行；
++ insertRow（pos），在行集合中给定位置插入一行。
+\<tbody>元素添加了以下属性和方法：
++ rows，包含<tbody>元素中所有行的HTMLCollection；
++ deleteRow（pos），删除给定位置的行；
++ insertRow（pos），在行集合中给定位置插入一行，返回该行的引用。
+
+\<tr>元素添加了以下属性和方法：
++ cells，包含<tr>元素所有表元的HTMLCollection；
++ deleteCell（pos），删除给定位置的表元；
++ insertCell (pos) ，添加给定位置的表元；
+
+通过这些属性和方法极大减少了创建表格所需的代码量
+``` js
+// 使用table的特性和方法创建table
+const table = document.createElement('table')
+table.border = 1
+table.width = "100%"
+// 创建标题
+const tbody = document.createElement('tbody')
+table.appendChild(tbody)
+// 创建第一行
+const row1 = tbody.insertRow(0)
+row1.insertCell(0)
+row1.cells[0].appendChild(document.createTextNode('Cell1_1'))
+row1.insertCell(1)
+row1.cells[1].appendChild(document.createTextNode('Cell1_1'))
+// 创建第二行
+const row2 = tbody.insertRow(1)
+row2.insertCell(0)
+row2.cells[0].appendChild(document.createTextNode('Cell2_1'))
+row2.insertCell(1)
+row2.cells[1].appendChild(document.createTextNode('Cell2_1'))
+bodyNode.append(table)
+```
+## 使用NodeList
+理解NodeList对象和相关的NamedNodeMap、HTMLCollection，是理解DOM编程的关键。这3个结合都是"实时的",意味着文档结构的变化会实时的在它们身上反映出来。实际上NodeList就是基于DOM文档的实时查询。
+
+因为获取到的div HtmlCollection是一个实时的，所以会无限增长
+``` js
+// 无限循环，但是通过querySelectorAll不会无限循环。
+for (let div of document.getElementsByTagName('div')) {
+	console.log(div);
+	let newDiv = document.createElement('div')
+	bodyNode.appendChild(newDiv)
+}
+```
+因此任何时候要迭代NodeList的时候，最好再初始化一个变量保存当时查询时的长度，然后用这个长度去迭代。这时迭代NodeList对象的首选方式。
+
+若是不想要初始化一个变量，可以反向迭代集合
+``` js
+const divs = document.getElementsByTagName('div')
+for (let i = divs.length - 1; i >= 0; i--) {
+	let newDiv = document.createElement('div')
+	bodyNode.appendChild(newDiv)
+}
+```
+一般来说，最好限制操作NodeList的次数。因为每次查询都会搜索整个文档，所以最好把查询到的NodeList缓存起来。

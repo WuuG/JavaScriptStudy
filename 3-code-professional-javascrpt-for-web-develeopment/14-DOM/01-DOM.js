@@ -351,7 +351,7 @@ const bodyNode = document.body
 
 
 
-/** 
+/**
  * Comment类型
 */
 // const myDiv = document.querySelector('#myDiv')
@@ -364,14 +364,14 @@ const bodyNode = document.body
 
 
 
-/** 
+/**
  * DocumentType类型
 */
 // console.log(document.doctype.name); //html
 
 
 
-/** 
+/**
  * 文档片段
 */
 // const fragment = document.createDocumentFragment()
@@ -388,12 +388,177 @@ const bodyNode = document.body
 
 
 
-/** 
+/**
  * 属性节点
 */
-let attr = document.createAttribute('align')
-attr.value = "center"
-bodyNode.setAttributeNode(attr)
-console.log(bodyNode.getAttribute('align')); // center
-console.log(bodyNode.getAttributeNode('align').value); // center
-console.log(bodyNode.attributes.align.value); // center
+// let attr = document.createAttribute('align')
+// attr.value = "center"
+// bodyNode.setAttributeNode(attr)
+// console.log(bodyNode.getAttribute('align')); // center
+// console.log(bodyNode.getAttributeNode('align').value); // center
+// console.log(bodyNode.attributes.align.value); // center
+
+
+
+/**
+ * DOM编程
+*/
+// const scipt = document.createElement('script')
+// scipt.src = './04-test.js'
+// bodyNode.appendChild(scipt)
+
+
+// // 函数
+// function loadScript(src) {
+// 	const scipt = document.createElement('script')
+// 	scipt.src = src
+// 	bodyNode.appendChild(scipt)
+// }
+
+
+// 嵌入源代码DOM操作
+// const srcipt = document.createElement('script')
+// srcipt.appendChild(document.createTextNode("console.log('动态嵌入源代码')"))
+// bodyNode.appendChild(srcipt)
+
+
+// IE中添加
+// const script = document.createElement('script')
+// script.text = "console.log('动态嵌入源代码');"
+// bodyNode.appendChild(script)
+
+
+// 早期Safari
+// const script = document.createElement('script')
+// const code = "console.log('动态嵌入源代码');"
+
+// try {
+// 	script.appendChild(document.createTextNode(code))
+// } catch (error) {
+// 	script.text = code
+// }
+// bodyNode.appendChild(script)
+
+
+// 跨浏览器的函数
+// function loadScriptString(code) {
+// 	const script = document.createElement('script')
+// 	script.type = "text/javascript"
+// 	try {
+// 		script.appendChild(document.createTextNode(code))
+// 	} catch (error) {
+// 		script.text = code
+// 	}
+// 	bodyNode.appendChild(script)
+// }
+
+// loadScriptString("console.log('动态显示代码')")
+
+
+
+// 动态样式
+// const link = document.createElement('link')
+// link.rel = 'stylesheet'
+// link.type = 'text/css'
+// link.href = './05-styles.css'
+// const headNode = document.querySelector('head')
+// headNode.appendChild(link)
+
+
+// 抽象为函数
+// function loadStyles(url) {
+// 	const link = document.createElement('link')
+// 	link.rel = 'stylesheet'
+// 	link.type = 'text/css'
+// 	link.href = url
+// 	const head = document.getElementsByTagName('head')[0]
+// 	headNode.appendChild(link)
+// }
+// loadStyles('./05-styles.css')
+
+
+// 通过style动态添加CSS规则
+// function loadStyleString(css) {
+// 	const style = document.createElement("style")
+// 	style.type = "text/css"
+// 	try {
+// 		style.appendChild(document.createTextNode(css))
+// 	} catch (error) {
+// 		style.styleSheet.cssText = css
+// 	}
+// 	const head = document.getElementsByTagName('head')[0]
+// 	head.appendChild(style)
+// }
+// const css = 'body {background-color: seagreen;}'
+// loadStyleString(css)
+
+
+
+// DOM编程修新建表格
+// 创建表格
+// const table = document.createElement('table')
+// table.border = 1
+// table.width = "100%"
+// // 创建tbody
+// const tbody = document.createElement('tbody')
+// table.appendChild(tbody)
+// // 第一行
+// const row1 = document.createElement('tr')
+// const cell1_1 = document.createElement('td')
+// cell1_1.appendChild(document.createTextNode('cell1_1'))
+// const cell1_2 = document.createElement('td')
+// cell1_2.appendChild(document.createTextNode('cell1_2'))
+// row1.appendChild(cell1_1)
+// row1.appendChild(cell1_2)
+// tbody.appendChild(row1)
+// // 第二行
+// const row2 = document.createElement('tr')
+// const cell2_1 = document.createElement('td')
+// cell2_1.appendChild(document.createTextNode('cell2_1'))
+// const cell2_2 = document.createElement('td')
+// cell2_2.appendChild(document.createTextNode('cell2_2'))
+// row2.appendChild(cell2_1)
+// row2.appendChild(cell2_2)
+// tbody.appendChild(row2)
+// bodyNode.appendChild(table)
+
+
+
+// 使用table的特性和方法创建table
+// const table = document.createElement('table')
+// table.border = 1
+// table.width = "100%"
+// // 创建标题
+// const tbody = document.createElement('tbody')
+// table.appendChild(tbody)
+// // 创建第一行
+// const row1 = tbody.insertRow(0)
+// row1.insertCell(0)
+// row1.cells[0].appendChild(document.createTextNode('Cell1_1'))
+// row1.insertCell(1)
+// row1.cells[1].appendChild(document.createTextNode('Cell1_1'))
+// // 创建第二行
+// const row2 = tbody.insertRow(1)
+// row2.insertCell(0)
+// row2.cells[0].appendChild(document.createTextNode('Cell2_1'))
+// row2.insertCell(1)
+// row2.cells[1].appendChild(document.createTextNode('Cell2_1'))
+// bodyNode.append(table)
+
+
+
+// NodeList
+// 无限循环，但是通过querySelectorAll不会无限循环。
+// for (let div of document.getElementsByTagName('div')) {
+// 	console.log(div);
+// 	let newDiv = document.createElement('div')
+// 	bodyNode.appendChild(newDiv)
+// }
+
+
+// 反向迭代
+const divs = document.getElementsByTagName('div')
+for (let i = divs.length - 1; i >= 0; i--) {
+	let newDiv = document.createElement('div')
+	bodyNode.appendChild(newDiv)
+}
