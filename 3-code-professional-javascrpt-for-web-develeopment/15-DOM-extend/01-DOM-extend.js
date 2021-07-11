@@ -1,4 +1,4 @@
-/** 
+/**
  * Selector API
 */
 // querySelector
@@ -36,7 +36,7 @@
 
 
 
-/** 
+/**
  * 元素遍历
 */
 // 过去以跨浏览器方式遍历元素的所有子元素
@@ -66,7 +66,7 @@
 
 
 
-/** 
+/**
  * HTML5
 */
 // getElementsByClassName()
@@ -244,17 +244,66 @@
 
 
 // scrollIntoView()
-const div = document.querySelector('#scroll')
-// 不要直接调用，因为未渲染就调用，会无效的。
-setTimeout(() => {
-	// 下面两者相同
-	div.scrollIntoView()
-	div.scrollIntoView(true)
-	// 与元素底部对齐
-	div.scrollIntoView(false)
-	div.scrollIntoView({
-		behavior: "smooth",
-		block: 'end',
-		inline: 'start'
-	})
-}, 100);
+// const div = document.querySelector('#scroll')
+// // 不要直接调用，因为未渲染就调用，会无效的。
+// setTimeout(() => {
+// 	// 下面两者相同
+// 	div.scrollIntoView()
+// 	div.scrollIntoView(true)
+// 	// 与元素底部对齐
+// 	div.scrollIntoView(false)
+// 	div.scrollIntoView({
+// 		behavior: "smooth",
+// 		block: 'end',
+// 		inline: 'start'
+// 	})
+// }, 100);
+
+
+
+/**
+ * 专有拓展
+ */
+// children
+// console.log(document.body.children);// HTMLCollection(7)[]
+
+
+// contains
+// const bodyNode = document.body
+// const div = document.querySelector('#myDiv')
+// console.log(bodyNode.contains(div)); //true
+// console.log(div.contains(bodyNode)); //false
+
+
+// compareDocumentPosition
+// const bodyNode = document.body
+// const div = document.querySelector('#myDiv')
+// const ul = document.querySelector('ul')
+// console.log(bodyNode.compareDocumentPosition(div)); // 20 0x10 + 0x4
+// console.log(div.compareDocumentPosition(bodyNode)); // 10 0x8 + 0x2
+// console.log(div.compareDocumentPosition(ul)); // 2 0x2
+
+// const result = bodyNode.compareDocumentPosition(div)
+// console.log(!!(result & 0x10)); // true
+
+
+
+// 插入标记
+// innerText
+// const ul = document.querySelector('body>ul')
+// console.log(ul.innerText);
+// // 1
+// // 2
+// // 3
+
+
+// var div = document.querySelector('#innerHTML')
+// div.innerText = '<p> hello & welcome <em>world!</em></p>'
+// console.log(div.innerText); //<p> hello & welcome <em>world!</em></p>
+
+
+// 滚动
+// const div = document.querySelector('#scroll')
+// setTimeout(() => {
+// 	div.scrollIntoViewIfNeeded()
+// }, 100);

@@ -1,3 +1,34 @@
+- [Selector API](#selector-api)
+	- [querySelector()](#queryselector)
+	- [querySelectorAll()](#queryselectorall)
+	- [matches()](#matches)
+- [元素遍历](#元素遍历)
+- [HTML5](#html5)
+	- [CSS类扩展](#css类扩展)
+		- [getElementByClassName()](#getelementbyclassname)
+		- [classList属性](#classlist属性)
+	- [焦点管理](#焦点管理)
+	- [HTMLDocument扩展](#htmldocument扩展)
+		- [readyState属性](#readystate属性)
+		- [compatMode属性](#compatmode属性)
+		- [head属性](#head属性)
+	- [字符集属性](#字符集属性)
+	- [自定义数据属性](#自定义数据属性)
+	- [插入标记](#插入标记)
+		- [innerHTML属性](#innerhtml属性)
+		- [旧IE中的innerHTML](#旧ie中的innerhtml)
+		- [outerHTML属性](#outerhtml属性)
+		- [insertAdjacentHTML()和insertADjacentText()](#insertadjacenthtml和insertadjacenttext)
+		- [内存与性能问题](#内存与性能问题)
+		- [跨站脚本](#跨站脚本)
+	- [scrollIntoView()](#scrollintoview)
+- [专有扩展](#专有扩展)
+	- [children属性](#children属性)
+	- [contains()方法](#contains方法)
+	- [插入标记](#插入标记-1)
+		- [innerText属性](#innertext属性)
+		- [outerText属性](#outertext属性)
+	- [滚动](#滚动)
 # Selector API
 通过CSS选择符对DOM进行获取。
 
@@ -350,3 +381,69 @@ setTimeout(() => {
 	})
 }, 100);
 ```
+# 专有扩展
+除了已经标准化的，各家浏览器很多未被标准化的专有拓展。它们在将来有可能会被纳入标准。
+## children属性
+IE9之间的版本与其他浏览器在处理空白文本的差异导致了该属性的出现。该属性是一个HTMLCollection，只包含元素的Element类型的节点。
+``` js
+console.log(document.body.children);// HTMLCollection(7)[]
+```
+## contains()方法
+该方法可以用于确定一个元素是否是另一个元素的后代。
+``` js
+const bodyNode = document.body
+const div = document.querySelector('#myDiv')
+console.log(bodyNode.contains(div)); //true
+console.log(div.contains(bodyNode)); //false
+```
+另外使用DOM Level 3的compareDocumentPosition()方法也可以确定节点间的关系。该方法会返回两个节点关系的位掩码
++ 0x1 断开 传入节点不在文档中
++ 0x2 领先 在参考节点之前
++ 0X4 随后 在参考节点之后
++ 0x8 包含 参考节点的祖先
++ 0x10 被包含 参考节点的后代
+```js
+const bodyNode = document.body
+const div = document.querySelector('#myDiv')
+const ul = document.querySelector('ul')
+console.log(bodyNode.compareDocumentPosition(div)); // 20 0x10 + 0x4
+console.log(div.compareDocumentPosition(bodyNode)); // 10 0x8 + 0x2
+console.log(div.compareDocumentPosition(ul)); // 2 0x2
+```
+也可以通过按位与来判断其是否包含,这样只是进行包含判断，其他(0x1,0x2...)无法这样使用
+``` js
+const result = bodyNode.compareDocumentPosition(div)
+console.log(!!(result & 0x10)); // true
+```
+> IE9及之后，以及现代所有浏览器都支持container()和compareDocumentPosition()方法
+## 插入标记
+### innerText属性
+该属性返回对应元素包含的所有文本内容,无论在文本在子树的哪个层级。在用于读取值时，innerText会按照深度优先的顺序将子树所有文本节点的值拼接起来。在用于写入值的时候，innerText会移除元素所有后代并插入一个包含该值的文本节点。
+
+因为不同浏览器对待空格的方式不同，因此格式化之后的字符串可能包含也可能不包含原始HTML代码中的缩进。
+``` js
+const ul = document.querySelector('body>ul')
+console.log(ul.innerText);
+// 1
+// 2
+// 3
+```
+通过innerText修改文本 <--似乎与书上结果不相同，不会对字符串中的HTML字符进行编码，而是会直接输出字符串
+``` js
+var div = document.querySelector('#innerHTML')
+div.innerText = '<p> hello & welcome <em>world!</em></p>'
+console.log(div.innerText); //<p> hello & welcome <em>world!</em></p>
+```
+### outerText属性
+outerText与innerText雷士，只不过作用范围包含调用它的节点。在读取文本时，outerText和innerText返回相同的内容。但写入会替换整个元素。
+
+outerText是一个非标准元素，也没有被标准化的前提，因此不推荐依赖这个属性实现重要操作。除了FireFox之外所有主流浏览器都支持outerText。
+## 滚动
+除之间已经标准化的scrollIntoView()外，不同浏览器中仍有其他专有方法。如scrollIntoViewIfNeeded()会在元素不可见的情况进行滚动，否则什么都不做。其接受参数alingCenter为boolean,若设置为true会尝试将其放在视口中央（垂直方向）。
+``` js
+const div = document.querySelector('#scroll')
+setTimeout(() => {
+	div.scrollIntoViewIfNeeded()
+}, 100);
+```
+考虑到scrollIntoView()是唯一一个所有浏览器都支持的方法，所以只用它就好了
