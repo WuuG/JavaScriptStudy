@@ -48,3 +48,37 @@ console.log(document.body.matches('body')); // true
 console.log(document.body.matches('ul')); // false
 ```
 # 元素遍历
+IE9之前IE不会把元素间的空格当作空白节点，而其他浏览器会。这使得childNodes和firstChild等属性的差异。因此为了弥补这个差异，又不影响DOM规范，W3C通过了新的Element Traversal规范定义一组新属性。
++ childElementCount，返回子元素数量。
++ firstElementChild，指向第一个Element类型的子元素。
++ lastElementChild，指向最后一个Element类型的子元素。
++ previousElementSibiling，指向前一个Element类型的同胞元素
++ nextElementSibilng，指向后一个Element类型的同胞元素。
+
+过去以跨浏览器方式遍历元素的所有子元素
+``` js
+const parentElement = document.getElementById('parent')
+const currentChildNode = parentElement.firstChild
+while (currentChildNode) {
+	if (currentChildNode.nodeType === 1) {
+		// 对元素节点进行相应处理
+	}
+	if (currentChildNode === parentElement.lastChild) {
+		break
+	}
+	currentChildNode = currentChildNode.nextSibling
+}
+```
+使用Element Traversal属性后
+``` js
+const parentElement = document.getElementById('parent')
+const currentChildNode = parentElement.firstElementChild
+while (currentChildNode) {
+	// 对元素节点进行相应处理
+	if (currentChildNode === parentElement.lastElementChild) {
+		break
+	}
+	currentChildNode = currentChildNode.nextElementSibling
+}
+```
+IE9以上，以及所有现代浏览器都支持Element Traversal属性。

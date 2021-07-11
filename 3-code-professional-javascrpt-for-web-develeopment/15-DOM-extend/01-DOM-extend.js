@@ -31,5 +31,35 @@
 
 
 // matches
-console.log(document.body.matches('body')); // true
-console.log(document.body.matches('ul')); // false
+// console.log(document.body.matches('body')); // true
+// console.log(document.body.matches('ul')); // false
+
+
+
+/** 
+ * 元素遍历
+*/
+// 过去以跨浏览器方式遍历元素的所有子元素
+// const parentElement = document.getElementById('parent')
+// const currentChildNode = parentElement.firstChild
+// while (currentChildNode) {
+// 	if (currentChildNode.nodeType === 1) {
+// 		// 对元素节点进行相应处理
+// 	}
+// 	if (currentChildNode === parentElement.lastChild) {
+// 		break
+// 	}
+// 	currentChildNode = currentChildNode.nextSibling
+// }
+
+
+// 使用Element Traversal属性后
+const parentElement = document.getElementById('parent')
+const currentChildNode = parentElement.firstElementChild
+while (currentChildNode) {
+	// 对元素节点进行相应处理
+	if (currentChildNode === parentElement.lastElementChild) {
+		break
+	}
+	currentChildNode = currentChildNode.nextElementSibling
+}
