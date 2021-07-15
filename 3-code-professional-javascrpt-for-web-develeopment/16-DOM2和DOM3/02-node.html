@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<s:svg xmlns:s="http://www.w3.org/2000/svg" version="1.1" viewBox="00100100" style="width: 100%;height: 100%;"
+		id="svg">
+		<s:rect x="0" y="0" width="100" height="100" style="fill:red"></s:rect>
+	</s:svg>
+	<script>
+		console.log(document.body.isDefaultNamespace("http://www.w3.org/1999/xhtml")); // true
+		const svg = document.querySelector('#svg')
+		// 似乎对这个svg引用，无法直接通过querySeletor获取
+		console.log(svg.isDefaultNamespace('http://www.w3.org/2000/svg')); // false
+		console.log(svg.lookupPrefix("http://www.w3.org/2000/svg"));
+		console.log(svg.lookupNamespaceURI('s'));
+
+		const htmls = document.getElementsByTagNameNS('http://www.w3.org/1999/xhtml', "*")
+		console.log(htmls);
+	</script>
+</body>
+
+</html>
