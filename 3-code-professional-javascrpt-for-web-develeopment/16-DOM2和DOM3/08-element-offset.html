@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		.box {
+			width: 20px;
+			height: 20px;
+			margin-left: 100px;
+			margin-top: 200px;
+			background-color: red;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="box"></div>
+	<script>
+		function getElementLeft(element) {
+			console.log(element);
+			let actualLeft = element.offsetLeft
+			let current = element.offsetParent
+			while (current != null) {
+				actualLeft += current.offsetLeft
+				current = current.offsetParent
+			}
+			return actualLeft
+		}
+		const box = document.querySelector('.box')
+		console.log(getElementLeft(box)); // 108, body自带8px offsetleft(edge)
+
+		// 实际上就是html的宽度和高度
+		console.log(document.documentElement.clientHeight);
+		console.log(document.documentElement.clientWidth);
+
+		console.log(document.documentElement.scrollHeight);
+		console.log(document.documentElement.scrollWidth);
+
+
+	</script>
+</body>
+
+</html>

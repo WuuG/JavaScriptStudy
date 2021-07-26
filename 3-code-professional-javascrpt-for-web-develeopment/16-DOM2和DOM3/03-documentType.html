@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-// W3C DTD HTML 4.01// EN" "http://www.w3.org/TR/html4/strict.dtd" [<!ELEMENT name (#PCDATA)>]>
+
+
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<div id="div"></div>
+	<script>
+		console.log(document.doctype.publicId);
+		console.log(document.doctype.systemId);
+		console.log(document.doctype.internalSubset); // undefined ？
+		// -// W3C DTD HTML 4.01// EN
+		// http://www.w3.org/TR/html4/strict.dtd
+
+		const oldNode = document.querySelector('#div')
+		const newNode = document.importNode(oldNode, true) // 导入节点以所有后代
+		document.body.appendChild(newNode)
+
+		let parentWindow = document.defaultView || document.parentWindow
+
+		let doctype = document.implementation.createDocumentType("html", "-// W3C// DTD 4.01// EN", "http://www.w3.org/TR/html4/strict.dtd")
+		console.log(doctype);
+
+		// let doc = document.implementation.createDocument('', 'root', null)
+
+		const doc = document.implementation.createDocument("http://www.w3.org/1999/xhtml", "html", doctype)
+
+		const htmldoc = document.implementation.createHTMLDocument('new Doc')
+		console.log(htmldoc.title);  // New Doc
+		console.log(htmldoc.body); // <body></body>
+
+		const div1 = document.createElement('div')
+		const div2 = document.createElement('div')
+		div1.setAttribute('class', 'box')
+		div2.setAttribute('class', 'box')
+		console.log(div1.isSameNode(div1)); // true
+		console.log(div1.isSameNode(div2)); // false
+		console.log(div1.isEqualNode(div2)); // true
+
+		// const bodyNode = document.body 
+		// bodyNode.setUserData('name', 'Nicolas', function () { }) // 看来该方法是废弃了
+		// const value = document.body.getUserData('name')
+		// console.log(value);
+
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>计算样式</title>
+	<link rel="stylesheet" href="./06-css.css" id="link">
+	<style>
+		#myDiv {
+			background-color: blue;
+			width: 200px;
+			height: 200px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="myDiv" style="background-color: red;border: 1px solid black;"></div>
+	<script>
+		const div = document.querySelector('#myDiv')
+		const computedStyle = document.defaultView.getComputedStyle(div, null)
+		console.log(computedStyle.backgroundColor); // rgb(255, 0, 0)
+		console.log(computedStyle.border); // 1px solid rgb(0, 0, 0)
+		console.log(computedStyle.width); // 200px
+		console.log(computedStyle.height); // 200px
+
+		let sheet = null
+		console.log(document.styleSheets);
+		for (let i = 0; i < document.styleSheets.length; i++) {
+			sheet = document.styleSheets[i]
+			console.log(sheet.href);
+		}
+		// file:///D:/study-git/JavaScriptStudy/3-code-professional-javascrpt-for-web-develeopment/16-DOM2%E5%92%8CDOM3/06-css.css
+		// null  这个是指<style>标签
+		const link = document.querySelector('#link')
+		console.log(link.sheet);
+	</script>
+</body>
+
+</html>

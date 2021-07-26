@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>滚动</title>
+	<style>
+		.box {
+			width: 200px;
+			height: 200px;
+			background-color: red;
+			overflow: scroll;
+		}
+
+		.box .kid-box {
+			width: 2000px;
+			height: 2000px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="box">
+		<div class="kid-box"></div>
+	</div>
+	<button class="button">获取滚动距离</button>
+	<button class="set-button">设置滚动距离</button>
+	<script>
+		const box = document.querySelector('.box')
+		const btn = document.querySelector('.button')
+		const setBtn = document.querySelector('.set-button')
+		btn.addEventListener('click', () => {
+			console.log(box.scrollLeft);
+			console.log(box.scrollTop);
+		})
+		setBtn.addEventListener('click', () => {
+			box.scrollLeft = '100px'
+			box.scrollTop = '100px'
+		})
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>sheet-operate</title>
+	<link rel="stylesheet" href="./06-css.css">
+</head>
+
+<body>
+	<div class="box"></div>
+	<script>
+		const sheet = document.styleSheets[0]
+		const rules = sheet.cssRules || sheet.rules // 看来和浏览器有关,获取可能报错和跨域有关。
+		const rule = rules[0]
+		console.log(rule.selectorText); // .body
+		console.log(rule.cssText); // .body { background-color: rgb(238, 238, 238); }
+		console.log(rule.style.cssText); // background-color: rgb(238, 238, 238);
+		console.log(rule.style.backgroundColor); // rgb(238, 238, 238)
+
+		rule.style.backgroundColor = 'black' // 页面背景变为黑色
+
+		sheet.insertRule(".box {width:200px;height:200px}", 0) // 出现红色盒子
+
+		sheet.deleteRule(0) // 红色盒子消失
+		console.log(sheet);
+
+
+	</script>
+	<style>
+	</style>
+</body>
+
+</html>

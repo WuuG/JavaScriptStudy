@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>style</title>
+	<style>
+		#myDiv {
+			width: 20px;
+			height: 20px;
+			border: 10px solid rgba(47, 0, 255, 0.952);
+		}
+	</style>
+</head>
+
+<body>
+	<div id="myDiv" style="color:red"></div>
+	<div id="emptyDiv"></div>
+	<script>
+		const myDiv = document.querySelector('#myDiv')
+		myDiv.style.backgroundColor = 'red'
+		myDiv.style.border = '1px solid #000'
+		console.log(myDiv.style.color);
+		console.log(myDiv.style.cssText);
+		console.log(myDiv.style.length);
+		console.log(myDiv.style.parentRule);
+
+		const emptyDiv = document.querySelector('#emptyDiv')
+		console.log(emptyDiv.style);
+
+		// 通过CSS属性(也即是style属性)设置的样式，可以通过cssText获取,给cssText复制会重写整个style的值。
+		console.log(myDiv.style.cssText); // color: red; background-color: red; border: 1px solid rgb(0, 0, 0);
+		// myDiv.style.cssText = "width:200px;background-color:green"
+		console.log(myDiv.style.cssText); // width: 200px; background-color: green;
+
+		// 通过length和item()方法可以迭代CSS属性名
+		for (let i = 0, len = myDiv.style.length; i < len; i++) {
+			console.log(myDiv.style[i]);
+			console.log(myDiv.style.item(i));
+		}
+
+		// 通过迭代获取的属性名，可以用于获取其对应属性的值，通过getPropertyValue()
+		for (let i = 0, len = myDiv.style.length; i < len; i++) {
+			const prop = myDiv.style[i]
+			const value = myDiv.style.getPropertyValue(prop)
+		}
+
+		// 已废弃
+		// getPropertyValue()返回的是CSS属性的字符串表示，若是需要更多信息，可以通过getPropertyCSSValue()获取CSS对象。这个对象由两个属性：cssText和cssValueType,后者是一个数值常量，表示当前值的类型(0表示继承的值,1代表原始，2代表列表，3代表自定义值)
+		// for (let i = 0, len = myDiv.style.length; i < len; i++) {
+		// 	const prop = myDiv.style[i]
+		// 	const CSSProject = myDiv.style.getPropertyCSSValue(prop)
+		// 	console.log(CSSProject);
+		// }
+
+		// removeProperty()方法用于从元素样式中删除指定的CSS属性。使用这个方法删除属性，意味着会应用该属性的默认样式(其他样式表层叠继承而来的).
+		myDiv.style.removeProperty('border')
+	</script>
+</body>
+
+</html>
