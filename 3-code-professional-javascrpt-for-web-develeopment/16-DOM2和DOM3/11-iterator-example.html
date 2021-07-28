@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Document</title>
+</head>
+
+<body>
+	<h1>hello world</h1>
+	<div>
+		<li>list item 1</li>
+		<li>list itme 2</li>
+		<li>list item 3</li>
+	</div>
+	<script>
+		const iterator = document.createNodeIterator(
+			document.body,
+			NodeFilter.SHOW_ELEMENT,
+			null,
+			false
+		);
+		let node = iterator.nextNode();
+		while (node != null) {
+			console.log(node.tagName);
+			node = iterator.nextNode()
+		}
+		// BODY
+		// H1
+		// DIV
+		// LI
+		// SCRIPT
+		const filter = function (node) {
+			return node.tagName.toLowerCase() === 'li' ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
+		}
+		const iteratorNode = document.createNodeIterator(document.body, NodeFilter.SHOW_ELEMENT, filter, false)
+		let filterNode = iteratorNode.nextNode()
+		while (filterNode != null) {
+			console.log(filterNode.tagName);
+			filterNode = iteratorNode.nextNode()
+		}
+		// 3个 LI 
+		// const treeWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT, null, false)
+		// let treeWalkerNode = treeWalker.nextNode()
+		// while (treeWalkerNode != null) {
+		// 	console.log(treeWalkerNode.tagName);
+		// 	treeWalkerNode = treeWalker.nextNode()
+		// }
+		// H1
+		// DIV
+		// LI * 3
+		// SCRIPT
+		const treeWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT, null, false)
+		let walkerNode = treeWalker.nextNode()
+		walkerNode = treeWalker.nextSibling()
+		walkerNode = treeWalker.firstChild()
+		while (walkerNode != null) {
+			console.log(walkerNode.tagName);
+			walkerNode = treeWalker.nextSibling()
+		}
+		// LI * 3
+
+		console.log(treeWalker.currentNode.tagName); // LI
+		treeWalker.currentNode = document.body
+		console.log(treeWalker.nextNode().tagName); // H1
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>遍历</title>
+</head>
+
+<body>
+	<div>
+		<p>p</p>
+		<i>i</i>
+	</div>
+	<div>
+		<li>list item 1</li>
+		<li>list itme 2</li>
+		<li>list item 3</li>
+	</div>
+	<script>
+		let whatToShow = NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT
+
+		let filter = {
+			acceptNode(node) {
+				return node.tagName.toLowerCase = "p" ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP
+			}
+		}
+		let iterator = document.createNodeIterator(document.documentElement, NodeFilter.SHOW_ELEMENT, filter, false)
+
+		// filter也可以是一个函数，直接作为acceptNode
+		let filter = function (node) {
+			return node.tagName.toLowerCase = "p" ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP
+		}
+		let iterator = document.createNodeIterator(document.documentElement, NodeFilter.SHOW_ELEMENT, filter, false)
+
+		// 简单的遍历所有节点的NodeIterator
+		let iterator = document.createNodeIterator(document, NodeFilter.SHOW_ALL, null, false)
+	</script>
+</body>
+
+</html>

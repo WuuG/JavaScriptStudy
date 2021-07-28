@@ -21,6 +21,9 @@
 		- [客户端尺寸](#客户端尺寸)
 		- [滚动尺寸](#滚动尺寸)
 		- [确定元素尺寸](#确定元素尺寸)
+- [遍历](#遍历)
+	- [NodeIterator](#nodeiterator)
+	- [TreeWalker](#treewalker)
 # DOM的演进
 ## XML命名空间
 通过给html设置xmls命名空间.
@@ -400,3 +403,140 @@ scrollLeft和scrollTop属性可以用于确定元素滚动位置，或者用于�
 ```
 ### 确定元素尺寸
 浏览器在每个元素都暴露了getBoundingClientRect()方法，返回一个DOMRect对象，包含6个属性：left、top、right、bottom、height和width。可在[图](https://mdn.mozillademos.org/files/15087/rect.png)查看。
+# 遍历
+DOM2 Traversal and Range模块定义了两个类型用于辅助顺序遍历DOM结构。这两个类型:NodeIterator和TreeWalker————从某个起点开始执行对DOM结构的深度优先遍历。
+
+如前所诉，DOM遍历是对DOM结构的深度优先遍历。至少允许朝两个方向移动(取决于类型)。遍历以给定节点为根，不能在DOM中向上超越这个根节点。
+
+DOM中的任何节点都可以作为遍历的根节点。 遍历会从根节点开始进行深度遍历，在到达最后的节点后，遍历会在DOM树种反向回收。
+## NodeIterator
+NodeIterator类型是两种类型中比较简单的，可以通过document.createNodeIterator()方法创建实例，该方法接受四个参数：
++ root, 作为遍历的根节点。
++ whatToShow, 数值代码，表示应该访问那些节点。
++ filter, NodeFilter对象或函数，表示是否接受或跳过特定节点。
++ entityReferenceExpansion, 布尔值，表示是否扩展实体引用。这个参数在HTML文档中没有效果，因为实体引用永远不拓展。
+
+whatToShow参数是一个位掩码，通过应用一个或多个过滤器来指定访问哪些节点。这个参数对应的常量在NodeFilter类型中进行的定义。
++ NodeFilter.SHOW_ALL，所有节点。
++ NodeFilter.SHOW_ELEMENT，元素节点。
++ NodeFilter.SHOW_ATTRIBUTE，属性节点。由于DOM的结构，因此实际上用不上。
++ NodeFilter.SHOW_TEXT，文本节点。
++ NodeFilter.SHOW_CDATA_SECTION, CData区块节点。不是在HTML页面中使用的。
++ NodeFilter.SHOW_ENTITY_REFERENCE，实体引用节点。不是在HTML页面中使用的。
++ NodeFilter.SHOW_ENTITY，实体节点。不是在HTML页面中使用的。
++ NodeFilter.SHOW_PROCESSING_INSTRUCTION，处理指令节点。不是在HTML页面中使用的。
++ NodeFilter.SHOW_DOCUMENT，文档节点。
++ NodeFilter.SHOW_DOCUMENT_TYPE，文档类型节点。
++ NodeFilter.SHOW_DOCUMENT_FRAGMENT，文档片段节点。不是在HTML页面中使用的。
++ NodeFilter.SHOW_NOTATION，记号节点。不是在HTML页面中使用的
+
+上述这些值除了NodeFilter.SHOW_ALL之外，都可以组合使用。如下，可以通过按位或操作组合多个选项。
+``` js
+let whatToShow = NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT
+```
+filter参数可以用来指定自定义NodeFilter对象，或者作为一个节点过滤器函数。 NodeFilter对象只有一个acceptNode()，若应该返回节点就返回NodeFilter.FILTER_ACCEPT,否则返回NodeFilter.FILTER_SKIP。 因为NodeFilter是一个抽象类型，所以不可能创建它的实例。以下代码定义了只接受<p\>元素的节点过滤器对象：
+``` js
+let filter = {
+	acceptNode(node) {
+		return node.tagName.toLowerCase = "p" ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP
+	}
+}
+let iterator = document.createNodeIterator(document.documentElement, NodeFilter.SHOW_ELEMENT, filter, false)
+
+//  filter也可以是一个函数，直接作为acceptNode
+let filter = function (node) {
+	return node.tagName.toLowerCase = "p" ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP
+}
+let iterator = document.createNodeIterator(document.documentElement,NodeFilter.SHOW_ELEMENT,filter,false)
+```
+若是不需要过滤函数，可以给这个参数传入null
+
+要创建一个简单的遍历所有节点的NodeIterator，可以使用以下代码
+``` js
+// 简单的遍历所有节点的NodeIterator
+let iterator = document.createNodeIterator(document,NodeFilter.SHOW_ALL,null,false)
+```
+NodeIterator的两个主要方法是nextNode()和previoursNode().通过这两个函数可以在节点间通过深度遍历的顺序进行移动。当到达结尾或者开头时，会返回null. 第一次调用nextNode()时会返回根节点,看样子是NodeIterator内部维护了一个指针，下例
+``` html
+<body>
+	<h1>hello world</h1>
+	<div>
+		<li>list item 1</li>
+		<li>list itme 2</li>
+		<li>list item 3</li>
+	</div>
+	<script>
+		const iterator = document.createNodeIterator(
+			document.body,
+			NodeFilter.SHOW_ELEMENT,
+			null,
+			false
+		);
+		let node = iterator.nextNode();
+		while (node != null) {
+			console.log(node.tagName);
+			node = iterator.nextNode()
+		}
+ 		// BODY
+ 		// H1
+ 		// DIV
+ 		// LI
+ 		// SCRIPT
+	</script>
+</body>
+```
+通过传入filter，遍历只会输出<li\>元素的标签。
+``` js
+const filter = function (node) {
+	return node.tagName.toLowerCase() === 'li' ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
+}
+const iteratorNode = document.createNodeIterator(document.body, NodeFilter.SHOW_ELEMENT, filter, false)
+let filterNode = iteratorNode.nextNode()
+while (filterNode != null) {
+	console.log(filterNode.tagName);
+	filterNode = iteratorNode.nextNode()
+}
+// 3个 LI 
+```
+## TreeWalker
+TreeWalker除了包含同样的nextNode(),previousNode()方法，其还添加了DOM结构中向不同方向遍历的方法。<-- 突然发现这里有点像处理文件时的指针。
++ parentNode(),遍历到当前节点的父节点。
++ firstChild(),遍历到当前节点的第一个子节点。
++ lastChild(),遍历到当前节点的最后一个子节点。
++ nextSibling(),遍历到当前节点的下一个同胞节点。
++ previousSibiling(),遍历到当前节点的上一个同胞节点。
+
+TreeWalker对象要调用document.createTreeWalker()方法来创建，这个方法于document.createNodeIterator()同样的参数。因为二者很类似，所以TreeWalker通常可以取代NodeIterator。
+``` js
+const treeWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT, null, false)
+let treeWalkerNode = treeWalker.nextNode()
+while (treeWalkerNode != null) {
+	console.log(treeWalkerNode.tagName);
+	treeWalkerNode = treeWalker.nextNode()
+}
+// H1
+// DIV
+// LI * 3
+// SCRIPT
+```
+不同的是，节点过滤器(filter)除了可以返回NodeFilter.FILTER_ACCEPT和NodeFilter.FILTER_SKIPm还可以返回NodeFilter.FILTER_REJECT。在使用NodeIterator时，SKIP和REJECT是相同的，但在TreeWalker时，SKIP表示跳过节点。而REJECT则是跳过整个子树。
+
+当然TreeWalker增强的地方在于可以在DOM结构中游走。如下例
+``` js
+const treeWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT, null, false)
+let walkerNode = treeWalker.nextNode()
+walkerNode = treeWalker.nextSibling()
+walkerNode = treeWalker.firstChild()
+while (walkerNode != null) {
+	console.log(walkerNode.tagName);
+	walkerNode = treeWalker.nextSibling()
+}
+// LI * 3
+```
+TreeWalker类型也有一个名为currentNode的属性，表示遍历过程中上一次返回的节点。可以通过修改这个属性来影响接下来遍历的起点。
+``` js
+// ...接上文代码
+console.log(treeWalker.currentNode.tagName); // LI
+treeWalker.currentNode = document.body
+console.log(treeWalker.nextNode().tagName); // H1
+```
