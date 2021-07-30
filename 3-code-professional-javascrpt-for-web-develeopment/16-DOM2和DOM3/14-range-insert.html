@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>range insert</title>
+</head>
+
+<body>
+	<p id="p1"><b>Hello</b>world !</p>
+
+	<script>
+		// let p1 = document.getElementById('p1'),
+		// 	helloNode = p1.firstChild.firstChild,
+		// 	worldNode = p1.lastChild
+
+		// const range = document.createRange()
+		// range.setStart(helloNode, 2)
+		// range.setEnd(worldNode, 3)
+
+		// let span = document.createElement("span")
+		// span.style.color = "red"
+		// span.append(document.createTextNode('Inserted text'))
+		// range.insertNode(span)
+
+
+		let p1 = document.getElementById('p1'),
+			helloNode = p1.firstChild.firstChild,
+			worldNode = p1.lastChild
+
+		const range = document.createRange()
+		range.selectNode(helloNode)
+		let span = document.createElement('span')
+		span.style.backgroundColor = "yellow"
+		range.surroundContents(span)
+
+
+		// const range = document.createRange()
+		// range.setStart(helloNode, 2)
+		// range.setEnd(worldNode, 3)
+		// Uncaught DOMException: Failed to execute 'surroundContents' on 'Range': The Range has partially selected a non-Text node.
+		// let span = document.createElement('span')
+		// span.style.backgroundColor = "yellow"
+		// range.surroundContents(span)
+
+		// console.log(range.collapsed); // false
+		// range.collapse()
+		// console.log(range.collapsed); // true
+	</script>
+	<p id='p2'>Paragraph 1</p>
+	<p id='p3'>Paragraph 2</p>
+	<script>
+		const p2 = document.querySelector('#p2'),
+			p3 = document.querySelector('#p3'),
+			range2 = document.createRange()
+		range2.setStartBefore(p2)
+		range2.setStartAfter(p3)
+		console.log(range2.collapsed); // true
+	</script>
+
+</body>
+
+</html>

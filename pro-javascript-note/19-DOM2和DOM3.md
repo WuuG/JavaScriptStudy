@@ -24,6 +24,15 @@
 - [遍历](#遍历)
 	- [NodeIterator](#nodeiterator)
 	- [TreeWalker](#treewalker)
+- [范围](#范围)
+	- [DOM范围](#dom范围)
+	- [简单选择](#简单选择)
+	- [复杂选择](#复杂选择)
+	- [操作范围](#操作范围)
+	- [范围插入](#范围插入)
+	- [范围折叠](#范围折叠)
+	- [范围比较](#范围比较)
+	- [复制范围](#复制范围)
 # DOM的演进
 ## XML命名空间
 通过给html设置xmls命名空间.
@@ -539,4 +548,245 @@ TreeWalker类型也有一个名为currentNode的属性，表示遍历过程中�
 console.log(treeWalker.currentNode.tagName); // LI
 treeWalker.currentNode = document.body
 console.log(treeWalker.nextNode().tagName); // H1
+```
+# 范围
+DOM2 Traversal and Range模块定义了范围接口。范围可用于在文档中选择内容，而不用考虑节点之间的界限。
+## DOM范围
+DOM2在document上定义了createRange()方法。该方法创建一个DOM范围对象。
+
+与节点类似，这个范围对象是与创建它的文档相关的。 使用这个范围在后台选择文档中特定部分。创建并指定它的位置之后，可以对范围的内容执行一些操作，从而实现对底层DOM树更精细的控制。
+
+每个范围范围都是Range类型的实例，拥有相应的属性和方法。下面的属性提供了与范围在文档中位置相关的信息。
++ startContainer, 范围起点所在节点(选取中第一个子节点的父节点)。
++ starOffset, 范围起点在startContainer中的偏移量。如果startCOntainer是文本节点、注释节点或CData区块节点，则startOffser指范围起点之前跳过的字符数。否则，表示范围中第一个节点的索引。
++ endContainer, 范围终点所在的节点(选区中最后一个子节点的父节点)
++ endOffset, 范围起点在startContainer中的偏移量
++ commonAncestorContainer,文档中以startContainer和endContainer为后代的最深的节点。
+
+这些属性会在范围被放到文档中特定位置时获得相应的值。
+## 简单选择
+通过范围选择文档中某个部分的两个简单方法：selectNode()和selectNodeContents(),二者都接受一个节点作为参数。 前者选择整个节点，后者只选择后代节点。
+``` html
+<body>
+	<p id="p1"><b>Hello</b>world !</p>
+	<script>
+		const range1 = document.createRange(),
+			range2 = document.createRange(),
+			p1 = document.getElementById('p1')
+		range1.selectNode(p1)
+		range2.selectNodeContents(p1)
+
+		// 在调用selectNode()时，startContainer，endContainer,commonAncestorContainer都等于传入节点的父节点。
+		console.log(range1.startContainer);// body节点
+		console.log(range1.endContainer);// body节点
+		console.log(range1.commonAncestorContainer);// body节点
+		console.log(range1.startOffset); // 1 返回范围第一个节点在其父节点的索引  因为索引为0的节点是 文本节点
+		console.log(range1.endOffset); // 2 因为只选择了一个节点，因此索引为 startOffset + 1, <--因为只有两个节点吧,一个文本节点+一个选择的节点
+
+		// 调用selectNodeContents()时，前三个属性都为传入的节点。 startOffset属性值始终为0，因为范围是从传入节点的第一个子节点开始，而endOffset等于传入节点的子节点数量，在该例子中等于2
+		console.log(range2.startContainer);// p节点
+		console.log(range2.endContainer);// p节点
+		console.log(range2.commonAncestorContainer);// p节点
+		console.log(range2.startOffset); // 0
+		console.log(range2.endOffset); // 2
+	</script>
+</body>
+```
+在选定节点或节点后代后，可以在范围上调用相应方法，实现对范围中选区更精细的控制。
++ setStartBefore（refNode），把范围的起点设置到refNode之前，从而让refNode成为选区的第一个子节点。startContainer属性被设置为refNode.parentNode，而startOffset属性被设置为refNode在其父节点childNodes集合中的索引。
++ setStartAfter（refNode），把范围的起点设置到refNode之后，从而将refNode排除在选区之外，让其下一个同胞节点成为选区的第一个子节点。startContainer属性被设置为refNode.parentNode, startOffset属性被设置为refNode在其父节点childNodes集合中的索引加1。
++ setEndBefore（refNode），把范围的终点设置到refNode之前，从而将refNode排除在选区之外、让其上一个同胞节点成为选区的最后一个子节点。endContainer属性被设置为refNode. parentNode, endOffset属性被设置为refNode在其父节点childNodes集合中的索引。
++ setEndAfter（refNode），把范围的终点设置到refNode之后，从而让refNode成为选区的最后一个子节点。endContainer属性被设置为refNode.parentNode, endOffset属性被设置为refNode在其父节点childNodes集合中的索引加1。
+
+在调用这些方法时，所有属性都会被重新赋值。不给为了实现复杂选区，也可以直接修改这些属性的值。
+## 复杂选择
+要创建复杂的范围，需要使用setStart()和setEnd()方法。这两个方法接受两个参数:参照节点和偏移量。对setStart()来说，参照节点会称为startContainer，而偏移量会赋值给startOffset。对setEnd()而言，参照节点会称为endContainer，而偏移量会赋值给endOffset。
+
+使用这两个方法，可以模拟selectNode()和selectNodeContents()的行为。比如：
+``` html
+<body>
+	<p id="p1"><b>Hello</b>world !</p>
+	<script>
+		let range1 = document.createRange(),
+			range2 = document.createRange(),
+			p1 = document.getElementById('p1'),
+			p1Index = -1,
+			i,
+			len;
+		for (i = 0, len = p1.parentNode.childNodes.length; i < len; i++) {
+			if (p1.parentNode.childNodes[i] == p1) {
+				p1Index = i;
+				break
+			}
+		}
+		range1.setStart(p1.parentNode, p1Index)
+		range1.setEnd(p1.parentNode, p1Index + 1)
+		range2.setStart(p1, 0)
+		range2.setEnd(p1, p1.childNodes.length)
+	</script>
+</body>
+```
+setStart()和setEnd()的真正用处在于选择节点中的某个部分。
+
+如下例选择"Hello"中"llo"至"wrold !"中的"o"部分
+``` html
+<p id="p1"><b>Hello</b>world !</p>I
+```
+``` js
+let p1 = document.getElementById('p1'),
+	helloNode = p1.firstChild.firstChild,
+	worldNode = p1.lastChild
+
+console.log(helloNode);
+console.log(worldNode);
+const range = document.createRange()
+range.setStart(helloNode, 2)
+range.setEnd(worldNode, 3)
+```
+## 操作范围
+创建范围后，浏览器会在内部创建一个文档片段节点(DocumentFragment)。为操作范围内的内容，选取中的内容的格式必须完好。在前面的例子中，因为范围的起点和终点都在文本节点内部，并不是完整的DOM结构，所以无法在DOM中表示。不过范围能够确定缺失的开始和结束标签，从而可以重构出有效的DOM结构，以便后续操作。
+
+以前面的例子为例，可以发现范围选区中缺少一个开始的<b\>标签，因此会在**后台**动态的补上这个标签，同时还需要补上"He"的结束标签</b\>,之后获取的DOM结构如下,其中的world会被拆成两个文本节点一个"wo"一个"rld !"
+``` js
+<p><b>He</b><b>llo</b>world !</p>
+```
+在创建了范围后，就可以使用方法来操作范围的内容了。(值得注意的是，在documentFragment内的所有节点，都是对应文档中相应documentFragment节点的指针，也就是说修改了文档片段就会修改原DOM树的内容)
+
+deleteContents(),该方法会从文档中删除范围包含的节点。
+``` js
+let p1 = document.getElementById('p1'),
+	helloNode = p1.firstChild.firstChild,
+	worldNode = p1.lastChild
+
+console.log(helloNode);
+console.log(worldNode);
+const range = document.createRange()
+range.setStart(helloNode, 2)
+range.setEnd(worldNode, 3)
+range.deleteContents() 
+```
+执行上面的代码后，页面中的HTML会变为如下
+``` html
+<p><b>He</b>rld !</p>
+```
+如前文所说，因为之前确定range的时候后台修改了DOM结构，因此即使删除range，剩下的DOM结构仍然是完整的。
+
+extractContents()和deleteContents()很类似，也会从文档中移除选区，不给该方法会返回对应的文档片段。这样就可以将选中的内容插入文档中的其他地方了,如下代码(该代码之前的代码与前文类似)
+``` js
+// ...
+const documentFragment = range.extractContents();
+p1.parentNode.appendChild(documentFragment)
+```
+在上文代码执行后，页面DOM结构会变为如下
+``` html
+<p><b>He</b>rld !</p> <b>llo</b>wo
+```
+如果不想把range从代码中移除，也可以使用cloneContents()创建一个副本,然后将这个副本插入到文档其他地方。
+``` js
+const fragment = range.cloneContents()
+p1.parentNode.appendChild(fragment)
+```
+``` html
+<p><b>Hello</b>world !</p>
+<b>llo</b>wo
+```
+> 需要注意的是，为保持结构完好而拆分节点的操作，只有在调用方法的时候才会发生。 DOM被修改之前，原始HTML会一直保持不变
+## 范围插入
+初始html
+``` html
+<p id="p1"><b>Hello</b>world !</p>
+```
+使用下例代码进行节点插入操作(insertNode()方法)
+``` js
+let p1 = document.getElementById('p1'),
+	helloNode = p1.firstChild.firstChild,
+	worldNode = p1.lastChild
+
+const range = document.createRange()
+range.setStart(helloNode, 2)
+range.setEnd(worldNode, 3)
+
+let span = document.createElement("span")
+span.style.color = "red"
+span.append(document.createTextNode('Inserted text'))
+range.insertNode(span)
+```
+在运行以下代码后，html会变为
+``` html
+<p><b>He<span style="color:red">Inserted text</span>llo</b>world !</p>
+```
+> 在插入后，span元素插入到了"Hello"的"llo"之前，也就是range之前，但是原始的HTML并没有添加或删除<b\>元素(因为这里并没有使用之前提到的方法)。
+除了向范围内插入内容，还可以使用surroundContents()方法包裹范围内容。该方法接受一个参数，即包含范围内容的节点。调用这个方法，后台会执行如下操作：
+1. 提取出范围的内容。
+2. 在原始文档中范围之前所在的位置插入给定节点。
+3. 将范围对应文档片段的内容添加给定节点。
+``` html
+<p><span style="background-color:yellow"><b>Hello</b></span>world !</p>
+```
+为了插入<span\>元素，范围中必包含完整的DOM结构。如果范围中包含部分选择的非文本节点,这个操作会失败并报错。另外，如果给定的节点是Document、DocumentType或DocumentFragment类型，也会导致抛出错误。
+``` js
+const range = document.createRange()
+range.setStart(helloNode, 2)
+range.setEnd(worldNode, 3)
+
+let span = document.createElement('span')
+span.style.backgroundColor = "yellow"
+range.surroundContents(span)
+// Uncaught DOMException: Failed to execute 'surroundContents' on 'Range': The Range has partially selected a non-Text node.
+```
+## 范围折叠
+如果范围没有下选择文档中的任何部分，则称为折叠(collapsed).折叠范围有点类似文本框：如果文本框中有文本，则可以用鼠标选中以高亮显示全部文本，这时候，如果在单击鼠标，则选区会被移除，光标会落在某两个字符中间。而在折叠范围时，位置会被设置为范围与文档交界的地方，可能是范围选区的开始处，也可能是结尾处。
+
+折叠范围可以使用collapse()方法，这个方法接受一个参数：布尔值，表示折叠到哪一端。ture表示折叠到起点，false表示折叠到终点。要确定范围是否已经被折叠，可以检测范围是否已经被折叠，可以检测范围的collapsed属性：
+``` js
+console.log(range.collapsed); // false
+range.collapse()
+console.log(range.collapsed); // true
+```
+测试范围是否被折叠，能够帮助确定范围中的两个节点是否相邻。例如以下HTML代码:
+``` html
+<p id='p2'>Paragraph 1</p>
+<p id='p3'>Paragraph 2</p>
+<script>
+	const p2 = document.querySelector('#p2'),
+		p3 = document.querySelector('#p3'),
+		range2 = document.createRange()
+	range2.setStartBefore(p2)
+	range2.setStartAfter(p3)
+	console.log(range2.collapsed); // true
+```
+因为p2后面和p3前面没有内容，所以两个节点是相邻的。
+## 范围比较
+如果有多个范围，则可以使用compareBoundaryPoints()方法确定范围之间是否存在公共边界(起点或终点).这个方法接受两个参数:要比较的范围和一个常量值，表示比较的方式。这个常量参数包括：
++ Range.START_TO_START(0),比较两个范围的起点。
++ Range.START_TO_END(1)，比较一个范围的起点和第二个范围的终点。
++ Range.END_TO_END(2), 比较两个范围的终点。
++ Range.END_TO_START(3), 比较第一个范围的终点和第二个范围的起点。
+
+compareBoundaryPoints()方法在第一个范围的边界点位于第二个范围的边界点之前返回-1，两个范围的边界点相等时返回0，在第一个范围的边界点位于第二个range的边界点之后返回1。 
+``` js
+	<p id="p1"><b>Hello</b>world !</p>
+	<script>
+		const range1 = document.createRange()
+		const range2 = document.createRange()
+		const p1 = document.getElementById("p1")
+		range1.selectNodeContents(p1)
+		range2.selectNodeContents(p1)
+		range2.setEndBefore(p1.lastChild)
+		console.log(range1.compareBoundaryPoints(Range.START_TO_START, range2)); // 0
+		console.log(range2.compareBoundaryPoints(Range.END_TO_END, range1)); // -1
+	</script>
+```
+## 复制范围
+通过调用cloneRange()方法可以复制范围。
+``` js
+const newRange = range.cloneRange()
+```
+新范围包含与原始范围一样的属性，但修改其边界点不会影响其原始范围。
+> cloneRange()和cloneContents()区别在于，前者返回的是range对象，后者返回的是documentFragment
+## 清理
+在使用完范围后，最好调用detach()方法将范围从创建它的文档中剥离。调用detach()之后，就可以放心解除范围的引用，以便垃圾回收程序释放其占用的内存。
+``` js
+range.detach() // 从文档中比例范围
+range = null // 接触引用
 ```

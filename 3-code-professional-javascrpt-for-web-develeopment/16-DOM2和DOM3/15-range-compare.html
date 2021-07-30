@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Range compare</title>
+</head>
+
+<body>
+	<p id="p1"><b>Hello</b>world !</p>
+	<script>
+		const range1 = document.createRange()
+		const range2 = document.createRange()
+		const p1 = document.getElementById("p1")
+		range1.selectNodeContents(p1)
+		range2.selectNodeContents(p1)
+		range2.setEndBefore(p1.lastChild)
+		console.log(range1.compareBoundaryPoints(Range.START_TO_START, range2)); // 0
+		console.log(range2.compareBoundaryPoints(Range.END_TO_END, range1)); // -1
+	</script>
+</body>
+
+</html>

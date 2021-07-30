@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>flex range</title>
+</head>
+
+<body>
+	<p id="p1"><b>Hello</b>world !</p>
+
+	<script>
+		// let range1 = document.createRange(),
+		// 	range2 = document.createRange(),
+		// 	p1 = document.getElementById('p1'),
+		// 	p1Index = -1,
+		// 	i,
+		// 	len;
+		// for (i = 0, len = p1.parentNode.childNodes.length; i < len; i++) {
+		// 	if (p1.parentNode.childNodes[i] == p1) {
+		// 		p1Index = i;
+		// 		break
+		// 	}
+		// }
+		// range1.setStart(p1.parentNode, p1Index)
+		// range1.setEnd(p1.parentNode, p1Index + 1)
+		// range2.setStart(p1, 0)
+		// range2.setEnd(p1, p1.childNodes.length)
+
+		let p1 = document.getElementById('p1'),
+			helloNode = p1.firstChild.firstChild,
+			worldNode = p1.lastChild
+
+		console.log(helloNode);
+		console.log(worldNode);
+		const range = document.createRange()
+		range.setStart(helloNode, 2)
+		range.setEnd(worldNode, 3)
+
+		// deleteContents() 
+		// range.deleteContents() 
+
+		// extractContents();
+		// const documentFragment = range.extractContents();
+		// p1.parentNode.appendChild(documentFragment)
+
+		const fragment = range.cloneContents()
+		p1.parentNode.appendChild(fragment)
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>range</title>
+</head>
+
+<body>
+	<p id="p1"><b>Hello</b>world !</p>
+	<script>
+		const range1 = document.createRange(),
+			range2 = document.createRange(),
+			p1 = document.getElementById('p1')
+		range1.selectNode(p1)
+		range2.selectNodeContents(p1)
+
+		// 在调用selectNode()时，startContainer，endContainer,commonAncestorContainer都等于传入节点的父节点。
+		console.log(range1.startContainer);// body节点
+		console.log(range1.endContainer);// body节点
+		console.log(range1.commonAncestorContainer);// body节点
+		console.log(range1.startOffset); // 1 返回范围第一个节点在其父节点的索引  因为索引为0的节点是 文本节点
+		console.log(range1.endOffset); // 2 因为只选择了一个节点，因此索引为 startOffset + 1, <--因为只有两个节点吧,一个文本节点+一个选择的节点
+
+		// 调用selectNodeContents()时，前三个属性都为传入的节点。 startOffset属性值始终为0，因为范围是从传入节点的第一个子节点开始，而endOffset等于传入节点的子节点数量，在该例子中等于2
+		console.log(range2.startContainer);// p节点
+		console.log(range2.endContainer);// p节点
+		console.log(range2.commonAncestorContainer);// p节点
+		console.log(range2.startOffset); // 0
+		console.log(range2.endOffset); // 2
+	</script>
+</body>
+
+</html>
