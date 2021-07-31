@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<input type="button" value="click" id="btn">
+	<script>
+		var btn = document.getElementById('btn')
+		btn.onclick = function (events) {
+			console.log(events); //undefined
+			var event = window.event
+			console.log(event.type); // click
+		}
+	</script>
+
+	<input type="button" value="click attach" id="btn2">
+	<script>
+		var btn2 = document.getElementById('btn2')
+		btn2.attachEvent('onclick', function (event) {
+			console.log(event.type);
+		})
+	</script>
+	<input type="button" value="HTML" onclick="console.log(event.type)">
+
+	<input type="button" value="srcElement" id="btn3">
+	<script>
+		var btn3 = document.getElementById('btn3')
+		btn3.onclick = function () {
+			console.log(window.event.srcElement === this); // true
+		}
+		btn3.attachEvent("onclick", function (event) {
+			console.log(window.event.srcElement === this); // false
+		})
+	</script>
+	<a href="https://www.baidu.com" id="link">百度</a>
+	<script>
+		var link = document.querySelector('#link')
+		link.onclick = function () {
+			window.event.returnValue = false
+		}
+	</script>
+
+	<input type="button" value="cancelBubbte" id="btn4">
+	<script>
+		var btn4 = document.querySelector('#btn4')
+		btn4.onclick = function () {
+			console.log("clicked");
+			window.event.cancelBubble = true
+		}
+		document.body.onclick = function () {
+			console.log('body clicked');
+		}
+	</script>
+	<script>
+		var EventUtil = {
+			//... 之前的代码
+			getEvent: function (event) {
+				return event ? event : window.event
+			},
+			getTarget: function (event) {
+				return event.target || event.srcElement
+			},
+			preventDefault: function (event) {
+				if (event.preventDefault) {
+					event.preventDefault
+				} else {
+					event.returnValue = false
+				}
+			},
+			stopPropagation: function (event) {
+				if (event.stopPropagation) {
+					event.stopPropagation()
+				} else {
+					event.cancelBubble = true
+				}
+			}
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<input type="text" value="click me" onclick="console.log('clicked')">
+	<input type="text" value="click me" onclick="console.log('&quot;clicked&quot')">
+	<input type="text" onclick="showMessage()">
+
+	<!-- 输出click -->
+	<input type="text" onclick="console.log(event.type)">
+
+	<!-- 输出"Click Me" -->
+	<input type="button" value="Click Me" onclick="console.log(this.value)">
+
+	<!-- 输出"Click Me" -->
+	<input type="button" value="Click Me " onclick="console.log(value)">
+	<form method="post">
+		<!-- 打印button的value -->
+		<input type="text" name="username" value="" onclick="console.log(button.value)">
+		<!-- 打印上面的value -->
+		<input type="button" value="Echo Username" onclick="console.log(username.value)" name="button">
+	</form>
+	<script>
+		function showMessage() {
+			console.log('hello world');
+		}
+	</script>
+	<input type="button" value="Click Me" onclick="try {showMessage()} catch(ex){}">
+
+	<input type="button" id='myBtn' value="Click myBtn">
+	<script>
+		const btn = document.querySelector('#myBtn')
+		btn.onclick = function () {
+			console.log('click me');
+		}
+	</script>
+
+	<form method="POST">
+		<input type="text" value="value" name="input">
+		<input type="button" id="myBtn2" value="click" name="button">
+	</form>
+	<script>
+		const myBtn2 = document.querySelector('#myBtn2')
+		myBtn2.onclick = function (event) {
+			console.log(event);
+			console.log(this); // input#myBtn2 element
+			console.log(input.value); // 报错，这样就无法获取同一个form的其他元素了
+		}
+	</script>
+	<input type="button" value="click me" id="btn3">
+	<script>
+		const btn3 = document.querySelector('#btn3')
+		btn3.addEventListener('click', () => {
+			console.log(this); // window
+		})
+		btn3.addEventListener('click', function () {
+			console.log(this.id);
+		})
+	</script>
+	<input type="button" value="removeEventListener" id="btn4">
+	<script>
+		const btn4 = document.querySelector('#btn4')
+		btn4.addEventListener('click', function () {
+			console.log(this.id);
+		}, 'false')
+		btn4.removeEventListener('click', function () { // 没有效果
+			console.log(this.id);
+		}, 'false')
+	</script>
+
+	<input type="button" value="removeEventListener correct" id="btn5">
+	<script>
+		const btn5 = document.querySelector('#btn5')
+		const hander = function () {
+			console.log(this.id);
+		}
+		btn4.addEventListener('click', hander, 'false')
+		btn4.removeEventListener('click', hander, 'false')
+	</script>
+
+</body>
+
+</html>

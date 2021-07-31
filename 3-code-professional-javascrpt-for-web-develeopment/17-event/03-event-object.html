@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>event object</title>
+</head>
+
+<body>
+
+	<input type="button" id="btn" value="event object">
+	<script>
+		const btn = document.querySelector('#btn')
+		btn.onclick = function (event) {
+			console.log(event.type); // click
+		}
+		btn.addEventListener('click', (event) => {
+			console.log(event.type); // click
+		})
+	</script>
+	<!-- 打印click -->
+	<input type="button" value="event object html" onclick="console.log(event.type)">
+
+	<input type="button" value="this target currentTarget" id="btn2">
+	<script>
+		const btn2 = document.querySelector('#btn2')
+		btn2.onclick = function (event) {
+			console.log(event.target === this); // true
+			console.log(event.currentTarget === this); // true
+		}
+	</script>
+
+	<input type="button" value="this target currentTarget body" id="btn3">
+	<script>
+		const body = document.body
+		body.onclick = function (event) {
+			console.log(event.currentTarget === document.body);
+			console.log(this === document.body);
+			console.log(event.target === document.getElementById('btn3'));
+		}
+		// 在点击 btn3 后三个均打印 true
+	</script>
+
+	<input type="button" value="event.type" id="btn4">
+	<script>
+		const btn4 = document.getElementById("btn4")
+		const handler = function (event) {
+			switch (event.type) {
+				case "click":
+					console.log('Clicked');
+					break
+				case "mouseover":
+					event.target.style.backgroundColor = "red"
+					break
+				case "mouseout":
+					event.target.style.backgroundColor = ''
+					break
+			}
+		}
+		btn4.onclick = handler
+		btn4.onmouseover = handler
+		btn4.onmouseout = handler
+	</script>
+	<a href="www.baidu.com" id="link">百度</a>
+	<script>
+		const link = document.getElementById('link')
+		link.onclick = function (event) {
+			event.preventDefault();
+		}
+	</script>
+
+	<input type="button" value="stop propagation" id="btn5">
+	<script>
+		const btn5 = document.getElementById('btn5')
+		btn5.onclick = function (evnet) {
+			console.log("clicked");
+			evnet.stopPropagation();
+		}
+	</script>
+
+	<input type="button" value="eventPhase" id="btn6">
+	<script>
+		const btn6 = document.getElementById('btn6')
+		const handler1 = function (event) {
+			console.log(event.eventPhase);
+		}
+		btn6.onclick = handler1 // 2
+		document.documentElement.addEventListener('click', handler1, true) // 1
+		document.documentElement.onclick = handler1 // 3
+	</script>
+</body>
+
+</html>

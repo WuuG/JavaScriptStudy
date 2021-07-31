@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<input type="button" value="IE attachEvent" id='btn6'>
+	<script>
+		var btn6 = document.querySelector("#btn6")
+		btn6.attachEvent('onclick', function () {
+			console.log('click');
+		})
+	</script>
+
+	<input type="button" value="this" id="btn">
+	<script>
+		var btn = document.getElementById('btn')
+		btn.attachEvent('onclick', function () {
+			console.log(this === window); // true
+		})
+		btn.attachEvent('onclick', function () {
+			console.log('define after');
+		})
+		// define after
+		// click
+	</script>
+
+	<script>
+		var EventUtil = {
+			addHander: function (element, type, handler) {
+				if (element.addEventListner) {
+					element.addEventListner(type, handler, false)
+				} else if (element.attachEvent) {
+					element.attachEvent("on" + type, handler)
+				} else {
+					element["on" + type] = handler
+				}
+			},
+			removeHandler: function (element, type, handler) {
+				if (element.removeEventListenerl) {
+					element.removeEventListenerl(type, handler, false)
+				} else if (element.detachEvent) {
+					element.detachEvent("on" + type, handler)
+				} else {
+					element["on" + type] = null
+				}
+			}
+		}
+	</script>
+
+</body>
+
+</html>
