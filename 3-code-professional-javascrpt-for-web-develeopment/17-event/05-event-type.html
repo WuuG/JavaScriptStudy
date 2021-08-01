@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>event type</title>
+</head>
+
+<body onload="console.log('loaded')" onunload="console.log('body unload')">
+	<img src="./smile.png" onload="console.log('image loaded')">
+	<a href="http://www.baidu.com">百度</a>
+	<script>
+		window.addEventListener('load', () => {
+			console.log('loaded');
+			const image = document.createElement('img')
+			document.body.appendChild(image)
+			image.src = './smile.png'
+			image.addEventListener('load', (event) => {
+				console.log(event.target.src);
+			})
+		})
+		window.addEventListener('load', () => {
+			let img = new Image()
+			img.addEventListener('load', () => {
+				console.log('new Image loaded');
+			})
+			img.src = './smile.png'
+		})
+		window.addEventListener('load', () => {
+			const script = document.createElement('script')
+			script.addEventListener('load', (event) => {
+				console.log('loaded');
+			})
+			script.src = "./06-example.js"
+			document.body.appendChild(script)
+		})
+
+		window.addEventListener('load', () => {
+			const link = document.createElement('link')
+			link.type = "text/css"
+			link.rel = "stylesheet"
+			link.addEventListener('load', (event) => {
+				console.log('outside css loaded');
+			})
+			link.href = './07-example.css'
+			document.getElementsByTagName('head')[0].appendChild(link)
+		})
+		"use strict"
+		window.addEventListener('unload', (event) => {
+			console.log('Unloaded!');
+		})
+		window.addEventListener('resize', (event) => {
+			console.log('Resized');
+		})
+		window.addEventListener('scroll', (event) => {
+			if (document.compatMode == 'CSS1Compat') {
+				console.log(document.documentElement.scrollTop);
+			} else {
+				console.log(document.body.scrollTop);
+			}
+		})
+	</script>
+</body>
+
+</html>
