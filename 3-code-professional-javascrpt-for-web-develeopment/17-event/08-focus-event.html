@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<div class="parentDiv">
+		<input id="div1">这是第一个div</input>
+	</div>
+	<div class="parentDiv">
+		<input id="div2">这是第二个div</input>
+	</div>
+	<script>
+		const div = document.querySelector('.parentDiv')
+		const div1 = document.querySelector('#div1')
+		const div2 = document.querySelector('#div2')
+		div1.addEventListener('focusout', (event) => {
+			console.log(`focuesout ${event.target}`);
+		})
+		div1.addEventListener('focusin', (event) => {
+			console.log(`focuesin ${event.target}`);
+		})
+		div1.addEventListener('blur', (event) => {
+			console.log(`blur ${event.target}`);
+		})
+		div1.addEventListener('DOMFocusOut', (event) => {
+			console.log(`DOMFocusOut ${event.target}`);
+		})
+		div1.addEventListener('focus', (event) => {
+			console.log(`focus ${event.target}`);
+		})
+		div1.addEventListener('DOMFocusIn', (event) => {
+			console.log(`DOMFocusIn ${event.target}`);
+		})
+		div2.addEventListener('focusout', (event) => {
+			console.log(`focuesout ${event.target}`);
+		})
+		div2.addEventListener('focusin', (event) => {
+			console.log(`focuesin ${event.target}`);
+		})
+		div2.addEventListener('blur', (event) => {
+			console.log(`blur ${event.target}`);
+		})
+		div2.addEventListener('DOMFocusOut', (event) => {
+			console.log(`DOMFocusOut ${event.target}`);
+		})
+		div2.addEventListener('focus', (event) => {
+			console.log(`focus ${event.target}`);
+		})
+		div2.addEventListener('DOMFocusIn', (event) => {
+			console.log(`DOMFocusIn ${event.target}`);
+		})
+		div.addEventListener('focusout', (event) => {
+			console.log(`DIV focuesout ${event.target}`);
+		})
+		div.addEventListener('focusin', (event) => {
+			console.log(`DIV focusin ${event.target}`);
+		})
+		div.addEventListener('blur', (event) => {
+			console.log(`DIV blur ${event.target}`);
+		})
+		div.addEventListener('DOMFocusOut', (event) => {
+			console.log(`DIV DOMFocusOut ${event.target}`);
+		})
+		div.addEventListener('focus', (event) => {
+			console.log(`DIV focus ${event.target}`);
+		})
+		div.addEventListener('DOMFocusIn', (event) => {
+			console.log(`DIV DOMFocusIn ${event.target}`);
+		})
+	</script>
+</body>
+
+</html>

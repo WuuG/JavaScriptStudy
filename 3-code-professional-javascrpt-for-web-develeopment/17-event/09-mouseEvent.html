@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>mouseEvent</title>
+	<style>
+		div {
+			width: 200px;
+			height: 200px;
+			background-color: skyblue;
+			margin: 10px auto;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="myDiv"></div>
+	<script>
+		var myDiv = document.querySelector('#myDiv')
+		myDiv.addEventListener('click', (event) => {
+			// console.log(`Client coordinates: ${event.clientX},${event.clientY}`);
+			// console.log(`Page coordinates: ${event.pageX},${event.pageY}`);
+			console.log(`Screen coordinates: ${event.screenX}, ${event.screenY}`);
+			console.log(event);
+		})
+
+		// myDiv.addEventListener('click', function (event) {
+		// 	var pageX = event.pageX,
+		// 		pageY = event.pageY
+		// 	if (pageX === undefined) {
+		// 		pageX = event.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft)
+		// 	}
+		// 	if (pageY === undefined) {
+		// 		pageY = event.clientY + (document.body.scrollTop || document.documentElement.scrollTop)
+		// 	}
+		// 	console.log('Page coordinates: ' + pageX + ',' + pageY);
+		// })
+		// myDiv.attachEvent('onclick', function (event) {
+		// 	var pageX = event.pageX,
+		// 		pageY = event.pageY
+		// 	if (pageX === undefined) {
+		// 		pageX = event.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft)
+		// 	}
+		// 	if (pageY === undefined) {
+		// 		pageY = event.clientY + (document.body.scrollTop || document.documentElement.scrollTop)
+		// 	}
+		// 	console.log('Page coordinates: ' + pageX + ',' + pageY);
+		// })
+	</script>
+	<div id="myDiv2"></div>
+	<script>
+		let div = document.querySelector('#myDiv2')
+		div.addEventListener('click', (event) => {
+			const keys = new Array()
+			if (event.shiftKey) {
+				keys.push('shift')
+			}
+			if (event.ctrlKey) {
+				keys.push('ctrl')
+			}
+			if (event.altKey) {
+				keys.push('alt')
+			}
+			if (event.metaKey) {
+				keys.push('meta')
+			}
+			console.log("Keys:" + keys.join(', '));
+		})
+	</script>
+
+	<div id="myDiv3"></div>
+	<div id="myDiv4"></div>
+	<script>
+		const div3 = document.querySelector('#myDiv3')
+		const div4 = document.querySelector('#myDiv4')
+		div3.addEventListener('mouseout', (event) => {
+			console.log(event.relatedTarget); // div#myDiv3
+		})
+		div4.addEventListener('mouseover', (event) => {
+			console.log(event.relatedTarget); // div#myDiv3
+		})
+
+		document.documentElement.addEventListener('mousewheel', (event) => {
+			console.log(event.wheelDelta); // 150?
+		})
+	</script>
+	<div id="myDiv5"></div>
+	<script>
+		const div5 = document.querySelector('#myDiv5')
+		div5.addEventListener('mouseover', () => {
+			console.log('touch element');
+		})
+	</script>
+</body>
+
+</html>
