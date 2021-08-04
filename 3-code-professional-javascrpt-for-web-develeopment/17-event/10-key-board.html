@@ -43,6 +43,67 @@
 			}
 		})
 	</script>
+
+	<input type="text" id="input2">
+	<script>
+		const textbox1 = document.getElementById('input2')
+		textbox1.addEventListener('keypress', (event) => {
+			console.log(event);
+			// 奇怪的是ctrl shift 不会触发keypress事件,为什么呢?
+			console.log(event.location, event.keyLocation);
+			// 似乎keyLocation不存在，且location只会显示3. 4，5无法测试。
+			const loc = event.keyLocation || event.location
+			if (loc) {
+				console.log(`key location: ${loc}`);
+			}
+			const text = document.createTextNode(`pressKey: ${loc}`)
+			document.body.appendChild(text)
+		})
+	</script>
+
+	<input type="text" id="input3"></input>
+	<script>
+		const input3 = document.getElementById('input3')
+		input3.addEventListener('keypress', (event) => {
+			console.log(event.key);
+			if (event.getModifierState) {
+				console.log(event.getModifierState("Shift"));
+			}
+		})
+	</script>
+
+	<h1 id="test-focus">测试focus</h1>
+	<script>
+		const testFoucs = document.getElementById('test-focus')
+		testFoucs.addEventListener('focus', () => {
+			console.log('focus');
+			testFoucs.addEventListener('keypress', (event) => {
+				console.log(event);
+			})
+		})
+	</script>
+
+	<input type="text" id="input4">
+	<script>
+		const input4 = document.getElementById('input4')
+		input4.addEventListener('textInput', (event) => {
+			console.log(event.data, event.inputMethod);
+		})
+	</script>
+
+	<input type="text" id="input5">
+	<script>
+		const input5 = document.getElementById('input5')
+		input5.addEventListener('compositionstart', (event) => {
+			console.log(event.data);
+		})
+		input5.addEventListener('compositionupdate', (event) => {
+			console.log(event.data);
+		})
+		input5.addEventListener('compositionend', (event) => {
+			console.log(event.data);
+		})
+	</script>
 </body>
 
 </html>
