@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<textarea name="myText" id="myText" cols="30" rows="10"></textarea>
+	<script>
+		const textbox = document.getElementById('myText')
+		textbox.addEventListener('keyup', (event) => {
+			const keyCode = event.keyCode
+			const key = String.fromCharCode(keyCode)
+			console.log(key);
+		})
+
+		var EventUtil = {
+			getCharCode: function (event) {
+				if (typeof event.charcode == "number") {
+					return event.charcode
+				} else {
+					return event.keyCode
+				}
+			}
+		}
+		textbox.addEventListener('keypress', (event) => {
+			const charCode = EventUtil.getCharCode(event)
+			const key = String.fromCharCode(charCode)
+			console.log(key);
+		})
+	</script>
+	<input type="text" id="input1">
+	<script>
+		const input1 = document.getElementById('input1')
+		input1.addEventListener('keypress', (event) => {
+			const identifier = event.key;
+			if (identifier) {
+				console.log(identifier);
+			}
+		})
+	</script>
+</body>
+
+</html>
