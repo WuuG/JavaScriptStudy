@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Html 5 evetns</title>
+	<style>
+		#myDiv {
+			width: 200px;
+			height: 200px;
+			background-color: red;
+		}
+
+		#myMenu {
+			position: absolute;
+			visibility: hidden;
+			background-color: silver;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="myDiv"></div>
+	<ul id="myMenu">
+		<li><a href="www.baidu.com">百度</a></li>
+		<li><a href="www.baidu.com">百度</a></li>
+		<li><a href="www.baidu.com">百度</a></li>
+		<li> 这是无法点击的</li>
+	</ul>
+	<script>
+		window.addEventListener('load', (event) => {
+			const div = document.getElementById('myDiv')
+			div.addEventListener('contextmenu', (event) => {
+				event.preventDefault()
+				const menu = document.getElementById('myMenu')
+				menu.style.left = event.clientX + 'px'
+				menu.style.top = event.clientY + 'px'
+				menu.style.visibility = "visible"
+				menu.addEventListener('click', (event) => {
+					event.stopPropagation()
+				})
+			})
+			document.addEventListener('click', (event) => {
+				document.getElementById('myMenu').style.visibility = 'hidden'
+			})
+		})
+	</script>
+	<script>
+		window.addEventListener('beforeunload', (event) => {
+			let message = 'do you realy want quit the Website?'
+			event.returnValue = message
+			return message
+		})
+	</script>
+	<script>
+		document.addEventListener('DOMContentLoaded', (event) => {
+			console.log(event);
+			console.log("DOMContent loaded");
+		})
+	</script>
+	<script>
+		document.addEventListener('readystatechange', (event) => {
+			if (document.readyState == "interactive") {
+				console.log("Content loaded");
+			}
+		})
+	</script>
+	<script>
+		document.addEventListener('readystatechange', function (event) {
+			if (document.readyState == "interactive" || document.readyState == "complete") {
+				document.removeEventListener("readystatechange", arguments.callee)
+				console.log("ready Content loaded");
+			}
+		})
+	</script>
+</body>
+
+</html>
