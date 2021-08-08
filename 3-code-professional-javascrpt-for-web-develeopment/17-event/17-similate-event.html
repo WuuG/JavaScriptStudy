@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>模拟事件</title>
+</head>
+
+<body>
+	<button id="myBtn">点击</button>
+	<script>
+		document.body.addEventListener('click', (event) => {
+			console.log(event);
+		})
+		document.body.addEventListener('keydown', (event) => {
+			console.log(event);
+		})
+		const btn = document.querySelector('#myBtn')
+		const event = document.createEvent("MouseEvent")
+		event.initEvent('click', true, true)
+		btn.dispatchEvent(event)
+	</script>
+	<input type="text" id="textbox">
+	<script>
+		let textbox = document.getElementById('textbox')
+		const keyBoardEvent = document.createEvent('KeyboardEvent')
+		// keyBoardEvent.initKeyEvent('keydown', true, true, document.defaultView, false, false, false, true, false, 65, 65)
+		keyBoardEvent.initEvent('keydown', true, true)
+		keyBoardEvent.view = document.defaultView
+		textbox.dispatchEvent(keyBoardEvent)
+	</script>
+	<script>
+		const newEvent = new Event('keyDown', { bubbles: true, cancelable: true, })
+		newEvent.charCode = 65
+		textbox.dispatchEvent(newEvent)
+	</script>
+	<div id="myDiv"></div>
+	<script>
+		const div = document.getElementById('myDiv')
+		div.addEventListener('cat', (event) => {
+			console.log('miao');
+		})
+		document.addEventListener('cat', (event) => {
+			console.log(`Document: ${event.detail}`);
+		})
+		if (document.implementation.hasFeature("CustomEvents", '3.0')) {
+			const customEvnet = document.createEvent("CustomEvent")
+			customEvnet.initCustomEvent('cat', true, true, "Hello World!")
+			div.dispatchEvent(customEvnet)
+		}
+	</script>
+	<script>
+		const newCustomEvent = new CustomEvent('cat', { cancelable: true, bubbles: true, detail: "Hellow World!" })
+		div.dispatchEvent(newCustomEvent)
+	</script>
+</body>
+
+</html>

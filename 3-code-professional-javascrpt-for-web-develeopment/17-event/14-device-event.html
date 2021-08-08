@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>device orientation</title>
+</head>
+
+<body>
+	<div id="myDiv"></div>
+	<script>
+		window.addEventListener('load', () => {
+			const myDiv = document.getElementById('myDiv')
+			console.log(window);
+			myDiv.innerHTML = 'Current orientaion is ' + window.orientation
+			window.addEventListener('orientationchange', (event) => {
+				myDiv.innerHTML = 'Current orientaion is ' + window.orientation
+			})
+		})
+	</script>
+	<div id="output"></div>
+	<script>
+		window.addEventListener('deviceorientation', (event) => {
+			let output = document.getElementById('output')
+			console.log(event);
+			output.innerHTML = `Alpha=${event.alpha}, Beta=${event.beta}, Gamma=${event.gamma}`
+		})
+	</script>
+	<div id="arrow"> -> </div>
+	<script>
+		window.addEventListener('deviceorientation', (event) => {
+			const arrow = document.getElementById('arrow')
+			arrow.style.transform = `rotate(${Math.round(event.alpha)}deg)`
+		})
+	</script>
+
+	<script>
+		window.addEventListener('devicemotion', (event) => {
+			let output = document.getElementById('output')
+			if (event.rotationRate !== null) {
+				output.innerHTML += `Alpha=${event.rotationRate.alpha}` + `Beta=${event.rotationRate.beta}` + `Gamma=${event.rotationRate.gamma}`
+			}
+		})
+	</script>
+	<div id="output3"></div>
+	<script>
+		function handleTouchEvent(event) {
+			// 只针对一个触点。
+			if (event.touches.length == 1) {
+				const output3 = document.getElementById('output3')
+				switch (event.type) {
+					case "touchstart":
+						output3.innerHTML += `<br>Touch started: (${event.touches[0].clientX},${event.touches[0].clientY})`
+						break
+					case "touchend":
+						output3.innerHTML += `<br>Touch ended: (${event.touches[0].clientX},${event.touches[0].clientY})`
+						break
+					case "touchmove":
+						event.preventDefault();
+						output3.innerHTML += `<br>Touch moved: (${event.touches[0].clientX},${event.touches[0].clientY})`
+						break
+				}
+			}
+		}
+		document.addEventListener('touchstart', handleTouchEvent)
+		document.addEventListener('touchmove', handleTouchEvent)
+		document.addEventListener('touchend', handleTouchEvent)
+	</script>
+</body>
+
+</html>

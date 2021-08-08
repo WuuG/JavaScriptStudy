@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>内存与性能</title>
+</head>
+
+<body>
+	<ul id="myLinks">
+		<li id="goSomewhere">go somewhere</li>
+		<li id="doSomething">Do something</li>
+		<li id="sayHi">say Hi</li>
+	</ul>
+	<script>
+		let item1 = document.getElementById('goSomeWhere')
+		let item2 = document.getElementById('doSomething')
+		let item3 = document.getElementById('sayHi')
+		let list = document.getElementById('myLinks')
+		list.addEventListener('click', (event) => {
+			const target = event.target
+			switch (target.id) {
+				case "doSomething":
+					document.title = "I changed the document's title"
+					break;
+				case "goSomewhere":
+					location.href = "http://www.baidu.com"
+					break
+				case "sayHi":
+					console.log('hi');
+					break
+			}
+		})
+	</script>
+	<div id="myDiv2">
+		<input type="button" value="click me" id="myBtn" onclick="console.log('button')">
+	</div>
+	<script>
+		let btn = document.getElementById('myDiv2')
+		btn.onclick = function () {
+			btn.onclick = null
+			document.getElementById('myDiv2').innerHTML = 'replace'
+		}
+	</script>
+</body>
+
+</html>
