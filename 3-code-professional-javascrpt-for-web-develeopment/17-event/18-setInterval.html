@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>setInterval</title>
+	<style>
+		#status {
+			width: 10px;
+			height: 100px;
+			background-color: red;
+		}
+
+		body {
+			height: 1200px;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- <script>
+		(function () {
+			function updateanimations() {
+				doAnimation1()
+				doAnimation2()
+				// ... 其他任务
+			}
+			setInterval(updateanimations, 100);
+		})()
+	</script> -->
+	<div id="status"></div>
+	<script>
+		function updateProgress() {
+			const div = document.getElementById('status')
+			const divRule = document.styleSheets[0].cssRules[0]
+			divRule.style.width = (parseInt(divRule.style.width, 10) + 5) + '%'
+			console.log(divRule.style.width);
+			if (divRule.style.width != '100%') {
+				requestAnimationFrame(updateProgress)
+			}
+		}
+		requestAnimationFrame(updateProgress)
+	</script>
+	<script>
+		let requestID = window.requestAnimationFrame(() => {
+			console.log('Repaint !');
+		})
+		window.cancelAnimationFrame(requestID)
+	</script>
+	<script>
+		// function expensiveOperation() {
+		// 	console.log('Invoked at', Date.now());
+		// }
+		// window.addEventListener('scroll', () => {
+		// 	expensiveOperation()
+		// })
+	</script>
+	<script>
+		let enqueued = true;
+		function expensiveOperation() {
+			console.log('Invoked at', Date.now());
+		}
+		window.addEventListener('scroll', () => {
+			if (enqueued) {
+				enqueued = false
+				window.requestAnimationFrame(expensiveOperation)
+				window.setTimeout(() => enqueued = true, 50)
+			}
+		})
+	</script>
+	<canvas id="drawing" width="200" height="200">A drawing of something.</canvas>
+	<script>
+		// const drawing = document.getElementById('drawing')
+		// if (drawing.getContext) {
+		// 	let context = drawing.getContext('2d')
+		// }
+	</script>
+	<script>
+		const drawing = document.getElementById('drawing')
+		if (drawing.getContext) {
+			const imgURI = drawing.toDataURL("image/png")
+			const image = document.createElement("img")
+			image.src = imgURI
+			document.body.appendChild(image)
+		}
+	</script>
+</body>
+
+</html>
