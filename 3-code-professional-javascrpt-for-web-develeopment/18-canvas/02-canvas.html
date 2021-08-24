@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Canvas</title>
+	<style>
+	</style>
+</head>
+
+<body>
+	<canvas id="drawing"></canvas>
+	<script>
+		let drawing = document.getElementById('drawing')
+		if (drawing.getContext) {
+			const context = drawing.getContext("2d")
+			context.fillStyle = "#ff0000"
+			context.fillRect(10, 10, 50, 50)
+			context.fillStyle = "rgba(0,0,255,0.5)"
+			context.fillRect(30, 30, 50, 50)
+		}
+	</script>
+	<canvas id="drawing1"></canvas>
+	<script>
+		const drawing1 = document.querySelector('#drawing1')
+		if (drawing1.getContext) {
+			const context = drawing1.getContext("2d")
+			context.strokeStyle = '#ff0000'
+			context.strokeRect(10, 10, 50, 50)
+			context.strokeStyle = "rgba(0,0,255,0.5)"
+			context.strokeRect(30, 30, 50, 50)
+		}
+	</script>
+	<canvas id="drawing2"></canvas>
+	<script>
+		const drawing2 = document.getElementById('drawing2')
+		if (drawing2.getContext) {
+			const context = drawing2.getContext("2d")
+			context.fillStyle = "#ff0000"
+			context.fillRect(10, 10, 50, 50)
+			context.fillStyle = "rgba(0,0,255,0.5)"
+			context.fillRect(30, 30, 50, 50)
+			context.clearRect(40, 40, 10, 10)
+		}
+	</script>
+	<canvas id="drawing3" width="300px" height="200px"></canvas>
+	<script>
+		const drawing3 = document.getElementById('drawing3')
+		const context = drawing3.getContext("2d")
+		context.beginPath()
+		context.arc(100, 100, 99, 0, 2 * Math.PI, false)
+		// 这里若是不移动的话，内圈到外圈会有一条直线
+		context.moveTo(194, 100)
+		context.arc(100, 100, 94, 0, 2 * Math.PI, false)
+
+		context.moveTo(100, 100)
+		context.lineTo(100, 15)
+		context.moveTo(100, 100)
+		context.lineTo(35, 100)
+		context.stroke()
+
+		console.log(`Point (100,100) is in the path ? ${context.isPointInPath(100, 100)}`);
+
+		// text
+		context.font = "bold 14px Arial"
+		context.textAlign = "center"
+		context.textBaseline = "middle"
+		context.fillText("12", 100, 20)
+
+		context.textAlign = "start"
+		context.fillText("12", 100, 40)
+		context.textAlign = "end"
+		context.fillText("12", 100, 60)
+	</script>
+	<canvas id="drawing4"></canvas>
+	<script>
+		const drawing4 = document.getElementById('drawing4')
+		if (drawing4.getContext) {
+			const context = drawing4.getContext("2d")
+			context.strokeRect(10, 0, 140, 20)
+			let fontSize = 100
+			context.font = fontSize + 'px Arial'
+			while (context.measureText('hello world!').width > 140) {
+				fontSize--
+				context.font = fontSize + 'px Arial'
+			}
+			context.fillText('hello world!', 10, 20)
+			context.fillText(`Font size is ${fontSize}px`, 10, 50)
+		}
+	</script>
+
+	<canvas id="drawing5" height="200px"></canvas>
+	<script>
+		const drawing5 = document.getElementById('drawing5')
+		{
+			const context = drawing5.getContext("2d")
+			context.beginPath()
+			context.arc(100, 100, 99, 0, 2 * Math.PI, false)
+			// 这里若是不移动的话，内圈到外圈会有一条直线
+			context.moveTo(194, 100)
+			context.arc(100, 100, 94, 0, 2 * Math.PI, false)
+
+			// 移动原点至表盘中心
+			context.translate(100, 100)
+			context.moveTo(0, 0)
+			context.lineTo(0, -85)
+			context.moveTo(0, 0)
+			context.lineTo(-65, 0)
+			context.stroke()
+		}
+	</script>
+
+	<canvas id="drawing6" height="200px"></canvas>
+	<script>
+		const drawing6 = document.getElementById('drawing6')
+		{
+			const context = drawing6.getContext("2d")
+			context.beginPath()
+			context.arc(100, 100, 99, 0, 2 * Math.PI, false)
+			// 这里若是不移动的话，内圈到外圈会有一条直线
+			context.moveTo(194, 100)
+			context.arc(100, 100, 94, 0, 2 * Math.PI, false)
+
+			// 移动原点至表盘中心
+			context.translate(100, 100)
+			context.rotate(90)
+			context.moveTo(0, 0)
+			context.lineTo(0, -85)
+			context.moveTo(0, 0)
+			context.lineTo(-65, 0)
+			context.stroke()
+		}
+	</script>
+	<canvas id="drawing7" height="200px"></canvas>
+	<script>
+		{
+			const drawing7 = document.getElementById('drawing7')
+			const context = drawing7.getContext("2d")
+			context.fillStyle = "#ff0000"
+			context.save()
+
+			context.fillStyle = "#00ff00"
+			context.translate(100, 100)
+			context.save()
+
+			context.fillStyle = "#0000ff"
+			context.fillRect(0, 0, 100, 200)
+
+			context.restore()
+			context.fillRect(10, 10, 100, 200)
+
+			context.restore()
+			context.fillRect(10, 10, 100, 200)
+		}
+	</script>
+</body>
+
+</html>

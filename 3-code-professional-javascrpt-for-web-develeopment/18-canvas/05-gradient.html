@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <canvas id="drawing" width="200px" height="200px"></canvas>
+  <script>
+    {
+      const drawing = document.getElementById('drawing')
+      const context = drawing.getContext('2d')
+      const gradient = context.createLinearGradient(30, 30, 70, 70)
+      gradient.addColorStop(0, "white")
+      gradient.addColorStop(1, "black")
+      context.fillStyle = "#ff0000"
+      context.fillRect(10, 10, 50, 50)
+      context.fillStyle = gradient
+      context.fillRect(30, 30, 50, 50)
+
+      const gradient1 = context.createLinearGradient(100, 100, 130, 130)
+      gradient1.addColorStop(0, "white")
+      gradient1.addColorStop(1, "black")
+      context.fillStyle = gradient1
+      context.fillRect(110, 110, 50, 50)
+    }
+  </script>
+  <canvas id="drawing1"></canvas>
+  <script>
+    function createLinearGradient(context, x, y, width, height) {
+      return context.createLinearGradient(x, y, x + width, y + width)
+    }
+    {
+      const drawing1 = document.getElementById('drawing1')
+      const context = drawing1.getContext('2d')
+      const gradient = createLinearGradient(context, 30, 30, 50, 50)
+      gradient.addColorStop(0, "white")
+      gradient.addColorStop(1, "black")
+      context.fillStyle = gradient
+      context.fillRect(30, 30, 50, 50)
+    }
+  </script>
+  <canvas id="drawing2"></canvas>
+  <script>
+    {
+      const drawing = document.getElementById('drawing2')
+      const context = drawing.getContext('2d')
+      const gradient = context.createRadialGradient(55, 55, 10, 55, 55, 30);
+      gradient.addColorStop(0, 'white');
+      gradient.addColorStop(1, 'black');
+      context.fillStyle = '#ff000';
+      context.fillRect(10, 10, 50, 50);
+      context.fillStyle = gradient;
+      context.fillRect(30, 30, 50, 50);
+    }
+  </script>
+</body>
+
+</html>

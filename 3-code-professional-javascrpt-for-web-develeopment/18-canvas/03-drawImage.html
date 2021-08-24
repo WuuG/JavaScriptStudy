@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>绘制图像</title>
+</head>
+
+<body>
+	<img src="./rhino.jpg" alt="">
+	<canvas id="drawing" width="400px" height="400px"></canvas>
+	<script>
+		{
+			window.addEventListener('load', () => {
+				const image = document.querySelector('img')
+				const drawing = document.querySelector('#drawing')
+				const context = drawing.getContext('2d')
+				context.drawImage(image, 10, 10)
+				context.drawImage(image, 0, 10, 50, 50, 0, 100, 40, 60)
+			})
+		}
+	</script>
+	<canvas id="drawing1" width="400px" height="400px"></canvas>
+	<script>
+		{
+			window.addEventListener('load', () => {
+				setTimeout(() => {
+					console.log(1);
+					const drawing = document.querySelector('#drawing')
+					console.log(drawing.__proto__);
+					const drawing1 = document.querySelector('#drawing1')
+					const context = drawing.getContext('2d')
+					context.drawImage(drawing, 0, 0)
+				}, 1000);
+			})
+		}
+	</script>
+</body>
+
+</html>
